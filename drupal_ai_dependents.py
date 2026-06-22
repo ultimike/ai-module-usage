@@ -18,7 +18,7 @@ Additional data:
   www.drupal.org/api-d7/node.json — usage/install count
 
 Usage:
-  python3 drupal_ai_dependents.py [--output FILE] [--html FILE]
+  python3 drupal_ai_dependents.py [--json FILE] [--output FILE] [--html FILE]
 """
 
 # Python's standard library modules — no composer/npm needed.
@@ -539,6 +539,24 @@ def human_name(machine_name: str) -> str:
     return machine_name.replace("_", " ").title()
 
 
+_STABILITY_RE = re.compile(r'-(?P<level>alpha|beta|rc|dev)', re.IGNORECASE)
+
+def detect_stability(version: str) -> str:
+    """Return the stability level of a version string.
+
+    '1.2.3'        → 'stable'
+    '1.0.0-alpha1' → 'alpha'
+    '2.0.0-beta'   → 'beta'
+    '1.5.0-rc1'    → 'rc'
+    '1.0.0-dev'    → 'dev'
+    ''             → 'stable'
+    """
+    if not version:
+        return "stable"
+    m = _STABILITY_RE.search(version)
+    return m.group("level").lower() if m else "stable"
+
+
 # ---------------------------------------------------------------------------
 # HTML output
 # ---------------------------------------------------------------------------
@@ -748,7 +766,11 @@ def main() -> None:
         "--html", metavar="FILE",
         help="Write a self-contained HTML table to FILE (sortable by any column, filterable by name)",
     )
-    # args.output / args.html will be filename strings if provided, or None if omitted.
+    parser.add_argument(
+        "--json", metavar="FILE",
+        help="Write raw results to FILE as JSON (re-render later with render_md.py / render_html.py)",
+    )
+    # args.output / args.html / args.json will be filename strings if provided, or None if omitted.
     args = parser.parse_args()
 
     # -------------------------------------------------------------------------
@@ -825,11 +847,13 @@ def main() -> None:
         # Append a dict to our results list. In PHP this would be:
         # $rows[] = ["name" => ..., "url" => ..., ...]
         rows.append({
+            "machine_name": machine_name,
             "name":         human_name(machine_name),
             "url":          DRUPAL_PROJECT_URL.format(name=machine_name),
             "version":      p2["version"],
             "release_date": date or "—",  # `or` here means "if falsy, use this instead"
             "usage":        usage,
+            "stability":    detect_stability(p2["version"]),
         })
 
     print(
@@ -850,7 +874,21 @@ def main() -> None:
     rows.sort(key=lambda r: r["usage"] if r["usage"] else -1, reverse=True)
 
     # -------------------------------------------------------------------------
-    # Step 4: Render the markdown table
+    # Step 4: Write JSON if requested
+    # -------------------------------------------------------------------------
+
+    if args.json:
+        payload = {
+            "generated":      datetime.now().strftime("%Y-%m-%d"),
+            "drupal_versions": sorted(TARGET_VERSIONS),
+            "modules":        rows,
+        }
+        with open(args.json, "w", encoding="utf-8") as fh:
+            json.dump(payload, fh, indent=2, ensure_ascii=False)
+        print(f"JSON written to {args.json}", file=sys.stderr)
+
+    # -------------------------------------------------------------------------
+    # Step 6: Render the markdown table
     # -------------------------------------------------------------------------
 
     today   = datetime.now().strftime("%Y-%m-%d")  # like PHP's date('Y-m-d')
@@ -885,7 +923,7 @@ def main() -> None:
     output = "\n".join(lines) + "\n"
 
     # -------------------------------------------------------------------------
-    # Step 5: Write to file or print to stdout
+    # Step 7: Write to file or print to stdout
     # -------------------------------------------------------------------------
 
     if args.output:

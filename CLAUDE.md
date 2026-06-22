@@ -24,7 +24,12 @@ HTTP request. Output goes to stdout; progress goes to stderr.
 
 ```bash
 python3 drupal_ai_dependents.py              # print to stdout
-python3 drupal_ai_dependents.py -o out.md   # write to file
+python3 drupal_ai_dependents.py -o out.md   # write markdown to file
+python3 drupal_ai_dependents.py --json results.json  # save JSON for re-rendering
+
+# Fast re-render from saved JSON (no network calls):
+python3 render_md.py results.json -o results.md
+python3 render_html.py results.json -o results.html
 ```
 
 ---
@@ -185,10 +190,9 @@ header if present, falling back to exponential backoff starting at 2 seconds.
 - **`--drupal-versions` flag** to let the user filter by specific Drupal major
   versions (e.g. `--drupal-versions 11` for D11-only).
 
-- **`--stable-only` flag** to exclude alpha/beta/RC releases from the results.
+- ~~**`--stable-only` flag**~~ — stability filter added to `render_html.py` via checkboxes.
 
-- **Output format options** — ~~HTML output added (`--html FILE`)~~. CSV or
-  JSON still possible for spreadsheet/tool import.
+- **Output format options** — ~~HTML output added (`--html FILE`)~~. ~~JSON output added (`--json FILE`)~~. CSV still possible for spreadsheet/tool import.
 
 - **Caching between runs** — save the p2 responses locally (e.g. to a `.cache/`
   directory) so re-runs don't re-fetch every package. p2 files rarely change
@@ -206,11 +210,22 @@ header if present, falling back to exponential backoff starting at 2 seconds.
 
 ---
 
-## HTML output implementation (added 2026-06-22)
+## HTML output implementation
 
-`render_html(rows)` in `drupal_ai_dependents.py` builds a single self-contained
-`.html` file with no external dependencies. Key design notes:
+There are two HTML renderers:
 
+**`render_html(rows)` in `drupal_ai_dependents.py`** — original, called by `--html FILE`.
+Accepts a list of row dicts directly. No stability badges or filter checkboxes.
+Kept for backward compatibility with the `--html` shortcut.
+
+**`render_html.py`** — the recommended renderer, reads `results.json`. Key additions over
+the original:
+- Each `<tr>` has `data-stability="stable|rc|beta|alpha|dev"`.
+- Version cell shows a small colored badge (green=stable, blue=rc, yellow=beta, orange=alpha, grey=dev).
+- Controls bar has stability checkboxes (all checked by default); unchecking a level hides matching rows.
+- Combined filter: row visible when `nameMatches(row) AND checked.has(row.dataset.stability)`.
+
+Shared design notes for both renderers:
 - CSS and JS are stored as regular Python string variables (not f-strings) to
   avoid the need to escape every `{` and `}`. Only the final HTML assembly
   uses f-strings for the handful of variable substitutions.
@@ -223,11 +238,46 @@ header if present, falling back to exponential backoff starting at 2 seconds.
 - Sort state is tracked with `sortCol` (column index, -1 = none) and
   `sortDir` (1 = asc, -1 = desc). First click on a text column → ascending;
   first click on a numeric column → descending. Re-click reverses.
-- Filter operates on `data-val` of column 0 (module name), case-insensitive.
 - `html.escape()` is used on all row values to prevent XSS from any
   unexpected characters in API responses.
-- Triggered via `--html FILE` CLI flag; can be combined with `-o` for both
-  markdown and HTML in a single run.
+
+---
+
+## JSON output and rendering pipeline
+
+`--json FILE` writes a structured payload after the sort step:
+
+```json
+{
+  "generated":      "2026-06-22",
+  "drupal_versions": [10, 11],
+  "modules": [
+    {
+      "machine_name": "ai_provider_openai",
+      "name":         "Ai Provider Openai",
+      "url":          "https://www.drupal.org/project/ai_provider_openai",
+      "version":      "1.2.1",
+      "release_date": "2026-02-25",
+      "usage":        13133,
+      "stability":    "stable"
+    }
+  ]
+}
+```
+
+`stability` is computed by `detect_stability(version)` in the main script using
+`_STABILITY_RE = re.compile(r'-(?P<level>alpha|beta|rc|dev)', re.IGNORECASE)`.
+Empty/missing version strings default to `"stable"`.
+
+Old `results.json` files without the `stability` field are handled gracefully
+in `render_html.py` via `r.get("stability", "stable")`.
+
+Recommended workflow:
+```bash
+python3 drupal_ai_dependents.py --json results.json   # slow, once
+python3 render_md.py results.json -o results.md       # fast, re-run anytime
+python3 render_html.py results.json -o results.html   # fast, re-run anytime
+```
 
 ---
 
@@ -235,6 +285,8 @@ header if present, falling back to exponential backoff starting at 2 seconds.
 
 | File | Purpose |
 |------|---------|
-| `drupal_ai_dependents.py` | The script |
+| `drupal_ai_dependents.py` | Main script — data collection and candidate verification |
+| `render_md.py` | Markdown renderer — reads `results.json`, outputs markdown table |
+| `render_html.py` | HTML renderer — reads `results.json`, outputs HTML with stability filter |
 | `README.md` | User-facing documentation (usage, limitations, how it works) |
 | `CLAUDE.md` | This file — context for future Claude Code sessions |

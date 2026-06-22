@@ -1,0 +1,1665 @@
+{
+  "generated": "2026-06-22",
+  "drupal_versions": [
+    10,
+    11
+  ],
+  "modules": [
+    {
+      "machine_name": "ai_provider_openai",
+      "name": "Ai Provider Openai",
+      "url": "https://www.drupal.org/project/ai_provider_openai",
+      "version": "1.2.1",
+      "release_date": "2026-02-25",
+      "usage": 13133,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_image_alt_text",
+      "name": "Ai Image Alt Text",
+      "url": "https://www.drupal.org/project/ai_image_alt_text",
+      "version": "1.0.2",
+      "release_date": "2025-12-05",
+      "usage": 11110,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_agents",
+      "name": "Ai Agents",
+      "url": "https://www.drupal.org/project/ai_agents",
+      "version": "1.3.0",
+      "release_date": "2026-05-28",
+      "usage": 10758,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_anthropic",
+      "name": "Ai Provider Anthropic",
+      "url": "https://www.drupal.org/project/ai_provider_anthropic",
+      "version": "1.3.0-beta1",
+      "release_date": "2026-05-20",
+      "usage": 9107,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_provider_amazeeio",
+      "name": "Ai Provider Amazeeio",
+      "url": "https://www.drupal.org/project/ai_provider_amazeeio",
+      "version": "1.3.1",
+      "release_date": "2026-05-28",
+      "usage": 6525,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_dashboard",
+      "name": "Ai Dashboard",
+      "url": "https://www.drupal.org/project/ai_dashboard",
+      "version": "1.0.3",
+      "release_date": "2026-03-05",
+      "usage": 6081,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_seo",
+      "name": "Ai Seo",
+      "url": "https://www.drupal.org/project/ai_seo",
+      "version": "1.1.2",
+      "release_date": "2026-05-27",
+      "usage": 2984,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_azure",
+      "name": "Ai Provider Azure",
+      "url": "https://www.drupal.org/project/ai_provider_azure",
+      "version": "1.1.0-beta3",
+      "release_date": "2025-10-17",
+      "usage": 1363,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "gemini_provider",
+      "name": "Gemini Provider",
+      "url": "https://www.drupal.org/project/gemini_provider",
+      "version": "1.0.1",
+      "release_date": "2026-03-22",
+      "usage": 1019,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_litellm",
+      "name": "Ai Provider Litellm",
+      "url": "https://www.drupal.org/project/ai_provider_litellm",
+      "version": "1.2.0",
+      "release_date": "2025-10-13",
+      "usage": 727,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_vdb_provider_milvus",
+      "name": "Ai Vdb Provider Milvus",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_milvus",
+      "version": "1.1.0-beta4",
+      "release_date": "2026-06-11",
+      "usage": 669,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "metatag_ai",
+      "name": "Metatag Ai",
+      "url": "https://www.drupal.org/project/metatag_ai",
+      "version": "2.0.5",
+      "release_date": "2026-01-21",
+      "usage": 574,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_translate",
+      "name": "Ai Translate",
+      "url": "https://www.drupal.org/project/ai_translate",
+      "version": "1.3.1",
+      "release_date": "2026-02-11",
+      "usage": 557,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_ollama",
+      "name": "Ai Provider Ollama",
+      "url": "https://www.drupal.org/project/ai_provider_ollama",
+      "version": "1.2.0-rc3",
+      "release_date": "2026-04-08",
+      "usage": 361,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_vdb_provider_pinecone",
+      "name": "Ai Vdb Provider Pinecone",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_pinecone",
+      "version": "1.1.0-beta4",
+      "release_date": "2026-04-21",
+      "usage": 350,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_integration_eca",
+      "name": "Ai Integration Eca",
+      "url": "https://www.drupal.org/project/ai_integration_eca",
+      "version": "1.0.0-rc3",
+      "release_date": "2025-12-12",
+      "usage": 305,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_tmgmt",
+      "name": "Ai Tmgmt",
+      "url": "https://www.drupal.org/project/ai_tmgmt",
+      "version": "1.0.0-beta6",
+      "release_date": "2026-06-11",
+      "usage": 301,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_vdb_provider_postgres",
+      "name": "Ai Vdb Provider Postgres",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_postgres",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-04-23",
+      "usage": 230,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_aws_bedrock",
+      "name": "Ai Provider Aws Bedrock",
+      "url": "https://www.drupal.org/project/ai_provider_aws_bedrock",
+      "version": "1.1.0-beta4",
+      "release_date": "2026-04-15",
+      "usage": 213,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_media_image",
+      "name": "Ai Media Image",
+      "url": "https://www.drupal.org/project/ai_media_image",
+      "version": "1.0.0-alpha4",
+      "release_date": "2025-06-12",
+      "usage": 204,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_context",
+      "name": "Ai Context",
+      "url": "https://www.drupal.org/project/ai_context",
+      "version": "1.0.0-beta2",
+      "release_date": "2026-05-11",
+      "usage": 187,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_provider_deepseek",
+      "name": "Ai Provider Deepseek",
+      "url": "https://www.drupal.org/project/ai_provider_deepseek",
+      "version": "1.1.0",
+      "release_date": "2026-05-26",
+      "usage": 186,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_search",
+      "name": "Ai Search",
+      "url": "https://www.drupal.org/project/ai_search",
+      "version": "2.0.0-alpha1",
+      "release_date": "2025-11-28",
+      "usage": 174,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ckeditor_ai_agent",
+      "name": "Ckeditor Ai Agent",
+      "url": "https://www.drupal.org/project/ckeditor_ai_agent",
+      "version": "2.0.0-rc1",
+      "release_date": "2026-06-08",
+      "usage": 145,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_provider_deepl",
+      "name": "Ai Provider Deepl",
+      "url": "https://www.drupal.org/project/ai_provider_deepl",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-01-21",
+      "usage": 142,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_groq",
+      "name": "Ai Provider Groq",
+      "url": "https://www.drupal.org/project/ai_provider_groq",
+      "version": "1.2.0-rc1",
+      "release_date": "2025-10-13",
+      "usage": 139,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_summarize_document",
+      "name": "Ai Summarize Document",
+      "url": "https://www.drupal.org/project/ai_summarize_document",
+      "version": "1.1.0",
+      "release_date": "2025-07-17",
+      "usage": 129,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_content_suggestions",
+      "name": "Ai Content Suggestions",
+      "url": "https://www.drupal.org/project/ai_content_suggestions",
+      "version": "2.0.0-alpha1",
+      "release_date": "2026-03-05",
+      "usage": 126,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_mistral",
+      "name": "Ai Provider Mistral",
+      "url": "https://www.drupal.org/project/ai_provider_mistral",
+      "version": "1.1.0-rc1",
+      "release_date": "2026-02-19",
+      "usage": 122,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "elevenlabs",
+      "name": "Elevenlabs",
+      "url": "https://www.drupal.org/project/elevenlabs",
+      "version": "1.1.1",
+      "release_date": "2025-11-14",
+      "usage": 104,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_google_vertex",
+      "name": "Ai Provider Google Vertex",
+      "url": "https://www.drupal.org/project/ai_provider_google_vertex",
+      "version": "1.1.1",
+      "release_date": "2025-09-05",
+      "usage": 94,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_alibabacloud",
+      "name": "Ai Provider Alibabacloud",
+      "url": "https://www.drupal.org/project/ai_provider_alibabacloud",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-09-09",
+      "usage": 88,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_translate_paragraph_asymetric",
+      "name": "Ai Translate Paragraph Asymetric",
+      "url": "https://www.drupal.org/project/ai_translate_paragraph_asymetric",
+      "version": "1.2.2",
+      "release_date": "2026-02-03",
+      "usage": 88,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_content_strategy",
+      "name": "Ai Content Strategy",
+      "url": "https://www.drupal.org/project/ai_content_strategy",
+      "version": "1.2.1",
+      "release_date": "2026-05-18",
+      "usage": 87,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "analyze_ai_sentiments",
+      "name": "Analyze Ai Sentiments",
+      "url": "https://www.drupal.org/project/analyze_ai_sentiments",
+      "version": "1.2.0",
+      "release_date": "2026-04-07",
+      "usage": 82,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_huggingface",
+      "name": "Ai Provider Huggingface",
+      "url": "https://www.drupal.org/project/ai_provider_huggingface",
+      "version": "1.0.0-rc1",
+      "release_date": "2026-02-26",
+      "usage": 82,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "analyze_ai_content_marketing_audit",
+      "name": "Analyze Ai Content Marketing Audit",
+      "url": "https://www.drupal.org/project/analyze_ai_content_marketing_audit",
+      "version": "1.2.0",
+      "release_date": "2026-04-07",
+      "usage": 80,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_openrouter",
+      "name": "Ai Provider Openrouter",
+      "url": "https://www.drupal.org/project/ai_provider_openrouter",
+      "version": "1.1.4",
+      "release_date": "2026-03-21",
+      "usage": 79,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_search_block",
+      "name": "Ai Search Block",
+      "url": "https://www.drupal.org/project/ai_search_block",
+      "version": "1.0.0-rc24",
+      "release_date": "2026-06-18",
+      "usage": 77,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "analyze_ai_brand_voice",
+      "name": "Analyze Ai Brand Voice",
+      "url": "https://www.drupal.org/project/analyze_ai_brand_voice",
+      "version": "1.2.0",
+      "release_date": "2026-04-07",
+      "usage": 77,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "analyze_ai_content_security_audit",
+      "name": "Analyze Ai Content Security Audit",
+      "url": "https://www.drupal.org/project/analyze_ai_content_security_audit",
+      "version": "1.2.0",
+      "release_date": "2026-04-07",
+      "usage": 75,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_x",
+      "name": "Ai Provider X",
+      "url": "https://www.drupal.org/project/ai_provider_x",
+      "version": "1.0.0",
+      "release_date": "2025-03-21",
+      "usage": 63,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_simple_pdf_to_text",
+      "name": "Ai Simple Pdf To Text",
+      "url": "https://www.drupal.org/project/ai_simple_pdf_to_text",
+      "version": "1.0.0-alpha3",
+      "release_date": "2025-10-15",
+      "usage": 59,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "flowdrop_ai_provider",
+      "name": "Flowdrop Ai Provider",
+      "url": "https://www.drupal.org/project/flowdrop_ai_provider",
+      "version": "1.1.0-alpha1",
+      "release_date": "2026-06-20",
+      "usage": 59,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_translate_textfield",
+      "name": "Ai Translate Textfield",
+      "url": "https://www.drupal.org/project/ai_translate_textfield",
+      "version": "2.0.0-alpha2",
+      "release_date": "2025-10-17",
+      "usage": 54,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "varbase_ai",
+      "name": "Varbase Ai",
+      "url": "https://www.drupal.org/project/varbase_ai",
+      "version": "2.0.7",
+      "release_date": "2025-12-22",
+      "usage": 49,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_langdock",
+      "name": "Ai Provider Langdock",
+      "url": "https://www.drupal.org/project/ai_provider_langdock",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-03-25",
+      "usage": 45,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "tts",
+      "name": "Tts",
+      "url": "https://www.drupal.org/project/tts",
+      "version": "1.0.0",
+      "release_date": "2024-10-20",
+      "usage": 43,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "search_api_solr_dense_vector",
+      "name": "Search Api Solr Dense Vector",
+      "url": "https://www.drupal.org/project/search_api_solr_dense_vector",
+      "version": "1.0.0-alpha9",
+      "release_date": "2026-01-29",
+      "usage": 36,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_vdb_provider_sqlite",
+      "name": "Ai Vdb Provider Sqlite",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_sqlite",
+      "version": "1.0.0",
+      "release_date": "2025-05-21",
+      "usage": 35,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_usage_limits",
+      "name": "Ai Usage Limits",
+      "url": "https://www.drupal.org/project/ai_usage_limits",
+      "version": "1.0.0-alpha2",
+      "release_date": "2025-09-26",
+      "usage": 33,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_lmstudio",
+      "name": "Ai Provider Lmstudio",
+      "url": "https://www.drupal.org/project/ai_provider_lmstudio",
+      "version": "1.1.0",
+      "release_date": "2025-11-12",
+      "usage": 33,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_vdb_provider_mariadb",
+      "name": "Ai Vdb Provider Mariadb",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_mariadb",
+      "version": "1.0.1",
+      "release_date": "2026-06-17",
+      "usage": 29,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_agents_debugger",
+      "name": "Ai Agents Debugger",
+      "url": "https://www.drupal.org/project/ai_agents_debugger",
+      "version": "1.0.0-beta2",
+      "release_date": "2026-02-10",
+      "usage": 27,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_provider_acquia",
+      "name": "Ai Provider Acquia",
+      "url": "https://www.drupal.org/project/ai_provider_acquia",
+      "version": "1.0.0",
+      "release_date": "2026-02-18",
+      "usage": 23,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "feeds_tamper_ai",
+      "name": "Feeds Tamper Ai",
+      "url": "https://www.drupal.org/project/feeds_tamper_ai",
+      "version": "1.0.1",
+      "release_date": "2026-05-04",
+      "usage": 23,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_vdb_provider_qdrant",
+      "name": "Ai Vdb Provider Qdrant",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_qdrant",
+      "version": "1.3.0",
+      "release_date": "2026-05-09",
+      "usage": 23,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_openai_compatible",
+      "name": "Ai Provider Openai Compatible",
+      "url": "https://www.drupal.org/project/ai_provider_openai_compatible",
+      "version": "1.2.1",
+      "release_date": "2026-04-07",
+      "usage": 23,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_vdb_provider_azure_ai_search",
+      "name": "Ai Vdb Provider Azure Ai Search",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_azure_ai_search",
+      "version": "1.1.0-beta2",
+      "release_date": "2025-12-19",
+      "usage": 22,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_auto_reference",
+      "name": "Ai Auto Reference",
+      "url": "https://www.drupal.org/project/ai_auto_reference",
+      "version": "1.0.0-rc4",
+      "release_date": "2026-05-23",
+      "usage": 19,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_provider_vllm",
+      "name": "Ai Provider Vllm",
+      "url": "https://www.drupal.org/project/ai_provider_vllm",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-03-04",
+      "usage": 16,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "fireworksai",
+      "name": "Fireworksai",
+      "url": "https://www.drupal.org/project/fireworksai",
+      "version": "1.1.0-rc1",
+      "release_date": "2025-06-12",
+      "usage": 15,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_schemadotorg_jsonld",
+      "name": "Ai Schemadotorg Jsonld",
+      "url": "https://www.drupal.org/project/ai_schemadotorg_jsonld",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-04-30",
+      "usage": 14,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_webform_guard",
+      "name": "Ai Webform Guard",
+      "url": "https://www.drupal.org/project/ai_webform_guard",
+      "version": "1.1.6",
+      "release_date": "2026-01-20",
+      "usage": 13,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "node_ai_assistant",
+      "name": "Node Ai Assistant",
+      "url": "https://www.drupal.org/project/node_ai_assistant",
+      "version": "3.1.0",
+      "release_date": "2026-04-18",
+      "usage": 13,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "deepgram",
+      "name": "Deepgram",
+      "url": "https://www.drupal.org/project/deepgram",
+      "version": "1.0.0-beta2",
+      "release_date": "2024-10-29",
+      "usage": 13,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "mcp_client",
+      "name": "Mcp Client",
+      "url": "https://www.drupal.org/project/mcp_client",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-12-16",
+      "usage": 13,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_nanobanana",
+      "name": "Ai Provider Nanobanana",
+      "url": "https://www.drupal.org/project/ai_provider_nanobanana",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-11-21",
+      "usage": 13,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "agui",
+      "name": "Agui",
+      "url": "https://www.drupal.org/project/agui",
+      "version": "1.0.0-rc5",
+      "release_date": "2026-05-26",
+      "usage": 13,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_automator_extractor",
+      "name": "Ai Automator Extractor",
+      "url": "https://www.drupal.org/project/ai_automator_extractor",
+      "version": "1.0.0-beta2",
+      "release_date": "2025-09-09",
+      "usage": 12,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_translate_plus",
+      "name": "Ai Translate Plus",
+      "url": "https://www.drupal.org/project/ai_translate_plus",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-11-10",
+      "usage": 12,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "openai_batch",
+      "name": "Openai Batch",
+      "url": "https://www.drupal.org/project/openai_batch",
+      "version": "1.0.0-alpha10",
+      "release_date": "2026-06-19",
+      "usage": 12,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_related_content",
+      "name": "Ai Related Content",
+      "url": "https://www.drupal.org/project/ai_related_content",
+      "version": "1.0.0-alpha3",
+      "release_date": "2025-11-28",
+      "usage": 11,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_ckeditor_extras",
+      "name": "Ai Ckeditor Extras",
+      "url": "https://www.drupal.org/project/ai_ckeditor_extras",
+      "version": "1.0.1",
+      "release_date": "2026-03-12",
+      "usage": 11,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_anythingllm",
+      "name": "Ai Provider Anythingllm",
+      "url": "https://www.drupal.org/project/ai_provider_anythingllm",
+      "version": "1.0.0",
+      "release_date": "2026-03-25",
+      "usage": 11,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_rag_search_chat",
+      "name": "Ai Rag Search Chat",
+      "url": "https://www.drupal.org/project/ai_rag_search_chat",
+      "version": "1.0.6",
+      "release_date": "2026-06-09",
+      "usage": 11,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_browser",
+      "name": "Ai Provider Browser",
+      "url": "https://www.drupal.org/project/ai_provider_browser",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-03-09",
+      "usage": 10,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_content_advisor",
+      "name": "Ai Content Advisor",
+      "url": "https://www.drupal.org/project/ai_content_advisor",
+      "version": "1.0.0",
+      "release_date": "2025-08-27",
+      "usage": 9,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_dxpr",
+      "name": "Ai Provider Dxpr",
+      "url": "https://www.drupal.org/project/ai_provider_dxpr",
+      "version": "1.0.4",
+      "release_date": "2026-06-03",
+      "usage": 9,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "vais",
+      "name": "Vais",
+      "url": "https://www.drupal.org/project/vais",
+      "version": "1.0.0-alpha2",
+      "release_date": "2024-08-22",
+      "usage": 9,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_xai",
+      "name": "Ai Provider Xai",
+      "url": "https://www.drupal.org/project/ai_provider_xai",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-02-19",
+      "usage": 9,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "flowdrop_ui_agents",
+      "name": "Flowdrop Ui Agents",
+      "url": "https://www.drupal.org/project/flowdrop_ui_agents",
+      "version": "1.0.4",
+      "release_date": "2026-04-15",
+      "usage": 9,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_editoria11y",
+      "name": "Ai Editoria11Y",
+      "url": "https://www.drupal.org/project/ai_editoria11y",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-03-05",
+      "usage": 8,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_translate_lb_asymmetric",
+      "name": "Ai Translate Lb Asymmetric",
+      "url": "https://www.drupal.org/project/ai_translate_lb_asymmetric",
+      "version": "1.0.2",
+      "release_date": "2026-02-03",
+      "usage": 8,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_yandex",
+      "name": "Ai Provider Yandex",
+      "url": "https://www.drupal.org/project/ai_provider_yandex",
+      "version": "1.0.1",
+      "release_date": "2025-10-18",
+      "usage": 8,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_plus",
+      "name": "Ai Plus",
+      "url": "https://www.drupal.org/project/ai_plus",
+      "version": "1.0.1",
+      "release_date": "2026-06-10",
+      "usage": 8,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_content_lifecycle",
+      "name": "Ai Content Lifecycle",
+      "url": "https://www.drupal.org/project/ai_content_lifecycle",
+      "version": "1.0.0",
+      "release_date": "2025-04-10",
+      "usage": 7,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_migrate",
+      "name": "Ai Migrate",
+      "url": "https://www.drupal.org/project/ai_migrate",
+      "version": "1.0.1-beta1",
+      "release_date": "2025-07-02",
+      "usage": 7,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_simple_provider_installer",
+      "name": "Ai Simple Provider Installer",
+      "url": "https://www.drupal.org/project/ai_simple_provider_installer",
+      "version": "1.0.0-alpha3",
+      "release_date": "2024-12-03",
+      "usage": 6,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "flowdrop_agents",
+      "name": "Flowdrop Agents",
+      "url": "https://www.drupal.org/project/flowdrop_agents",
+      "version": "1.0.5",
+      "release_date": "2026-05-06",
+      "usage": 6,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_llms_txt_generator",
+      "name": "Ai Llms Txt Generator",
+      "url": "https://www.drupal.org/project/ai_llms_txt_generator",
+      "version": "1.0.1",
+      "release_date": "2025-10-31",
+      "usage": 6,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_404_redirect",
+      "name": "Ai 404 Redirect",
+      "url": "https://www.drupal.org/project/ai_404_redirect",
+      "version": "1.0.2",
+      "release_date": "2025-12-22",
+      "usage": 6,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_agent_memory",
+      "name": "Ai Agent Memory",
+      "url": "https://www.drupal.org/project/ai_agent_memory",
+      "version": "1.0.0",
+      "release_date": "2026-06-10",
+      "usage": 6,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_audio_field",
+      "name": "Ai Audio Field",
+      "url": "https://www.drupal.org/project/ai_audio_field",
+      "version": "1.0.0-rc1",
+      "release_date": "2025-03-19",
+      "usage": 5,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "pexels_ai",
+      "name": "Pexels Ai",
+      "url": "https://www.drupal.org/project/pexels_ai",
+      "version": "1.0.0-alpha3",
+      "release_date": "2025-10-03",
+      "usage": 5,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "rag_search",
+      "name": "Rag Search",
+      "url": "https://www.drupal.org/project/rag_search",
+      "version": "1.0.5",
+      "release_date": "2026-04-17",
+      "usage": 5,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_chatblock",
+      "name": "Ai Chatblock",
+      "url": "https://www.drupal.org/project/ai_chatblock",
+      "version": "1.0.0",
+      "release_date": "2026-03-06",
+      "usage": 5,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_jsonld_schema_generator",
+      "name": "Ai Jsonld Schema Generator",
+      "url": "https://www.drupal.org/project/ai_jsonld_schema_generator",
+      "version": "1.0.0",
+      "release_date": "2026-03-17",
+      "usage": 5,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "nanobanana_editor",
+      "name": "Nanobanana Editor",
+      "url": "https://www.drupal.org/project/nanobanana_editor",
+      "version": "1.0.0-beta4",
+      "release_date": "2026-04-15",
+      "usage": 5,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_empathy",
+      "name": "Ai Empathy",
+      "url": "https://www.drupal.org/project/ai_empathy",
+      "version": "1.0.3",
+      "release_date": "2026-06-11",
+      "usage": 4,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_vdb_provider_opensearch",
+      "name": "Ai Vdb Provider Opensearch",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_opensearch",
+      "version": "1.1.0-alpha2",
+      "release_date": "2025-11-18",
+      "usage": 4,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_dropsolidai",
+      "name": "Ai Provider Dropsolidai",
+      "url": "https://www.drupal.org/project/ai_provider_dropsolidai",
+      "version": "1.0.1-alpha1",
+      "release_date": "2025-10-10",
+      "usage": 4,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "media_accessibility_audit",
+      "name": "Media Accessibility Audit",
+      "url": "https://www.drupal.org/project/media_accessibility_audit",
+      "version": "1.0.0",
+      "release_date": "2025-12-24",
+      "usage": 4,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_automator_google_vision",
+      "name": "Ai Automator Google Vision",
+      "url": "https://www.drupal.org/project/ai_automator_google_vision",
+      "version": "1.0.0-beta1",
+      "release_date": "2024-10-10",
+      "usage": 3,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_content_chat",
+      "name": "Ai Content Chat",
+      "url": "https://www.drupal.org/project/ai_content_chat",
+      "version": "2.0.0",
+      "release_date": "2026-02-26",
+      "usage": 3,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_document_ocr",
+      "name": "Ai Document Ocr",
+      "url": "https://www.drupal.org/project/ai_document_ocr",
+      "version": "1.0.0-beta3",
+      "release_date": "2026-06-09",
+      "usage": 3,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_provider_aliyun_bailian",
+      "name": "Ai Provider Aliyun Bailian",
+      "url": "https://www.drupal.org/project/ai_provider_aliyun_bailian",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-06-20",
+      "usage": 3,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_watchdog_analyst",
+      "name": "Ai Watchdog Analyst",
+      "url": "https://www.drupal.org/project/ai_watchdog_analyst",
+      "version": "1.0.2",
+      "release_date": "2026-03-10",
+      "usage": 3,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "schema_metatag_ai",
+      "name": "Schema Metatag Ai",
+      "url": "https://www.drupal.org/project/schema_metatag_ai",
+      "version": "1.0.0",
+      "release_date": "2025-12-04",
+      "usage": 3,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "auphonic",
+      "name": "Auphonic",
+      "url": "https://www.drupal.org/project/auphonic",
+      "version": "1.0.0-beta3",
+      "release_date": "2024-10-10",
+      "usage": 3,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_single_page_importer",
+      "name": "Ai Single Page Importer",
+      "url": "https://www.drupal.org/project/ai_single_page_importer",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-06-12",
+      "usage": 2,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_webform_sentiment",
+      "name": "Ai Webform Sentiment",
+      "url": "https://www.drupal.org/project/ai_webform_sentiment",
+      "version": "1.0.2",
+      "release_date": "2025-05-27",
+      "usage": 2,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_workspace",
+      "name": "Ai Workspace",
+      "url": "https://www.drupal.org/project/ai_workspace",
+      "version": "1.0.0-rc4",
+      "release_date": "2026-03-04",
+      "usage": 2,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "drup_aid",
+      "name": "Drup Aid",
+      "url": "https://www.drupal.org/project/drup_aid",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-06-12",
+      "usage": 2,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "searxng",
+      "name": "Searxng",
+      "url": "https://www.drupal.org/project/searxng",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-11-28",
+      "usage": 2,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_budget_control",
+      "name": "Ai Budget Control",
+      "url": "https://www.drupal.org/project/ai_budget_control",
+      "version": "1.0.2-alpha1",
+      "release_date": "2026-04-08",
+      "usage": 2,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "metatag_ai_bulk_update",
+      "name": "Metatag Ai Bulk Update",
+      "url": "https://www.drupal.org/project/metatag_ai_bulk_update",
+      "version": "1.0.2",
+      "release_date": "2026-03-25",
+      "usage": 2,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_metering",
+      "name": "Ai Metering",
+      "url": "https://www.drupal.org/project/ai_metering",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-05-29",
+      "usage": 2,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_audio_generator",
+      "name": "Ai Audio Generator",
+      "url": "https://www.drupal.org/project/ai_audio_generator",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-04-16",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_migration",
+      "name": "Ai Migration",
+      "url": "https://www.drupal.org/project/ai_migration",
+      "version": "1.0.0-alpha2",
+      "release_date": "2025-12-12",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_apertus",
+      "name": "Ai Provider Apertus",
+      "url": "https://www.drupal.org/project/ai_provider_apertus",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-10-17",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_seo_link_advisor",
+      "name": "Ai Seo Link Advisor",
+      "url": "https://www.drupal.org/project/ai_seo_link_advisor",
+      "version": "1.1.1",
+      "release_date": "2026-02-15",
+      "usage": 1,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_validations",
+      "name": "Ai Validations",
+      "url": "https://www.drupal.org/project/ai_validations",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-12-17",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "drupaleasy_ai_tools",
+      "name": "Drupaleasy Ai Tools",
+      "url": "https://www.drupal.org/project/drupaleasy_ai_tools",
+      "version": "1.0.1",
+      "release_date": "2026-05-30",
+      "usage": 1,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_vdb_provider_elasticsearch",
+      "name": "Ai Vdb Provider Elasticsearch",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_elasticsearch",
+      "version": "1.0.0-rc1",
+      "release_date": "2026-05-09",
+      "usage": 1,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "ai_provider_infomaniak",
+      "name": "Ai Provider Infomaniak",
+      "url": "https://www.drupal.org/project/ai_provider_infomaniak",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-12-30",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "metatag_ai_generate",
+      "name": "Metatag Ai Generate",
+      "url": "https://www.drupal.org/project/metatag_ai_generate",
+      "version": "1.0.1",
+      "release_date": "2026-02-04",
+      "usage": 1,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_metatag_generator",
+      "name": "Ai Metatag Generator",
+      "url": "https://www.drupal.org/project/ai_metatag_generator",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-06-09",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "gutenberg_ai_tools",
+      "name": "Gutenberg Ai Tools",
+      "url": "https://www.drupal.org/project/gutenberg_ai_tools",
+      "version": "1.0.0-alpha5",
+      "release_date": "2025-04-07",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "llms_txt_ai",
+      "name": "Llms Txt Ai",
+      "url": "https://www.drupal.org/project/llms_txt_ai",
+      "version": "0.0.3",
+      "release_date": "2023-10-30",
+      "usage": 1,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "aidmi",
+      "name": "Aidmi",
+      "url": "https://www.drupal.org/project/aidmi",
+      "version": "1.1.0-rc1",
+      "release_date": "2026-06-16",
+      "usage": 1,
+      "stability": "rc"
+    },
+    {
+      "machine_name": "views_nl_filter",
+      "name": "Views Nl Filter",
+      "url": "https://www.drupal.org/project/views_nl_filter",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-03-28",
+      "usage": 1,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "aia",
+      "name": "Aia",
+      "url": "https://www.drupal.org/project/aia",
+      "version": "1.0.0",
+      "release_date": "2026-05-30",
+      "usage": 1,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_llama_cpp",
+      "name": "Ai Provider Llama Cpp",
+      "url": "https://www.drupal.org/project/ai_provider_llama_cpp",
+      "version": "1.2.0-beta1",
+      "release_date": "2026-06-22",
+      "usage": 1,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "rrf",
+      "name": "Rrf",
+      "url": "https://www.drupal.org/project/rrf",
+      "version": "1.1.0",
+      "release_date": "2025-11-28",
+      "usage": 1,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_tool_get_ip_address",
+      "name": "Ai Tool Get Ip Address",
+      "url": "https://www.drupal.org/project/ai_tool_get_ip_address",
+      "version": "1.0.3",
+      "release_date": "2025-12-09",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_tool_get_sitemap",
+      "name": "Ai Tool Get Sitemap",
+      "url": "https://www.drupal.org/project/ai_tool_get_sitemap",
+      "version": "1.0.3",
+      "release_date": "2025-12-08",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_agents_experimental_collection",
+      "name": "Ai Agents Experimental Collection",
+      "url": "https://www.drupal.org/project/ai_agents_experimental_collection",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-03-20",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_autoevals",
+      "name": "Ai Autoevals",
+      "url": "https://www.drupal.org/project/ai_autoevals",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-06-10",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_automator_pixabay",
+      "name": "Ai Automator Pixabay",
+      "url": "https://www.drupal.org/project/ai_automator_pixabay",
+      "version": "1.0.0-beta1",
+      "release_date": "2024-10-10",
+      "usage": null,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_image_filename",
+      "name": "Ai Image Filename",
+      "url": "https://www.drupal.org/project/ai_image_filename",
+      "version": "1.0.0",
+      "release_date": "2026-06-01",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_log_analysis",
+      "name": "Ai Log Analysis",
+      "url": "https://www.drupal.org/project/ai_log_analysis",
+      "version": "1.0.0",
+      "release_date": "2025-06-13",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_agent_migration",
+      "name": "Ai Agent Migration",
+      "url": "https://www.drupal.org/project/ai_agent_migration",
+      "version": "1.0.1-alpha1",
+      "release_date": "2025-06-29",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_monitoring",
+      "name": "Ai Monitoring",
+      "url": "https://www.drupal.org/project/ai_monitoring",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-05-11",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_evaluations",
+      "name": "Ai Evaluations",
+      "url": "https://www.drupal.org/project/ai_evaluations",
+      "version": "0.1.0",
+      "release_date": "2026-04-20",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_baidu",
+      "name": "Ai Provider Baidu",
+      "url": "https://www.drupal.org/project/ai_provider_baidu",
+      "version": "1.0.1",
+      "release_date": "2025-08-25",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_moonshot",
+      "name": "Ai Provider Moonshot",
+      "url": "https://www.drupal.org/project/ai_provider_moonshot",
+      "version": "1.0.1",
+      "release_date": "2025-08-25",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_zhipuai",
+      "name": "Ai Provider Zhipuai",
+      "url": "https://www.drupal.org/project/ai_provider_zhipuai",
+      "version": "1.0.1",
+      "release_date": "2025-08-26",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_search_sc",
+      "name": "Ai Search Sc",
+      "url": "https://www.drupal.org/project/ai_search_sc",
+      "version": "1.0.0",
+      "release_date": "2026-04-17",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_semantic_expansion",
+      "name": "Ai Semantic Expansion",
+      "url": "https://www.drupal.org/project/ai_semantic_expansion",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-05-19",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_assemblyai",
+      "name": "Ai Provider Assemblyai",
+      "url": "https://www.drupal.org/project/ai_provider_assemblyai",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-02-23",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "chromium_tool",
+      "name": "Chromium Tool",
+      "url": "https://www.drupal.org/project/chromium_tool",
+      "version": "1.0.2",
+      "release_date": "2025-09-26",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_cloudflare_gateway",
+      "name": "Ai Provider Cloudflare Gateway",
+      "url": "https://www.drupal.org/project/ai_provider_cloudflare_gateway",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-06-21",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_dreamstudio",
+      "name": "Ai Provider Dreamstudio",
+      "url": "https://www.drupal.org/project/ai_provider_dreamstudio",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-06-20",
+      "usage": null,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "generic_colors",
+      "name": "Generic Colors",
+      "url": "https://www.drupal.org/project/generic_colors",
+      "version": "1.0.0-alpha5",
+      "release_date": "2025-11-25",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_provider_quant_cloud",
+      "name": "Ai Provider Quant Cloud",
+      "url": "https://www.drupal.org/project/ai_provider_quant_cloud",
+      "version": "1.0.0",
+      "release_date": "2026-02-27",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "smart_paste",
+      "name": "Smart Paste",
+      "url": "https://www.drupal.org/project/smart_paste",
+      "version": "1.0.0-alpha1",
+      "release_date": "2024-12-23",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "twig_to_sdc",
+      "name": "Twig To Sdc",
+      "url": "https://www.drupal.org/project/twig_to_sdc",
+      "version": "1.0.0-alpha1",
+      "release_date": "2024-12-06",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "writer_ai",
+      "name": "Writer Ai",
+      "url": "https://www.drupal.org/project/writer_ai",
+      "version": "1.0.0-alpha2",
+      "release_date": "2025-08-19",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "flowdrop_ai_search",
+      "name": "Flowdrop Ai Search",
+      "url": "https://www.drupal.org/project/flowdrop_ai_search",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-05-12",
+      "usage": null,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "ai_entity_intake",
+      "name": "Ai Entity Intake",
+      "url": "https://www.drupal.org/project/ai_entity_intake",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-05-19",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "apex_ai",
+      "name": "Apex Ai",
+      "url": "https://www.drupal.org/project/apex_ai",
+      "version": "2.1.0",
+      "release_date": "2025-05-24",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_mittwald",
+      "name": "Ai Provider Mittwald",
+      "url": "https://www.drupal.org/project/ai_provider_mittwald",
+      "version": "1.1.0",
+      "release_date": "2026-05-05",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "workers_ai_provider",
+      "name": "Workers Ai Provider",
+      "url": "https://www.drupal.org/project/workers_ai_provider",
+      "version": "1.0.1",
+      "release_date": "2025-05-20",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_bytedance",
+      "name": "Ai Provider Bytedance",
+      "url": "https://www.drupal.org/project/ai_provider_bytedance",
+      "version": "1.0.2",
+      "release_date": "2025-12-17",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_ckeditor_wcag",
+      "name": "Ai Ckeditor Wcag",
+      "url": "https://www.drupal.org/project/ai_ckeditor_wcag",
+      "version": "1.0.1",
+      "release_date": "2025-02-28",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_rag_service",
+      "name": "Ai Rag Service",
+      "url": "https://www.drupal.org/project/ai_rag_service",
+      "version": "1.0.0",
+      "release_date": "2026-06-21",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_revision_assistant",
+      "name": "Ai Revision Assistant",
+      "url": "https://www.drupal.org/project/ai_revision_assistant",
+      "version": "1.0.1-alpha1",
+      "release_date": "2026-01-29",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "smartlinker_ai",
+      "name": "Smartlinker Ai",
+      "url": "https://www.drupal.org/project/smartlinker_ai",
+      "version": "1.0.0",
+      "release_date": "2026-03-23",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_audio_translate",
+      "name": "Ai Audio Translate",
+      "url": "https://www.drupal.org/project/ai_audio_translate",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-04-15",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_anthropic_provider_oauth",
+      "name": "Ai Anthropic Provider Oauth",
+      "url": "https://www.drupal.org/project/ai_anthropic_provider_oauth",
+      "version": "1.0.0-beta4",
+      "release_date": "2026-03-24",
+      "usage": null,
+      "stability": "beta"
+    },
+    {
+      "machine_name": "did_ai_provider",
+      "name": "Did Ai Provider",
+      "url": "https://www.drupal.org/project/did_ai_provider",
+      "version": "1.0.2",
+      "release_date": "2025-10-09",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_revision_log",
+      "name": "Ai Revision Log",
+      "url": "https://www.drupal.org/project/ai_revision_log",
+      "version": "1.1.1",
+      "release_date": "2024-10-29",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_rag_search_summary",
+      "name": "Ai Rag Search Summary",
+      "url": "https://www.drupal.org/project/ai_rag_search_summary",
+      "version": "1.0.0",
+      "release_date": "2026-01-30",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "midgard",
+      "name": "Midgard",
+      "url": "https://www.drupal.org/project/midgard",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-06-17",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "crux",
+      "name": "Crux",
+      "url": "https://www.drupal.org/project/crux",
+      "version": "2.0.0",
+      "release_date": "2025-12-11",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "api_normalization",
+      "name": "Api Normalization",
+      "url": "https://www.drupal.org/project/api_normalization",
+      "version": "1.0.0-alpha4",
+      "release_date": "2025-02-02",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_content_factory",
+      "name": "Ai Content Factory",
+      "url": "https://www.drupal.org/project/ai_content_factory",
+      "version": "1.0.1",
+      "release_date": "2026-05-24",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_agents_ossa",
+      "name": "Ai Agents Ossa",
+      "url": "https://www.drupal.org/project/ai_agents_ossa",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-03-25",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_eval",
+      "name": "Ai Eval",
+      "url": "https://www.drupal.org/project/ai_eval",
+      "version": "1.0.0-alpha10",
+      "release_date": "2026-04-25",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_tool_screenshot",
+      "name": "Ai Tool Screenshot",
+      "url": "https://www.drupal.org/project/ai_tool_screenshot",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-03-11",
+      "usage": null,
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "ai_content_assistant",
+      "name": "Ai Content Assistant",
+      "url": "https://www.drupal.org/project/ai_content_assistant",
+      "version": "1.0.2",
+      "release_date": "2026-06-05",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_provider_siliconflow",
+      "name": "Ai Provider Siliconflow",
+      "url": "https://www.drupal.org/project/ai_provider_siliconflow",
+      "version": "1.0.2",
+      "release_date": "2025-08-27",
+      "usage": null,
+      "stability": "stable"
+    },
+    {
+      "machine_name": "ai_upgrade_assistant",
+      "name": "Ai Upgrade Assistant",
+      "url": "https://www.drupal.org/project/ai_upgrade_assistant",
+      "version": "1.0.0-alpha30",
+      "release_date": "2026-02-14",
+      "usage": null,
+      "stability": "alpha"
+    }
+  ]
+}

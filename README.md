@@ -9,24 +9,55 @@ Generates a markdown table of all Drupal modules that declare a **hard dependenc
 
 ## Usage
 
+### Recommended workflow — collect once, render as many times as you like
+
+```bash
+# Run the slow network fetch (~45-60 min) and save to JSON
+python3 drupal_ai_dependents.py --json results.json
+
+# Re-render from the saved JSON (fast — no network calls)
+python3 render_md.py results.json -o results.md
+python3 render_html.py results.json -o results.html
+```
+
+### All-in-one — collect and render in a single run
+
 ```bash
 # Print markdown table to stdout
 python3 drupal_ai_dependents.py
 
-# Write markdown table to a file (progress still prints to terminal)
-python3 drupal_ai_dependents.py --output results.md
-
-# Short form
+# Write markdown to a file (progress still prints to terminal)
 python3 drupal_ai_dependents.py -o results.md
 
-# Write an interactive HTML table to a file
-python3 drupal_ai_dependents.py --html results.html
-
-# Write both formats at once
-python3 drupal_ai_dependents.py -o results.md --html results.html
+# Save JSON + markdown + HTML in one run
+python3 drupal_ai_dependents.py --json results.json -o results.md --html results.html
 ```
 
 ## Output
+
+### JSON
+
+The `--json FILE` flag writes a structured JSON file that can be re-rendered without re-fetching any data:
+
+```json
+{
+  "generated": "2026-06-22",
+  "drupal_versions": [10, 11],
+  "modules": [
+    {
+      "machine_name": "ai_provider_openai",
+      "name": "Ai Provider Openai",
+      "url": "https://www.drupal.org/project/ai_provider_openai",
+      "version": "1.2.1",
+      "release_date": "2026-02-25",
+      "usage": 13133,
+      "stability": "stable"
+    }
+  ]
+}
+```
+
+The `stability` field is derived from the version string: `stable`, `rc`, `beta`, `alpha`, or `dev`.
 
 ### Markdown
 
@@ -41,12 +72,15 @@ Modules with no tracked install count show `—` in the usage column.
 
 ### HTML
 
-The `--html FILE` flag generates a self-contained HTML file with no external dependencies (all CSS and JavaScript is embedded). The table supports:
+`render_html.py results.json -o results.html` generates a self-contained HTML file with no external dependencies (all CSS and JavaScript is embedded). The table supports:
 
 - **Sort by any column** — click a column header to sort ascending; click again to sort descending. Sort direction is indicated by ▲/▼ in the header.
 - **Filter by module name** — type in the search box to instantly hide non-matching rows.
+- **Filter by stability level** — checkboxes let you show or hide stable, RC, beta, alpha, and dev releases independently. Each version cell displays a small colored badge indicating stability.
 
 Default sort is by install count (descending), matching the markdown output order.
+
+The `--html FILE` flag on the main script still works as a convenience shortcut, but produces the older HTML output without stability badges or checkboxes.
 
 ## How it works
 
