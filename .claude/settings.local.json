@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.drupal.org)",
+      "WebFetch(domain:packagist.org)",
+      "WebFetch(domain:updates.drupal.org)",
+      "Bash(python3 -c \"import requests; print\\('requests', requests.__version__\\)\")",
+      "Bash(pip3 install *)",
+      "Bash(python3 -m ensurepip --upgrade)",
+      "Bash(python3 -m pip install --quiet requests)",
+      "Bash(apt-cache show *)",
+      "Bash(python3 -c \"import urllib.request; print\\('urllib ok'\\)\")",
+      "Bash(python3 drupal_ai_dependents.py)",
+      "Bash(echo \"--- EXIT $? ---\")",
+      "WebFetch(domain:packages.drupal.org)",
+      "Bash(python3 *)"
+    ]
+  }
+}
