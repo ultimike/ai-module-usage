@@ -18,14 +18,18 @@ SECURITY_NOT_COVERED_EMOJI = "🚫"
 
 def render_md(payload: dict) -> str:
     """Return a Markdown string from a results.json payload."""
-    rows    = payload["modules"]
-    today   = payload["generated"]
-    v_label = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
-    count   = len(rows)
+    rows         = payload["modules"]
+    recipe_rows  = payload.get("recipes", [])  # back-compat: older files have no "recipes" key
+    today        = payload["generated"]
+    v_label      = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
+    count        = len(rows)
+    recipe_count = len(recipe_rows)
 
     lines = [
-        f"# Drupal Modules with a Hard Dependency on [AI](https://www.drupal.org/project/ai)\n",
-        f"*Generated {today} · {count} modules · Drupal {v_label} compatible · all stability levels*\n",
+        f"# Drupal Modules and Recipes with a Hard Dependency on [AI](https://www.drupal.org/project/ai)\n",
+        f"*Generated {today} · {count} modules · {recipe_count} recipes ·"
+        f" Drupal {v_label} compatible · all stability levels*\n",
+        "## Modules\n",
         "| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |",
         "|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|",
     ]
@@ -36,6 +40,19 @@ def render_md(payload: dict) -> str:
             f"| [{r['label']}]({r['url']}) | {r['machine_name']} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {security_str} | {usage_str} |"
         )
+
+    # Recipes have no usage tracking and no meaningful security-advisory
+    # status, so this table omits both columns rather than inventing an
+    # "N/A" state for them.
+    lines.append("\n## Recipes\n")
+    lines.append("| Label | machine name | URL | Latest Version | Release Date |")
+    lines.append("|-------|--------------|-----|:--------------:|:------------:|")
+    for r in recipe_rows:
+        lines.append(
+            f"| [{r['label']}]({r['url']}) | {r['machine_name']} | {r['url']} | `{r['version']}` |"
+            f" {r['release_date']} |"
+        )
+
     return "\n".join(lines) + "\n"
 
 
@@ -58,7 +75,9 @@ def main() -> None:
     if args.output:
         with open(args.output, "w", encoding="utf-8") as fh:
             fh.write(output)
-        print(f"Wrote {len(payload['modules'])} rows to {args.output}", file=sys.stderr)
+        module_count = len(payload['modules'])
+        recipe_count = len(payload.get('recipes', []))
+        print(f"Wrote {module_count} modules and {recipe_count} recipes to {args.output}", file=sys.stderr)
     else:
         print(output)
 

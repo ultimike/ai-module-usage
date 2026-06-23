@@ -96,37 +96,65 @@
     .stab-beta   { background: #fff3cd; color: #856404; }
     .stab-alpha  { background: #fde8d8; color: #7d3800; }
     .stab-dev    { background: #e2e3e5; color: #383d41; }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #555;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .tab-btn.active {
+      color: #2d6a9f;
+      border-bottom-color: #2d6a9f;
+      font-weight: 600;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
   </style>
 </head>
 <body>
-  <h1>Drupal Modules &mdash; <a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>
-  <p class="meta">Generated 2026-06-23 &middot; 184 modules &middot; Drupal 10/11 compatible</p>
-  <div class="controls">
-    <input id="filter" type="search" placeholder="Filter by module name&hellip;">
-    <span class="stab-filters">Show:
-      <label><input type="checkbox" class="stab-cb" value="stable" checked> Stable</label>
+  <h1>Drupal Modules &amp; Recipes &mdash; <a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>
+  <p class="meta">Generated 2026-06-23 &middot; 184 modules &middot; 30 recipes &middot; Drupal 10/11 compatible</p>
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="modules">Modules (184)</button>
+    <button class="tab-btn" data-tab="recipes">Recipes (30)</button>
+  </div>
+  <div class="tab-panel active" id="panel-modules">
+    <div class="controls">
+      <input id="filter-modules" type="search" placeholder="Filter by module name&hellip;">
+      <span class="stab-filters">Show:
+        <label><input type="checkbox" class="stab-cb" value="stable" checked> Stable</label>
       <label><input type="checkbox" class="stab-cb" value="rc" checked> RC</label>
       <label><input type="checkbox" class="stab-cb" value="beta" checked> Beta</label>
       <label><input type="checkbox" class="stab-cb" value="alpha" checked> Alpha</label>
       <label><input type="checkbox" class="stab-cb" value="dev" checked> Dev</label>
-    </span>
-    <span class="stab-filters">Security:
-      <label><input type="checkbox" class="sec-cb" value="covered" checked> Covered</label>
+      </span>
+      <span class="stab-filters">Security:
+        <label><input type="checkbox" class="sec-cb" value="covered" checked> Covered</label>
       <label><input type="checkbox" class="sec-cb" value="not-covered" checked> Not covered</label>
-    </span>
-  </div>
-  <table id="tbl">
-    <thead>
-      <tr>
-        <th data-col="0" data-type="text">Label</th>
-        <th data-col="1" data-type="text">machine name</th>
-        <th data-col="2" data-type="text">Version</th>
-        <th data-col="3" data-type="date">Released</th>
-        <th data-col="4" data-type="num" class="col-security">Security coverage</th>
-        <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>
-      </tr>
-    </thead>
-    <tbody id="tbody">
+      </span>
+    </div>
+    <table id="tbl-modules">
+      <thead>
+        <tr>
+          <th data-col="0" data-type="text">Label</th>
+          <th data-col="1" data-type="text">machine name</th>
+          <th data-col="2" data-type="text">Version</th>
+          <th data-col="3" data-type="date">Released</th>
+          <th data-col="4" data-type="num" class="col-security">Security coverage</th>
+          <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-modules">
       <tr data-stability="stable" data-security="covered"><td data-val="OpenAI Provider"><a href="https://www.drupal.org/project/ai_provider_openai">OpenAI Provider</a></td><td data-val="drupal/ai_provider_openai">drupal/ai_provider_openai</td><td data-val="1.2.1" class="col-version">1.2.1<span class="badge stab-stable">Stable</span></td><td data-val="2026-02-25" class="col-date">2026-02-25</td><td data-val="1" class="col-security">✅</td><td data-val="13133" class="col-usage">13,133</td></tr>
       <tr data-stability="stable" data-security="covered"><td data-val="AI Image Alt Text"><a href="https://www.drupal.org/project/ai_image_alt_text">AI Image Alt Text</a></td><td data-val="drupal/ai_image_alt_text">drupal/ai_image_alt_text</td><td data-val="1.0.2" class="col-version">1.0.2<span class="badge stab-stable">Stable</span></td><td data-val="2025-12-05" class="col-date">2025-12-05</td><td data-val="1" class="col-security">✅</td><td data-val="11110" class="col-usage">11,110</td></tr>
       <tr data-stability="stable" data-security="covered"><td data-val="AI Agents"><a href="https://www.drupal.org/project/ai_agents">AI Agents</a></td><td data-val="drupal/ai_agents">drupal/ai_agents</td><td data-val="1.3.0" class="col-version">1.3.0<span class="badge stab-stable">Stable</span></td><td data-val="2026-05-28" class="col-date">2026-05-28</td><td data-val="1" class="col-security">✅</td><td data-val="10758" class="col-usage">10,758</td></tr>
@@ -311,56 +339,117 @@
       <tr data-stability="stable" data-security="not-covered"><td data-val="AI Content Assistant"><a href="https://www.drupal.org/project/ai_content_assistant">AI Content Assistant</a></td><td data-val="drupal/ai_content_assistant">drupal/ai_content_assistant</td><td data-val="1.0.2" class="col-version">1.0.2<span class="badge stab-stable">Stable</span></td><td data-val="2026-06-05" class="col-date">2026-06-05</td><td data-val="0" class="col-security">🚫</td><td data-val="" class="col-usage">—</td></tr>
       <tr data-stability="stable" data-security="not-covered"><td data-val="Siliconflow Provider"><a href="https://www.drupal.org/project/ai_provider_siliconflow">Siliconflow Provider</a></td><td data-val="drupal/ai_provider_siliconflow">drupal/ai_provider_siliconflow</td><td data-val="1.0.2" class="col-version">1.0.2<span class="badge stab-stable">Stable</span></td><td data-val="2025-08-27" class="col-date">2025-08-27</td><td data-val="0" class="col-security">🚫</td><td data-val="" class="col-usage">—</td></tr>
       <tr data-stability="alpha" data-security="not-covered"><td data-val="AI Upgrade Assistant"><a href="https://www.drupal.org/project/ai_upgrade_assistant">AI Upgrade Assistant</a></td><td data-val="drupal/ai_upgrade_assistant">drupal/ai_upgrade_assistant</td><td data-val="1.0.0-alpha30" class="col-version">1.0.0-alpha30<span class="badge stab-alpha">Alpha</span></td><td data-val="2026-02-14" class="col-date">2026-02-14</td><td data-val="0" class="col-security">🚫</td><td data-val="" class="col-usage">—</td></tr>
-    </tbody>
-  </table>
-  <p id="no-results">No modules match your filter.</p>
+      </tbody>
+    </table>
+    <p id="no-results-modules">No modules match your filter.</p>
+  </div>
+  <div class="tab-panel" id="panel-recipes">
+    <div class="controls">
+      <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">
+    </div>
+    <table id="tbl-recipes">
+      <thead>
+        <tr>
+          <th data-col="0" data-type="text">Label</th>
+          <th data-col="1" data-type="text">machine name</th>
+          <th data-col="2" data-type="text">Version</th>
+          <th data-col="3" data-type="date">Released</th>
+        </tr>
+      </thead>
+      <tbody id="tbody-recipes">
+      <tr><td data-val="AI Assistant"><a href="https://www.drupal.org/project/drupal_cms_ai">AI Assistant</a></td><td data-val="drupal/drupal_cms_ai">drupal/drupal_cms_ai</td><td data-val="2.1.3" class="col-version">2.1.3</td><td data-val="2026-06-01" class="col-date">2026-06-01</td></tr>
+      <tr><td data-val="AI Audio Transcription"><a href="https://www.drupal.org/project/ai_recipe_audio_transcription">AI Audio Transcription</a></td><td data-val="drupal/ai_recipe_audio_transcription">drupal/ai_recipe_audio_transcription</td><td data-val="1.x-dev" class="col-version">1.x-dev</td><td data-val="2026-06-11" class="col-date">2026-06-11</td></tr>
+      <tr><td data-val="AI Chatbot"><a href="https://www.drupal.org/project/ai_chatbot_recipe">AI Chatbot</a></td><td data-val="drupal/ai_chatbot_recipe">drupal/ai_chatbot_recipe</td><td data-val="1.16.0" class="col-version">1.16.0</td><td data-val="2025-09-26" class="col-date">2025-09-26</td></tr>
+      <tr><td data-val="AI CKEditor"><a href="https://www.drupal.org/project/drupal_cms_ai_ckeditor">AI CKEditor</a></td><td data-val="drupal/drupal_cms_ai_ckeditor">drupal/drupal_cms_ai_ckeditor</td><td data-val="1.0.1" class="col-version">1.0.1</td><td data-val="2026-02-22" class="col-date">2026-02-22</td></tr>
+      <tr><td data-val="AI Content Classification recipe"><a href="https://www.drupal.org/project/ai_recipe_content_classification">AI Content Classification recipe</a></td><td data-val="drupal/ai_recipe_content_classification">drupal/ai_recipe_content_classification</td><td data-val="1.0.0" class="col-version">1.0.0</td><td data-val="2025-10-09" class="col-date">2025-10-09</td></tr>
+      <tr><td data-val="AI Content Pre-Moderation"><a href="https://www.drupal.org/project/ai_recipe_content_pre_moderation">AI Content Pre-Moderation</a></td><td data-val="drupal/ai_recipe_content_pre_moderation">drupal/ai_recipe_content_pre_moderation</td><td data-val="2.0.0-alpha1" class="col-version">2.0.0-alpha1</td><td data-val="2026-04-30" class="col-date">2026-04-30</td></tr>
+      <tr><td data-val="AI Content Suggestions"><a href="https://www.drupal.org/project/ai_recipe_content_suggestions">AI Content Suggestions</a></td><td data-val="drupal/ai_recipe_content_suggestions">drupal/ai_recipe_content_suggestions</td><td data-val="1.x-dev" class="col-version">1.x-dev</td><td data-val="2026-06-11" class="col-date">2026-06-11</td></tr>
+      <tr><td data-val="AI Content vector search"><a href="https://www.drupal.org/project/ai_recipe_content_search_vector">AI Content vector search</a></td><td data-val="drupal/ai_recipe_content_search_vector">drupal/ai_recipe_content_search_vector</td><td data-val="1.x-dev" class="col-version">1.x-dev</td><td data-val="2026-06-11" class="col-date">2026-06-11</td></tr>
+      <tr><td data-val="AI Ecosystem Recipe"><a href="https://www.drupal.org/project/ai_ecosystem">AI Ecosystem Recipe</a></td><td data-val="drupal/ai_ecosystem">drupal/ai_ecosystem</td><td data-val="1.0.0-alpha2" class="col-version">1.0.0-alpha2</td><td data-val="2024-10-29" class="col-date">2024-10-29</td></tr>
+      <tr><td data-val="AI Guardrails PII"><a href="https://www.drupal.org/project/ai_recipe_guardrails_pii">AI Guardrails PII</a></td><td data-val="drupal/ai_recipe_guardrails_pii">drupal/ai_recipe_guardrails_pii</td><td data-val="1.0.0" class="col-version">1.0.0</td><td data-val="2026-03-18" class="col-date">2026-03-18</td></tr>
+      <tr><td data-val="AI Guardrails Prompt Safety"><a href="https://www.drupal.org/project/ai_recipe_guardrails_prompt_safety">AI Guardrails Prompt Safety</a></td><td data-val="drupal/ai_recipe_guardrails_prompt_safety">drupal/ai_recipe_guardrails_prompt_safety</td><td data-val="1.0.0" class="col-version">1.0.0</td><td data-val="2026-03-18" class="col-date">2026-03-18</td></tr>
+      <tr><td data-val="AI Image Alternative Text"><a href="https://www.drupal.org/project/ai_recipe_image_alt_text">AI Image Alternative Text</a></td><td data-val="drupal/ai_recipe_image_alt_text">drupal/ai_recipe_image_alt_text</td><td data-val="1.x-dev" class="col-version">1.x-dev</td><td data-val="2026-06-11" class="col-date">2026-06-11</td></tr>
+      <tr><td data-val="AI Image Classification recipe"><a href="https://www.drupal.org/project/ai_recipe_image_classification">AI Image Classification recipe</a></td><td data-val="drupal/ai_recipe_image_classification">drupal/ai_recipe_image_classification</td><td data-val="1.1.0" class="col-version">1.1.0</td><td data-val="2026-02-12" class="col-date">2026-02-12</td></tr>
+      <tr><td data-val="AI image safety validation"><a href="https://www.drupal.org/project/ai_recipe_validations_image_safety">AI image safety validation</a></td><td data-val="drupal/ai_recipe_validations_image_safety">drupal/ai_recipe_validations_image_safety</td><td data-val="1.0.x-dev" class="col-version">1.0.x-dev</td><td data-val="2026-06-12" class="col-date">2026-06-12</td></tr>
+      <tr><td data-val="AI SEO Optimizer recipe"><a href="https://www.drupal.org/project/ai_recipe_seo_optimizer">AI SEO Optimizer recipe</a></td><td data-val="drupal/ai_recipe_seo_optimizer">drupal/ai_recipe_seo_optimizer</td><td data-val="0.1.1" class="col-version">0.1.1</td><td data-val="2025-12-03" class="col-date">2025-12-03</td></tr>
+      <tr><td data-val="amazee.ai AI Provider Install"><a href="https://www.drupal.org/project/ai_provider_amazeeio_recipe">amazee.ai AI Provider Install</a></td><td data-val="drupal/ai_provider_amazeeio_recipe">drupal/ai_provider_amazeeio_recipe</td><td data-val="1.3.0" class="col-version">1.3.0</td><td data-val="2026-03-26" class="col-date">2026-03-26</td></tr>
+      <tr><td data-val="Drupal Module Chatbot Recipe"><a href="https://www.drupal.org/project/drupal_module_chatbot_recipe">Drupal Module Chatbot Recipe</a></td><td data-val="drupal/drupal_module_chatbot_recipe">drupal/drupal_module_chatbot_recipe</td><td data-val="1.0.x-dev" class="col-version">1.0.x-dev</td><td data-val="2025-06-24" class="col-date">2025-06-24</td></tr>
+      <tr><td data-val="GovNL AI Assistant"><a href="https://www.drupal.org/project/govnl_cms_ai">GovNL AI Assistant</a></td><td data-val="drupal/govnl_cms_ai">drupal/govnl_cms_ai</td><td data-val="1.0.0" class="col-version">1.0.0</td><td data-val="2026-05-27" class="col-date">2026-05-27</td></tr>
+      <tr><td data-val="Quiz Questions By Eca And Ai"><a href="https://www.drupal.org/project/quiz_questions_by_eca_and_ai">Quiz Questions By Eca And Ai</a></td><td data-val="drupal/quiz_questions_by_eca_and_ai">drupal/quiz_questions_by_eca_and_ai</td><td data-val="dev-main" class="col-version">dev-main</td><td data-val="2025-10-26" class="col-date">2025-10-26</td></tr>
+      <tr><td data-val="Recipe for AI Module development"><a href="https://www.drupal.org/project/ai_dev_recipe">Recipe for AI Module development</a></td><td data-val="drupal/ai_dev_recipe">drupal/ai_dev_recipe</td><td data-val="1.0.0-alpha1" class="col-version">1.0.0-alpha1</td><td data-val="2025-09-23" class="col-date">2025-09-23</td></tr>
+      <tr><td data-val="Saplings - AI CKEditor Experience"><a href="https://www.drupal.org/project/saplings_ai_ckeditor_experience">Saplings - AI CKEditor Experience</a></td><td data-val="drupal/saplings_ai_ckeditor_experience">drupal/saplings_ai_ckeditor_experience</td><td data-val="1.0.3" class="col-version">1.0.3</td><td data-val="2025-06-24" class="col-date">2025-06-24</td></tr>
+      <tr><td data-val="Saplings AI Agents"><a href="https://www.drupal.org/project/saplings_ai_agents">Saplings AI Agents</a></td><td data-val="drupal/saplings_ai_agents">drupal/saplings_ai_agents</td><td data-val="1.0.4" class="col-version">1.0.4</td><td data-val="2025-07-08" class="col-date">2025-07-08</td></tr>
+      <tr><td data-val="Saplings AI MCP"><a href="https://www.drupal.org/project/saplings_ai_mcp">Saplings AI MCP</a></td><td data-val="drupal/saplings_ai_mcp">drupal/saplings_ai_mcp</td><td data-val="1.0.6" class="col-version">1.0.6</td><td data-val="2025-11-26" class="col-date">2025-11-26</td></tr>
+      <tr><td data-val="Thunder AI"><a href="https://www.drupal.org/project/thunder_ai">Thunder AI</a></td><td data-val="drupal/thunder_ai">drupal/thunder_ai</td><td data-val="1.0.0-beta1" class="col-version">1.0.0-beta1</td><td data-val="2026-05-17" class="col-date">2026-05-17</td></tr>
+      <tr><td data-val="Varbase AI Agents"><a href="https://www.drupal.org/project/varbase_ai_agents">Varbase AI Agents</a></td><td data-val="drupal/varbase_ai_agents">drupal/varbase_ai_agents</td><td data-val="1.0.4" class="col-version">1.0.4</td><td data-val="2025-11-17" class="col-date">2025-11-17</td></tr>
+      <tr><td data-val="Varbase AI Default"><a href="https://www.drupal.org/project/varbase_ai_default">Varbase AI Default</a></td><td data-val="drupal/varbase_ai_default">drupal/varbase_ai_default</td><td data-val="1.0.2" class="col-version">1.0.2</td><td data-val="2025-07-22" class="col-date">2025-07-22</td></tr>
+      <tr><td data-val="Varbase AI Editor Assistant"><a href="https://www.drupal.org/project/varbase_ai_editor_assistant">Varbase AI Editor Assistant</a></td><td data-val="drupal/varbase_ai_editor_assistant">drupal/varbase_ai_editor_assistant</td><td data-val="1.0.1" class="col-version">1.0.1</td><td data-val="2025-07-01" class="col-date">2025-07-01</td></tr>
+      <tr><td data-val="Varbase AI Image Alt"><a href="https://www.drupal.org/project/varbase_ai_image_alt">Varbase AI Image Alt</a></td><td data-val="drupal/varbase_ai_image_alt">drupal/varbase_ai_image_alt</td><td data-val="1.0.1" class="col-version">1.0.1</td><td data-val="2025-07-01" class="col-date">2025-07-01</td></tr>
+      <tr><td data-val="Varbase AI Safety"><a href="https://www.drupal.org/project/varbase_ai_safety">Varbase AI Safety</a></td><td data-val="drupal/varbase_ai_safety">drupal/varbase_ai_safety</td><td data-val="1.0.0-alpha3" class="col-version">1.0.0-alpha3</td><td data-val="2026-06-21" class="col-date">2026-06-21</td></tr>
+      <tr><td data-val="Varbase AI Taxonomy Tagging"><a href="https://www.drupal.org/project/varbase_ai_taxonomy_tagging">Varbase AI Taxonomy Tagging</a></td><td data-val="drupal/varbase_ai_taxonomy_tagging">drupal/varbase_ai_taxonomy_tagging</td><td data-val="1.0.1" class="col-version">1.0.1</td><td data-val="2025-07-01" class="col-date">2025-07-01</td></tr>
+      </tbody>
+    </table>
+    <p id="no-results-recipes">No recipes match your filter.</p>
+  </div>
   <script>
     (function () {
-      var thead    = document.querySelector('#tbl thead tr');
-      var tbody    = document.getElementById('tbody');
-      var filter   = document.getElementById('filter');
-      var noRes    = document.getElementById('no-results');
-      var sortCol  = -1, sortDir = 1;
+      // Column-sort mechanics are identical for both tables, so this factory
+      // is shared. Filtering is NOT shared — the modules table filters by
+      // name + stability + security, the recipes table only by name, and
+      // forcing the simpler recipes filter through the modules' shape would
+      // add a pointless conditional to already-tested code.
+      function makeSorter(theadSel, tbodySel) {
+        var thead = document.querySelector(theadSel);
+        var tbody = document.querySelector(tbodySel);
+        var sortCol = -1, sortDir = 1;
 
-      function cellVal(row, col) {
-        return row.children[col].dataset.val;
-      }
-
-      function sortTable(col, type) {
-        if (sortCol === col) {
-          sortDir = -sortDir;
-        } else {
-          sortCol = col;
-          sortDir = (type === 'num') ? -1 : 1;
+        function cellVal(row, col) {
+          return row.children[col].dataset.val;
         }
-        var rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.sort(function (a, b) {
-          var av = cellVal(a, col), bv = cellVal(b, col);
-          if (type === 'num') {
-            av = (av === '') ? -Infinity : Number(av);
-            bv = (bv === '') ? -Infinity : Number(bv);
+
+        function sortTable(col, type) {
+          if (sortCol === col) {
+            sortDir = -sortDir;
           } else {
-            if (av === '' && bv === '') return 0;
-            if (av === '') return 1;
-            if (bv === '') return -1;
+            sortCol = col;
+            sortDir = (type === 'num') ? -1 : 1;
           }
-          return (av < bv ? -1 : av > bv ? 1 : 0) * sortDir;
+          var rows = Array.from(tbody.querySelectorAll('tr'));
+          rows.sort(function (a, b) {
+            var av = cellVal(a, col), bv = cellVal(b, col);
+            if (type === 'num') {
+              av = (av === '') ? -Infinity : Number(av);
+              bv = (bv === '') ? -Infinity : Number(bv);
+            } else {
+              if (av === '' && bv === '') return 0;
+              if (av === '') return 1;
+              if (bv === '') return -1;
+            }
+            return (av < bv ? -1 : av > bv ? 1 : 0) * sortDir;
+          });
+          rows.forEach(function (r) { tbody.appendChild(r); });
+          Array.from(thead.children).forEach(function (th) { delete th.dataset.sort; });
+          thead.children[col].dataset.sort = (sortDir === 1) ? 'asc' : 'desc';
+        }
+
+        Array.from(thead.querySelectorAll('th')).forEach(function (th) {
+          th.addEventListener('click', function () {
+            sortTable(Number(th.dataset.col), th.dataset.type);
+          });
         });
-        rows.forEach(function (r) { tbody.appendChild(r); });
-        Array.from(thead.children).forEach(function (th) { delete th.dataset.sort; });
-        thead.children[col].dataset.sort = (sortDir === 1) ? 'asc' : 'desc';
+
+        return { sortTable: sortTable, cellVal: cellVal, tbody: tbody };
       }
 
-      Array.from(thead.querySelectorAll('th')).forEach(function (th) {
-        th.addEventListener('click', function () {
-          sortTable(Number(th.dataset.col), th.dataset.type);
-        });
-      });
+      // ---- Modules tab: sorting + name/stability/security filter ----
+      var modulesSorter = makeSorter('#tbl-modules thead tr', '#tbody-modules');
+      modulesSorter.sortTable(5, 'num');
 
-      sortTable(5, 'num');
+      var filterModules = document.getElementById('filter-modules');
+      var noResModules   = document.getElementById('no-results-modules');
 
-      function applyFilter() {
-        var q = filter.value.toLowerCase();
+      function applyModulesFilter() {
+        var q = filterModules.value.toLowerCase();
         var stabChecked = new Set(
           Array.from(document.querySelectorAll('.stab-cb:checked'))
                .map(function (cb) { return cb.value; })
@@ -370,20 +459,54 @@
                .map(function (cb) { return cb.value; })
         );
         var visible = 0;
-        Array.from(tbody.querySelectorAll('tr')).forEach(function (row) {
-          var nameMatch = cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
+        Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
+          var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var stabMatch = stabChecked.has(row.dataset.stability);
           var secMatch = secChecked.has(row.dataset.security);
           var show = nameMatch && stabMatch && secMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
-        noRes.style.display = (visible === 0) ? '' : 'none';
+        noResModules.style.display = (visible === 0) ? '' : 'none';
       }
 
-      filter.addEventListener('input', applyFilter);
+      filterModules.addEventListener('input', applyModulesFilter);
       Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
-        cb.addEventListener('change', applyFilter);
+        cb.addEventListener('change', applyModulesFilter);
+      });
+
+      // ---- Recipes tab: sorting + name-only filter ----
+      // No stability or security data exists for recipes, so there's
+      // nothing to check here beyond the name filter. No default sortTable()
+      // call here (unlike modules) — rows already arrive alphabetical-by-
+      // label from the Python side (no usage signal to sort by instead),
+      // so calling sortTable() on load would just contradict that ordering.
+      var recipesSorter = makeSorter('#tbl-recipes thead tr', '#tbody-recipes');
+
+      var filterRecipes = document.getElementById('filter-recipes');
+      var noResRecipes   = document.getElementById('no-results-recipes');
+
+      function applyRecipesFilter() {
+        var q = filterRecipes.value.toLowerCase();
+        var visible = 0;
+        Array.from(recipesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
+          var show = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
+          row.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        noResRecipes.style.display = (visible === 0) ? '' : 'none';
+      }
+
+      filterRecipes.addEventListener('input', applyRecipesFilter);
+
+      // ---- Tab switching ----
+      Array.from(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          Array.from(document.querySelectorAll('.tab-btn')).forEach(function (b) { b.classList.remove('active'); });
+          Array.from(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.classList.remove('active'); });
+          btn.classList.add('active');
+          document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        });
       });
     })();
   </script>

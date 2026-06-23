@@ -9,10 +9,14 @@ re-discovering everything from scratch.
 
 ## What the script does
 
-`drupal_ai_dependents.py` finds all Drupal modules that declare a **hard
-dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their
-`composer.json`, and outputs a sorted markdown table with:
+`drupal_ai_dependents.py` finds all Drupal **modules and recipes** that
+declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)**
+in their `composer.json`. It only collects and verifies data, writing the
+result as JSON — rendering is `render_md.py`'s and `render_html.py`'s job
+(two sorted tables: Modules, then Recipes — separate `##` sections in
+markdown, separate tabs in HTML).
 
+**Modules table:**
 - Label — the module's actual display title, from its `*.info.yml` `name:` key (linked to the project page)
 - Machine name — the `name` field from the module's `composer.json` (e.g. `drupal/ai_agents`)
 - URL (`https://www.drupal.org/project/{name}`)
@@ -21,11 +25,20 @@ dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their
 - Security coverage — ✅/🚫 based on Drupal's security advisory policy
 - Active install count ("Drupal.org usage")
 
-Run time: **~17–20 minutes**. The p2 verification and info.yml label phases
-each use 3 concurrent workers (ThreadPoolExecutor), every worker respecting
-its phase's 3s per-worker delay. The drupal.org usage/security API remains
-sequential at 3s (most sensitive). Output goes to stdout; progress goes to
-stderr.
+**Recipes table:** Label, machine name, URL, version, release date — no
+security coverage or usage columns. Recipes (Drupal projects of type
+`drupal-recipe`, applied via `drush recipe` rather than installed as code)
+genuinely have neither: `project_usage` is absent from Drupal.org's API
+response for a recipe (not zero — absent), confirmed live, and recipes
+aren't on packages.drupal.org at all to begin with (see Data Sources §6-9
+below). The table omits both columns rather than inventing an "N/A" state.
+
+Run time: **~20-25 minutes**. The p2 verification and info.yml/recipe.yml
+label phases each use 3 concurrent workers (ThreadPoolExecutor), every
+worker respecting its phase's 3s per-worker delay. The drupal.org
+usage/security API remains sequential at 3s (most sensitive, and only
+queried for modules — recipes never touch it). JSON goes to stdout (or a
+file with `--json`); progress goes to stderr.
 
 **Every phase prints one line per module** (`[i/N] {name}: ...`). This
 matters most for the usage-count phase, which is fully sequential at
@@ -34,14 +47,19 @@ to only print when a release-date fallback was needed (rare), making the
 whole run look hung.
 
 ```bash
-python3 drupal_ai_dependents.py              # print to stdout
-python3 drupal_ai_dependents.py -o out.md   # write markdown to file
-python3 drupal_ai_dependents.py --json results.json  # save JSON for re-rendering
+python3 drupal_ai_dependents.py --json results.json  # slow (~20-25 min), once
 
 # Fast re-render from saved JSON (no network calls):
 python3 render_md.py results.json -o results.md
 python3 render_html.py results.json -o results.html
 ```
+
+There used to be `-o`/`--output` and `--html` flags that rendered markdown
+and a (simpler, modules-only) HTML table directly inside this script. They
+were removed: that inline rendering didn't get recipe support, stability
+badges, or filter checkboxes when `render_html.py` gained them, so it
+silently fell out of sync. Now there's exactly one renderer per output
+format, and this script's only job is producing correct, complete JSON.
 
 ---
 
@@ -124,6 +142,75 @@ since `pyyaml` isn't a stdlib dependency and the script only needs one
 top-level scalar key. Falls back to `human_name(machine_name)` (title-cased
 machine name) if the fetch or parse fails.
 
+### 6. Recipe candidate discovery — Packagist type+keyword search
+
+**Recipes are not on packages.drupal.org at all** — confirmed live: P2_URL
+returns HTTP 404 for any recipe. They ARE on the regular Packagist registry
+(`packagist.org`/`repo.packagist.org`), which is a completely separate
+service from packages.drupal.org despite the similar name.
+`packagist.org/search.json?type=drupal-recipe` alone returns ~670 packages
+regardless of AI-relatedness — verifying all of them would roughly double
+this script's run time. Adding `q=ai` narrows that to ~46-60 while still
+catching every recipe tested during development (including
+`drupal/drupal_cms_ai`). This accepts the same "could miss a non-'ai'-named
+dependent" tradeoff already made by the module search in §1 Source B.
+
+The candidate pool also reuses ecosystem-page names that failed module
+verification (free — no new request; a name can't be both a confirmed
+module and a recipe) rather than re-querying packages.drupal.org.
+
+### 7. Recipe candidate discovery — curated AI recipe list (supplement)
+
+`git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml`
+is a hand-maintained list from the AI Dashboard module, not authoritative.
+Confirmed useful: it catches `drupal/drupal_cms_ai`, a real recipe with a
+hard `drupal/ai` dependency that does **not** appear on the ecosystem page
+at all. Every name from this file still goes through full p2 verification
+against Packagist — the YAML contents are never trusted directly. Parsed
+with a loose regex (`_CURATED_MACHINE_NAME_RE`) extracting `machineName:`
+values, same no-YAML-library approach as `_INFO_NAME_RE`.
+
+### 8. Recipe verification — `repo.packagist.org/p2/drupal/{name}.json`
+
+Same Composer v2 p2 format as packages.drupal.org, just a different host
+and a different required `type` (`drupal-recipe` instead of
+`drupal-module`). `_select_best_ai_dependent_version()` is shared between
+`get_p2_info()` (modules) and `get_recipe_info()` (recipes) — the
+type/require/core-constraint filtering logic is identical, only the URL and
+date-extraction differ.
+
+**Unlike packages.drupal.org's p2 files, Packagist's have a real ISO-8601
+`time` field on every version** — no `extra.drupal.datestamp` workaround,
+and no `updates.drupal.org` date fallback is needed at all for recipes.
+
+**Important discovery made during development:** Composer splits
+stable/tagged releases from branch/dev snapshots into *separate* p2 files —
+`p2/drupal/{name}.json` (stable/tagged) vs `p2/drupal/{name}~dev.json`
+(dev). A recipe with only a `"1.x-dev"` release (no tagged release yet,
+e.g. `ai_recipe_audio_transcription`) returns an **empty** version list
+from the main URL — its data only exists in the `~dev` file. Confirmed
+live. `get_recipe_info()` fetches and merges both files before running
+verification, so dev-only recipes still resolve correctly. This same split
+likely also affects the module pipeline (a module with only a dev release
+would currently be invisible to `get_p2_info()`), but that's an existing,
+unaddressed gap — out of scope for this change (see Known Limitations).
+
+### 9. Recipe label — `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml`
+
+Recipes don't have a `{name}.info.yml` — their display title lives in the
+`name:` key of a **fixed-filename** `recipe.yml` at the repo root instead
+(not name-templated, unlike modules' info.yml). Reuses `_INFO_NAME_RE`
+as-is since it's a generic top-level `name:` matcher.
+
+**Important discovery made during development:** Composer's `"-dev"`
+version suffix (e.g. `"1.x-dev"`) is not a real git ref — GitLab has no
+`"1.x-dev"` branch or tag, only `"1.x"`. Confirmed live:
+`.../-/raw/1.x/composer.json` → 200, `.../-/raw/1.x-dev/composer.json` →
+404. `_git_ref_for_version()` strips the suffix before building the
+recipe.yml URL. This same gap likely exists latently in the module label
+path too (untested — no AI module in this dataset currently has only a dev
+release), but retrofitting it is out of scope for this change.
+
 ---
 
 ## API quirks and gotchas discovered during development
@@ -136,6 +223,10 @@ machine name) if the fetch or parse fails.
 | `updates.drupal.org` | Returns XML (not JSON). More tolerant of fast requests than the Drupal.org JSON API. |
 | `drupal.org/project/ai/ecosystem` | Page 0 has no `?page=0` parameter (omit it). Pagination detected by checking if `?page=N` appears in the HTML. |
 | `git.drupalcode.org` raw files | Tag names match the p2 `version` string directly (no `8.x-` prefix needed for modern packages). 404s if the module's main `.info.yml` isn't at the repo root under `{machine_name}.info.yml` (rare; handled by falling back to the title-cased machine name). |
+| `packagist.org/search.json` | Unlike `packages.drupal.org/8/search.json`, `per_page=100` is actually honored (not capped at 50). Returns all packages of the given `type` regardless of AI-relatedness — same false-positive-tolerant design as the module search. |
+| `repo.packagist.org` p2 files | Same Composer v2 p2 shape as packages.drupal.org's, but has a real `time` field — no datestamp workaround needed. **Splits stable/tagged releases from dev/branch snapshots into separate files** (`{name}.json` vs `{name}~dev.json`) — a dev-only package returns an empty version list from the main URL; both must be fetched and merged. |
+| `git.drupalcode.org` recipe.yml | Fixed filename (`recipe.yml`, not `{name}.info.yml`). Composer `"x.y-dev"` version strings are NOT real git refs — GitLab serves the underlying branch (e.g. `"1.x"`) with the `-dev` suffix stripped. |
+| curated YAML (`ai_dashboard_recommended_recipes.yml`) | Hand-maintained, not authoritative — every name still goes through full p2 verification. Catches at least one recipe (`drupal_cms_ai`) absent from the ecosystem page. |
 
 ---
 
@@ -169,6 +260,14 @@ it for free in the same request.
 `time.sleep()` after each call, meaning the first request in any sequence
 had zero lead-in gap. The current version sleeps before every call.
 
+**A second registry (Packagist proper) had to be introduced for recipes.**
+The single-registry design that works for modules doesn't extend to
+recipes — packages.drupal.org simply doesn't carry them (confirmed via live
+404). This is why recipe verification hits `repo.packagist.org` instead of
+`packages.drupal.org`, and recipe discovery hits `packagist.org` instead of
+`packages.drupal.org/8/search.json` — they're unrelated services with
+similar names.
+
 ---
 
 ## Rate limiting configuration
@@ -180,25 +279,44 @@ ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
 PACKAGES_DELAY       = 3.0   # packages.drupal.org (search + p2)
 RELEASE_DELAY        = 3.0   # updates.drupal.org (fallback only)
 DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
-GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml label fetch)
+GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch)
+PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2)
 ```
 
 The Drupal.org JSON API is the most sensitive — it returned 503s during
 development when called faster than ~1 per second. 3 seconds is conservative.
 `updates.drupal.org` is more tolerant (it handles all Drupal site cron checks
-globally) but we use 3s there too for consistency.
+globally) but we use 3s there too for consistency. `PACKAGIST_DELAY` reuses
+the same conservative 3s value on the assumption that packagist.org/
+repo.packagist.org (both high-traffic, CDN-backed endpoints for the global
+PHP ecosystem) are comparably tolerant to packages.drupal.org — not
+separately stress-tested, but a reasonable default given the project's
+overall conservative posture toward rate limiting.
 
 The 503 retry logic in `_drupal_api_get()` reads the `Retry-After` response
 header if present, falling back to exponential backoff starting at 2 seconds.
 
-**Concurrency note:** The p2 verification phase and the info.yml label phase
-each run 3 concurrent workers via `ThreadPoolExecutor(max_workers=3)`. Every
-worker calls `time.sleep(PACKAGES_DELAY)` or `time.sleep(GITLAB_DELAY)` before
-its own request — there is no shared rate limiter, so each upstream sees up
-to 3 simultaneous requests at burst starts, then ~1 req/s at steady state.
-This is safe for both CDN-backed static file servers (packages.drupal.org and
-git.drupalcode.org). The drupal.org JSON API (usage counts + security
-coverage) remains strictly sequential — one request every 3s.
+**Concurrency note:** The p2 verification phase, the info.yml label phase,
+the recipe p2 verification phase, and the recipe label phase **each** run 3
+concurrent workers via `ThreadPoolExecutor(max_workers=3)` — but
+sequentially, one phase at a time, not overlapping. Every worker sleeps its
+phase's delay constant before its own request — there is no shared rate
+limiter, so each upstream sees up to 3 simultaneous requests at burst
+starts, then ~1 req/s at steady state. This is safe for CDN-backed static
+file servers (packages.drupal.org, git.drupalcode.org, and — assumed,
+unverified — repo.packagist.org). The drupal.org JSON API (usage counts +
+security coverage) remains strictly sequential — one request every 3s, and
+is only ever called for modules, never recipes.
+
+**Recipe phases deliberately run sequentially after, not concurrently
+with, the module phases.** Recipes only touch hosts (`packagist.org`,
+`repo.packagist.org`, `git.drupalcode.org`) that are either unused by or
+already shared with the module phases — `git.drupalcode.org` specifically
+is shared with the module-label phase. Running both pools at once would
+double the burst load there, working against the "max 3 workers"
+assumption the rate-limiting is calibrated for, for a time saving bounded
+by the slower of the two pipelines anyway (the module phases, which
+dominate run time).
 
 ---
 
@@ -222,6 +340,34 @@ coverage) remains strictly sequential — one request every 3s.
 4. **Install counts undercount:** Sites with Drupal's update checking disabled
    don't report usage. The count is a lower bound, not an exact figure.
 
+5. **Recipe candidate coverage is keyword-narrowed, like module search:**
+   `q=ai` on the Packagist recipe search could miss a recipe with no "ai" in
+   its name/description that still hard-depends on `drupal/ai`. The
+   ecosystem-page-reuse and curated-YAML sources mitigate this somewhat but
+   don't close it entirely — same shape of gap as limitation #1, just for a
+   different registry.
+
+6. **Curated recipe YAML is a supplement, not the primary source:** the
+   Packagist type+keyword search (§6 above) is what makes recipe discovery
+   comprehensive; the curated YAML just catches specific known gaps (like
+   `drupal_cms_ai`) in case the search misses something.
+
+7. **Dev-version git-ref gap likely exists in the module label path too:**
+   `_git_ref_for_version()` (stripping `-dev` suffixes for GitLab raw-file
+   URLs) was added for recipes, where a dev-only release was confirmed live.
+   The module label path (`get_module_label()`) has the same theoretical
+   gap — a module with only a dev release would currently fail its
+   info.yml fetch — but this is untested/unaddressed, since no AI module in
+   the current dataset has only a dev release.
+
+8. **The packages.drupal.org p2 stable/dev file split may affect modules
+   too:** `get_recipe_info()` fetches both `{name}.json` and `{name}~dev.json`
+   p2 files because Packagist splits stable and dev releases between them —
+   confirmed live. `get_p2_info()` (modules) only fetches the main file. If
+   packages.drupal.org follows the same Composer p2 convention, a module
+   with only a dev release would currently be invisible to this script.
+   Unverified and unaddressed — out of scope for this change.
+
 ---
 
 ## Possible future improvements
@@ -231,7 +377,11 @@ coverage) remains strictly sequential — one request every 3s.
 
 - ~~**`--stable-only` flag**~~ — stability filter added to `render_html.py` via checkboxes.
 
-- **Output format options** — ~~HTML output added (`--html FILE`)~~. ~~JSON output added (`--json FILE`)~~. CSV still possible for spreadsheet/tool import.
+- **Output format options** — ~~HTML output added (`--html FILE`)~~ (later
+  removed — `drupal_ai_dependents.py` now only writes JSON;
+  `render_html.py` is the sole HTML renderer). ~~JSON output added
+  (`--json FILE`)~~. CSV still possible via a new `render_csv.py` for
+  spreadsheet/tool import.
 
 - **Caching between runs** — save the p2 responses locally (e.g. to a `.cache/`
   directory) so re-runs don't re-fetch every package. p2 files rarely change
@@ -251,23 +401,49 @@ coverage) remains strictly sequential — one request every 3s.
 
 ## HTML output implementation
 
-There are two HTML renderers:
+`drupal_ai_dependents.py` does **not** render HTML (or markdown) itself —
+it only collects, verifies, and writes JSON. `render_html.py` is the sole
+HTML renderer, reading `results.json`.
 
-**`render_html(rows)` in `drupal_ai_dependents.py`** — original, called by `--html FILE`.
-Accepts a list of row dicts directly. No stability badges or filter checkboxes.
-Kept for backward compatibility with the `--html` shortcut.
+(Earlier versions had a second, simpler HTML renderer — `render_html(rows)`
+inside `drupal_ai_dependents.py`, used via a `--html FILE` shortcut. It was
+removed once recipe support was added: it never gained stability badges,
+filter checkboxes, or a Recipes tab, so it silently fell further out of
+sync with `render_html.py` every time the real renderer changed — exactly
+the kind of drift `--json`-only output is meant to prevent. There is no
+replacement; use `render_html.py` directly.)
 
-**`render_html.py`** — the recommended renderer, reads `results.json`. Key additions over
-the original:
-- Each `<tr>` has `data-stability="stable|rc|beta|alpha|dev"` and
+**`render_html.py`** features:
+- Each module `<tr>` has `data-stability="stable|rc|beta|alpha|dev"` and
   `data-security="covered|not-covered"`.
 - Version cell shows a small colored badge (green=stable, blue=rc, yellow=beta, orange=alpha, grey=dev).
 - Controls bar has stability checkboxes (`.stab-cb`) and security coverage
   checkboxes (`.sec-cb`), all checked by default; unchecking a value hides
   matching rows.
 - Combined filter: row visible when `nameMatches(row) AND stabChecked.has(row.dataset.stability) AND secChecked.has(row.dataset.security)`.
+- **Tabbed Modules/Recipes interface:** two `.tab-btn` buttons toggle two
+  `.tab-panel` divs (`#panel-modules`, `#panel-recipes`), each with its own
+  `<table>`/`<tbody>` (`#tbl-modules`/`#tbody-modules`,
+  `#tbl-recipes`/`#tbody-recipes`) and its own "no results" message. Only
+  the modules panel has the stability/security checkboxes — the recipes
+  panel has just a name-filter input, since neither concept applies to
+  recipes.
+- The column-sort mechanics (`sortTable`/`cellVal`/header-click-wiring) are
+  factored into a `makeSorter(theadSel, tbodySel)` factory shared by both
+  tables — that logic is genuinely identical. The **filter** logic is
+  deliberately *not* shared: `applyModulesFilter()` keeps the existing
+  name+stability+security logic untouched, `applyRecipesFilter()` is a new,
+  simpler name-only function — forcing the simpler recipes filter through
+  the modules' shape would add a pointless conditional to already-tested
+  code.
+- The modules table defaults to sorting by usage (col 5) descending on
+  load, matching the row order the Python side already produced. The
+  recipes table has **no** default `sortTable()` call — its rows already
+  arrive alphabetical-by-label from the Python side (no usage signal to
+  sort by instead), so calling `sortTable()` on load would just contradict
+  that ordering.
 
-Shared design notes for both renderers:
+Design notes for `render_html.py`:
 - CSS and JS are stored as regular Python string variables (not f-strings) to
   avoid the need to escape every `{` and `}`. Only the final HTML assembly
   uses f-strings for the handful of variable substitutions.
@@ -286,15 +462,25 @@ Shared design notes for both renderers:
 - `html.escape()` is used on all row values to prevent XSS from any
   unexpected characters in API responses.
 - Security coverage uses `SECURITY_COVERED_EMOJI` (✅) / `SECURITY_NOT_COVERED_EMOJI`
-  (🚫) — defined once in `drupal_ai_dependents.py` and duplicated as local
-  constants in `render_md.py` / `render_html.py` since those are standalone
-  scripts that only read `results.json`, not importable modules.
+  (🚫) — `render_md.py` and `render_html.py` each define their own local
+  copy of these constants, since they're standalone scripts that only read
+  `results.json` (not importable modules, and not used by
+  `drupal_ai_dependents.py` itself, which doesn't render anything).
 
 ---
 
 ## JSON output and rendering pipeline
 
-`--json FILE` writes a structured payload after the sort step:
+`drupal_ai_dependents.py` writes JSON and nothing else — `--json FILE`
+writes it to a file; omitting `--json` prints the same JSON to stdout. This
+is deliberate: an earlier version also rendered markdown/HTML directly
+(`-o`/`--output` and `--html` flags, plus an inline `render_html(rows)`
+function), but that inline renderer drifted out of sync with
+`render_html.py` every time the real renderer gained a feature (it never
+got recipe support, stability badges, or filter checkboxes). Removing it
+means there's exactly one place each output format is rendered.
+
+The payload is written after the sort step:
 
 ```json
 {
@@ -311,9 +497,25 @@ Shared design notes for both renderers:
       "security_covered": true,
       "stability":        "stable"
     }
+  ],
+  "recipes": [
+    {
+      "machine_name": "drupal/ai_recipe_image_classification",
+      "label":        "AI Image Classification recipe",
+      "url":          "https://www.drupal.org/project/ai_recipe_image_classification",
+      "version":      "1.1.0",
+      "release_date": "2026-02-12",
+      "stability":    "stable"
+    }
   ]
 }
 ```
+
+Recipe rows have no `usage` or `security_covered` keys at all — not `null`,
+simply absent — since both concepts genuinely don't apply (see "What the
+script does" above). `recipe_rows` is sorted alphabetically by `label`
+(`recipe_rows.sort(key=lambda r: r["label"].lower())`) rather than by usage,
+since there's no usage signal to sort by.
 
 - `machine_name` is the composer.json `name` field for the package (e.g.
   `drupal/ai_provider_openai`), taken from the same p2 response already
@@ -338,6 +540,11 @@ the `label`/`machine_name`(composer-name)/`security_covered` fields are
 **not** compatible with the current renderers — re-run the main script to
 regenerate `results.json` before re-rendering.
 
+Files predating the `"recipes"` key entirely (from before recipe support
+was added) **are** compatible — both renderers read it via
+`payload.get("recipes", [])`, rendering an empty Recipes section/tab rather
+than crashing.
+
 Recommended workflow:
 ```bash
 python3 drupal_ai_dependents.py --json results.json   # slow, once
@@ -356,3 +563,6 @@ python3 render_html.py results.json -o results.html   # fast, re-run anytime
 | `render_html.py` | HTML renderer — reads `results.json`, outputs HTML with stability filter |
 | `README.md` | User-facing documentation (usage, limitations, how it works) |
 | `CLAUDE.md` | This file — context for future Claude Code sessions |
+
+Recipe support (modules-and-recipes) was added entirely within these four
+files — no new files were introduced.

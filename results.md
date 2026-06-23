@@ -1,6 +1,8 @@
-# Drupal Modules with a Hard Dependency on [AI](https://www.drupal.org/project/ai)
+# Drupal Modules and Recipes with a Hard Dependency on [AI](https://www.drupal.org/project/ai)
 
-*Generated 2026-06-23 · 184 modules · Drupal 10/11 compatible · all stability levels*
+*Generated 2026-06-23 · 184 modules · 30 recipes · Drupal 10/11 compatible · all stability levels*
+
+## Modules
 
 | Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |
 |-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|
@@ -188,3 +190,38 @@
 | [AI Content Assistant](https://www.drupal.org/project/ai_content_assistant) | drupal/ai_content_assistant | https://www.drupal.org/project/ai_content_assistant | `1.0.2` | 2026-06-05 | 🚫 | — |
 | [Siliconflow Provider](https://www.drupal.org/project/ai_provider_siliconflow) | drupal/ai_provider_siliconflow | https://www.drupal.org/project/ai_provider_siliconflow | `1.0.2` | 2025-08-27 | 🚫 | — |
 | [AI Upgrade Assistant](https://www.drupal.org/project/ai_upgrade_assistant) | drupal/ai_upgrade_assistant | https://www.drupal.org/project/ai_upgrade_assistant | `1.0.0-alpha30` | 2026-02-14 | 🚫 | — |
+
+## Recipes
+
+| Label | machine name | URL | Latest Version | Release Date |
+|-------|--------------|-----|:--------------:|:------------:|
+| [AI Assistant](https://www.drupal.org/project/drupal_cms_ai) | drupal/drupal_cms_ai | https://www.drupal.org/project/drupal_cms_ai | `2.1.3` | 2026-06-01 |
+| [AI Audio Transcription](https://www.drupal.org/project/ai_recipe_audio_transcription) | drupal/ai_recipe_audio_transcription | https://www.drupal.org/project/ai_recipe_audio_transcription | `1.x-dev` | 2026-06-11 |
+| [AI Chatbot](https://www.drupal.org/project/ai_chatbot_recipe) | drupal/ai_chatbot_recipe | https://www.drupal.org/project/ai_chatbot_recipe | `1.16.0` | 2025-09-26 |
+| [AI CKEditor](https://www.drupal.org/project/drupal_cms_ai_ckeditor) | drupal/drupal_cms_ai_ckeditor | https://www.drupal.org/project/drupal_cms_ai_ckeditor | `1.0.1` | 2026-02-22 |
+| [AI Content Classification recipe](https://www.drupal.org/project/ai_recipe_content_classification) | drupal/ai_recipe_content_classification | https://www.drupal.org/project/ai_recipe_content_classification | `1.0.0` | 2025-10-09 |
+| [AI Content Pre-Moderation](https://www.drupal.org/project/ai_recipe_content_pre_moderation) | drupal/ai_recipe_content_pre_moderation | https://www.drupal.org/project/ai_recipe_content_pre_moderation | `2.0.0-alpha1` | 2026-04-30 |
+| [AI Content Suggestions](https://www.drupal.org/project/ai_recipe_content_suggestions) | drupal/ai_recipe_content_suggestions | https://www.drupal.org/project/ai_recipe_content_suggestions | `1.x-dev` | 2026-06-11 |
+| [AI Content vector search](https://www.drupal.org/project/ai_recipe_content_search_vector) | drupal/ai_recipe_content_search_vector | https://www.drupal.org/project/ai_recipe_content_search_vector | `1.x-dev` | 2026-06-11 |
+| [AI Ecosystem Recipe](https://www.drupal.org/project/ai_ecosystem) | drupal/ai_ecosystem | https://www.drupal.org/project/ai_ecosystem | `1.0.0-alpha2` | 2024-10-29 |
+| [AI Guardrails PII](https://www.drupal.org/project/ai_recipe_guardrails_pii) | drupal/ai_recipe_guardrails_pii | https://www.drupal.org/project/ai_recipe_guardrails_pii | `1.0.0` | 2026-03-18 |
+| [AI Guardrails Prompt Safety](https://www.drupal.org/project/ai_recipe_guardrails_prompt_safety) | drupal/ai_recipe_guardrails_prompt_safety | https://www.drupal.org/project/ai_recipe_guardrails_prompt_safety | `1.0.0` | 2026-03-18 |
+| [AI Image Alternative Text](https://www.drupal.org/project/ai_recipe_image_alt_text) | drupal/ai_recipe_image_alt_text | https://www.drupal.org/project/ai_recipe_image_alt_text | `1.x-dev` | 2026-06-11 |
+| [AI Image Classification recipe](https://www.drupal.org/project/ai_recipe_image_classification) | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 |
+| [AI image safety validation](https://www.drupal.org/project/ai_recipe_validations_image_safety) | drupal/ai_recipe_validations_image_safety | https://www.drupal.org/project/ai_recipe_validations_image_safety | `1.0.x-dev` | 2026-06-12 |
+| [AI SEO Optimizer recipe](https://www.drupal.org/project/ai_recipe_seo_optimizer) | drupal/ai_recipe_seo_optimizer | https://www.drupal.org/project/ai_recipe_seo_optimizer | `0.1.1` | 2025-12-03 |
+| [amazee.ai AI Provider Install](https://www.drupal.org/project/ai_provider_amazeeio_recipe) | drupal/ai_provider_amazeeio_recipe | https://www.drupal.org/project/ai_provider_amazeeio_recipe | `1.3.0` | 2026-03-26 |
+| [Drupal Module Chatbot Recipe](https://www.drupal.org/project/drupal_module_chatbot_recipe) | drupal/drupal_module_chatbot_recipe | https://www.drupal.org/project/drupal_module_chatbot_recipe | `1.0.x-dev` | 2025-06-24 |
+| [GovNL AI Assistant](https://www.drupal.org/project/govnl_cms_ai) | drupal/govnl_cms_ai | https://www.drupal.org/project/govnl_cms_ai | `1.0.0` | 2026-05-27 |
+| [Quiz Questions By Eca And Ai](https://www.drupal.org/project/quiz_questions_by_eca_and_ai) | drupal/quiz_questions_by_eca_and_ai | https://www.drupal.org/project/quiz_questions_by_eca_and_ai | `dev-main` | 2025-10-26 |
+| [Recipe for AI Module development](https://www.drupal.org/project/ai_dev_recipe) | drupal/ai_dev_recipe | https://www.drupal.org/project/ai_dev_recipe | `1.0.0-alpha1` | 2025-09-23 |
+| [Saplings - AI CKEditor Experience](https://www.drupal.org/project/saplings_ai_ckeditor_experience) | drupal/saplings_ai_ckeditor_experience | https://www.drupal.org/project/saplings_ai_ckeditor_experience | `1.0.3` | 2025-06-24 |
+| [Saplings AI Agents](https://www.drupal.org/project/saplings_ai_agents) | drupal/saplings_ai_agents | https://www.drupal.org/project/saplings_ai_agents | `1.0.4` | 2025-07-08 |
+| [Saplings AI MCP](https://www.drupal.org/project/saplings_ai_mcp) | drupal/saplings_ai_mcp | https://www.drupal.org/project/saplings_ai_mcp | `1.0.6` | 2025-11-26 |
+| [Thunder AI](https://www.drupal.org/project/thunder_ai) | drupal/thunder_ai | https://www.drupal.org/project/thunder_ai | `1.0.0-beta1` | 2026-05-17 |
+| [Varbase AI Agents](https://www.drupal.org/project/varbase_ai_agents) | drupal/varbase_ai_agents | https://www.drupal.org/project/varbase_ai_agents | `1.0.4` | 2025-11-17 |
+| [Varbase AI Default](https://www.drupal.org/project/varbase_ai_default) | drupal/varbase_ai_default | https://www.drupal.org/project/varbase_ai_default | `1.0.2` | 2025-07-22 |
+| [Varbase AI Editor Assistant](https://www.drupal.org/project/varbase_ai_editor_assistant) | drupal/varbase_ai_editor_assistant | https://www.drupal.org/project/varbase_ai_editor_assistant | `1.0.1` | 2025-07-01 |
+| [Varbase AI Image Alt](https://www.drupal.org/project/varbase_ai_image_alt) | drupal/varbase_ai_image_alt | https://www.drupal.org/project/varbase_ai_image_alt | `1.0.1` | 2025-07-01 |
+| [Varbase AI Safety](https://www.drupal.org/project/varbase_ai_safety) | drupal/varbase_ai_safety | https://www.drupal.org/project/varbase_ai_safety | `1.0.0-alpha3` | 2026-06-21 |
+| [Varbase AI Taxonomy Tagging](https://www.drupal.org/project/varbase_ai_taxonomy_tagging) | drupal/varbase_ai_taxonomy_tagging | https://www.drupal.org/project/varbase_ai_taxonomy_tagging | `1.0.1` | 2025-07-01 |

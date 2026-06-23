@@ -1,30 +1,39 @@
 #!/usr/bin/env python3
 """
-Find all Drupal modules with a hard dependency on drupal/ai
-(https://www.drupal.org/project/ai) and output a markdown table showing:
-module name, URL, latest version, release date, and active install count.
+Find all Drupal modules and recipes with a hard dependency on drupal/ai
+(https://www.drupal.org/project/ai) and write the results as JSON. This
+script only collects and verifies data — render the output with
+render_md.py (markdown) or render_html.py (sortable/filterable HTML).
 
-Candidate discovery (two sources, union-merged):
+Module candidate discovery (two sources, union-merged):
   1. drupal.org/project/ai/ecosystem  — curated AI ecosystem listing
   2. packages.drupal.org search "ai"  — package name/description search
 
-Dependency verification (authoritative, reads composer.json directly):
+Module dependency verification (authoritative, reads composer.json directly):
   packages.drupal.org/files/packages/8/p2/drupal/{name}.json
   Confirms type=drupal-module AND drupal/ai is in the require field.
   Also supplies version, Drupal core constraint, and release datestamp.
 
-Additional data:
+Module additional data:
   updates.drupal.org           — release date fallback (when p2 has no datestamp)
-  www.drupal.org/api-d7/node.json — usage/install count
+  www.drupal.org/api-d7/node.json — usage/install count + security coverage
+
+Recipes are verified separately, against the regular Packagist registry
+(packages.drupal.org doesn't carry them at all) — see get_recipe_info() and
+CLAUDE.md's "Data sources" section for details.
 
 Usage:
-  python3 drupal_ai_dependents.py [--json FILE] [--output FILE] [--html FILE]
+  python3 drupal_ai_dependents.py [--json FILE]
+
+  # Write JSON, then render separately (recommended):
+  python3 drupal_ai_dependents.py --json results.json
+  python3 render_md.py results.json -o results.md
+  python3 render_html.py results.json -o results.html
 """
 
 # Python's standard library modules — no composer/npm needed.
 # Think of these like PHP's built-in extensions (json_decode, preg_match, etc.)
-import argparse           # parses command-line flags like --output
-import html               # html.escape() for safe HTML attribute/text escaping
+import argparse           # parses command-line flags like --json
 import json               # like PHP's json_decode() / json_encode()
 import re                 # like PHP's preg_match() / preg_replace()
 import sys                # access to stdin/stdout/stderr and script exit
@@ -52,6 +61,16 @@ DRUPAL_API_URL       = "https://www.drupal.org/api-d7/node.json"
 DRUPAL_PROJECT_URL   = "https://www.drupal.org/project/{name}"
 INFO_YML_URL         = "https://git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml"
 
+# Recipes (Drupal projects of type "drupal-recipe") are NOT published to
+# packages.drupal.org at all — confirmed by a 404 on P2_URL for any recipe.
+# They ARE published to the regular Packagist registry, in the same
+# Composer v2 p2 format, so recipe verification uses a second registry.
+RECIPE_SEARCH_URL    = "https://packagist.org/search.json"
+RECIPE_P2_URL        = "https://repo.packagist.org/p2/drupal/{name}.json"
+RECIPE_P2_DEV_URL    = "https://repo.packagist.org/p2/drupal/{name}~dev.json"
+RECIPE_YML_URL       = "https://git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml"
+CURATED_RECIPES_URL  = "https://git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml?ref_type=heads"
+
 # A Python `set` is like a PHP array used as a lookup table (array_flip'd),
 # where only unique values matter and order doesn't. Membership checks are O(1).
 TARGET_VERSIONS = {10, 11}
@@ -63,14 +82,11 @@ ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
 PACKAGES_DELAY       = 3.0   # packages.drupal.org (search pages + p2 files)
 RELEASE_DELAY        = 3.0   # updates.drupal.org (date fallback only)
 DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
-GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml label fetch)
+GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch)
+PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2 files)
 
 MAX_RETRIES   = 4    # how many times to retry a failed API call before giving up
 RETRY_BACKOFF = 2.0  # starting wait in seconds; doubles after each retry
-
-# Security advisory coverage indicators, shared by both renderers.
-SECURITY_COVERED_EMOJI     = "✅"
-SECURITY_NOT_COVERED_EMOJI = "🚫"
 
 # Request headers sent with every HTTP call. The dict literal here is like
 # PHP's associative array: ["User-Agent" => "..."]
@@ -329,6 +345,101 @@ def get_search_candidates(query: str = "ai") -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# Candidate discovery — recipes, source 1: Packagist type search
+# ---------------------------------------------------------------------------
+
+def get_recipe_search_candidates() -> list[str]:
+    """Paginate the regular Packagist registry for drupal-recipe packages.
+
+    Recipes aren't published to packages.drupal.org at all, so this queries
+    the main Packagist instead — `type=drupal-recipe` alone returns ~670
+    packages regardless of AI-relatedness, which would roughly double this
+    script's run time to verify. Adding `q="ai"` narrows that to ~60 while
+    still catching every recipe we need (confirmed live, including
+    drupal/drupal_cms_ai). This accepts the same "could miss a non-'ai'-named
+    dependent" tradeoff already made by get_search_candidates() for modules —
+    false positives are expected and filtered out at verification.
+    """
+    all_names, seen = [], set()
+
+    url: str | None = RECIPE_SEARCH_URL
+    params: dict | None = {"q": "ai", "type": "drupal-recipe", "per_page": 100}
+
+    while url:
+        time.sleep(PACKAGIST_DELAY)
+
+        try:
+            status, body, _ = _http_get(url, params)
+        except RuntimeError as exc:
+            print(f"  Warning: Packagist recipe search failed: {exc}",
+                  file=sys.stderr)
+            print("  Continuing without Packagist recipe candidates.", file=sys.stderr)
+            break
+        params = None  # clear params — the next URL already includes them
+
+        if status != 200 or not body:
+            break
+
+        data = json.loads(body)
+
+        for pkg in data.get("results", []):
+            name = pkg.get("name", "")
+            if name.startswith("drupal/"):
+                machine = name.removeprefix("drupal/")
+                if machine not in seen:
+                    seen.add(machine)
+                    all_names.append(machine)
+
+        url = data.get("next") or None
+
+    return all_names
+
+
+# ---------------------------------------------------------------------------
+# Candidate discovery — recipes, source 2: curated AI recipe list
+# ---------------------------------------------------------------------------
+
+# Matches a `machineName:` value anywhere in the curated YAML file, e.g.
+# `  machineName: ai_recipe_image_classification`. We don't parse the YAML
+# structure at all (no PyYAML in this project, same as _INFO_NAME_RE's
+# approach for info.yml) — every name extracted here still goes through full
+# p2 verification against Packagist, so a loose regex is safe.
+_CURATED_MACHINE_NAME_RE = re.compile(r'machineName:\s*(\S+)')
+
+
+def get_curated_recipe_candidates() -> list[str]:
+    """Fetch the AI Dashboard module's hand-maintained list of AI recipes.
+
+    This is a supplementary source, not authoritative — it's maintained by
+    a third party and isn't guaranteed exhaustive or even currently accurate.
+    It's useful because it catches at least one real AI recipe
+    (drupal/drupal_cms_ai) that doesn't appear on the ecosystem page at all.
+    Every name returned here still gets verified via get_recipe_info() like
+    any other candidate.
+    """
+    try:
+        status, body, _ = _http_get(CURATED_RECIPES_URL)
+    except RuntimeError as exc:
+        print(f"  Warning: curated recipe list fetch failed: {exc}", file=sys.stderr)
+        return []
+
+    if status != 200 or not body:
+        print(f"  Warning: curated recipe list returned HTTP {status}", file=sys.stderr)
+        return []
+
+    text = body.decode("utf-8", errors="replace")
+
+    seen, names = set(), []
+    for m in _CURATED_MACHINE_NAME_RE.finditer(text):
+        n = m.group(1)
+        if n not in seen:
+            seen.add(n)
+            names.append(n)
+
+    return names
+
+
+# ---------------------------------------------------------------------------
 # Dependency verification — packages.drupal.org p2
 # ---------------------------------------------------------------------------
 
@@ -350,6 +461,48 @@ def _core_is_d10_d11(constraint: str) -> bool:
     # interpreting backslashes, and f allows {v} substitution.
     # Result: rf"\b{10}\b" → the regex pattern r"\b10\b"
     return bool(any(re.search(rf"\b{v}\b", constraint) for v in TARGET_VERSIONS))
+
+
+def _select_best_ai_dependent_version(
+    versions: list[dict], required_type: str
+) -> dict | None:
+    """Filter a p2 version list down to the newest version that matches
+    `required_type` and has a Drupal 10/11-compatible drupal/ai dependency.
+
+    Shared by get_p2_info() (modules, packages.drupal.org) and
+    get_recipe_info() (recipes, Packagist) — the verification rules are
+    identical, only the registry URL and the required `type` differ.
+
+    `versions` is the raw p2 version list, newest-first, each entry the full
+    composer.json contents for that release. The `type` field is stable
+    across versions, so checking only the first (latest) entry is sufficient.
+
+    Returns the chosen version dict (still containing the full raw
+    composer.json fields for that release), or None if nothing qualifies.
+    """
+    if not versions or versions[0].get("type") != required_type:
+        return None
+
+    # Collect all versions that satisfy requirements, then pick the best one.
+    candidates = []
+    for v in versions:
+        require = v.get("require") or {}
+        if "drupal/ai" not in require:
+            continue
+        core_constraint = require.get("drupal/core", "")
+        if not _core_is_d10_d11(core_constraint):
+            continue
+        candidates.append(v)
+
+    if not candidates:
+        return None
+
+    # Prefer the newest stable release; fall back to the newest pre-release
+    # if no stable version exists (e.g. module is still in beta).
+    return next(
+        (v for v in candidates if detect_stability(v.get("version", "")) == "stable"),
+        candidates[0],
+    )
 
 
 def get_p2_info(machine_name: str) -> dict | None:
@@ -382,35 +535,12 @@ def get_p2_info(machine_name: str) -> dict | None:
     # Versions are listed newest-first. This is equivalent to PHP's:
     # $versions = $data['packages']["drupal/$machine_name"] ?? [];
     versions = data.get("packages", {}).get(f"drupal/{machine_name}", [])
-    if not versions:
+
+    # Type check excludes recipes (`drupal-recipe`), profiles, distributions —
+    # those are handled by the separate get_recipe_info() pipeline.
+    best = _select_best_ai_dependent_version(versions, "drupal-module")
+    if best is None:
         return None
-
-    # Check 1: is this actually a Drupal module (not a recipe, profile, etc.)?
-    # The `type` field in composer.json is stable across versions, so checking
-    # only the first (latest) entry is sufficient.
-    if versions[0].get("type") != "drupal-module":
-        return None
-
-    # Collect all versions that satisfy requirements, then pick the best one.
-    candidates = []
-    for v in versions:
-        require = v.get("require") or {}
-        if "drupal/ai" not in require:
-            continue
-        core_constraint = require.get("drupal/core", "")
-        if not _core_is_d10_d11(core_constraint):
-            continue
-        candidates.append(v)
-
-    if not candidates:
-        return None
-
-    # Prefer the newest stable release; fall back to the newest pre-release
-    # if no stable version exists (e.g. module is still in beta).
-    best = next(
-        (v for v in candidates if detect_stability(v.get("version", "")) == "stable"),
-        candidates[0],
-    )
 
     require = best.get("require") or {}
     core_constraint = require.get("drupal/core", "")
@@ -435,6 +565,76 @@ def _fetch_p2_with_delay(machine_name: str):
     """Sleep then fetch p2 info — designed to run in a worker thread."""
     time.sleep(PACKAGES_DELAY)
     return machine_name, get_p2_info(machine_name)
+
+
+# ---------------------------------------------------------------------------
+# Dependency verification — recipes: repo.packagist.org p2
+# ---------------------------------------------------------------------------
+
+def get_recipe_info(machine_name: str) -> dict | None:
+    """Fetch and parse a recipe's Composer p2 metadata from Packagist.
+
+    Recipes aren't on packages.drupal.org at all (confirmed: 404 on P2_URL
+    for any recipe), so this hits the regular Packagist registry instead —
+    same Composer v2 p2 format, just a different host and required `type`.
+
+    Unlike packages.drupal.org's p2 files, Packagist's have a real ISO-8601
+    `time` field on every version, so there's no datestamp workaround and
+    no need for an updates.drupal.org date fallback at all.
+
+    Composer splits stable/tagged releases (this URL) from branch/dev
+    snapshots into a separate "~dev" p2 file — confirmed live: a recipe
+    with only a "1.x-dev" release returns an EMPTY version list here, with
+    its actual data only in RECIPE_P2_DEV_URL. Both are fetched and merged
+    so dev-only recipes (no tagged release yet) still verify correctly.
+
+    Returns a dict with version/date/constraints, or None if the recipe
+    fails verification (doesn't exist, isn't a recipe, or doesn't have a
+    Drupal 10/11-compatible drupal/ai dependency).
+    """
+    versions = []
+    for url in (RECIPE_P2_URL.format(name=machine_name),
+                RECIPE_P2_DEV_URL.format(name=machine_name)):
+        try:
+            status, body, _ = _http_get(url)
+        except RuntimeError:
+            continue
+
+        if status != 200 or not body:
+            continue
+
+        try:
+            data = json.loads(body)
+        except json.JSONDecodeError:
+            continue
+
+        versions += data.get("packages", {}).get(f"drupal/{machine_name}", [])
+
+    best = _select_best_ai_dependent_version(versions, "drupal-recipe")
+    if best is None:
+        return None
+
+    require = best.get("require") or {}
+    core_constraint = require.get("drupal/core", "")
+    raw_time = best.get("time")
+    date = (
+        datetime.fromisoformat(raw_time).strftime("%Y-%m-%d")
+        if raw_time
+        else None
+    )
+    return {
+        "version":         best.get("version", ""),
+        "date":            date,
+        "ai_constraint":   require["drupal/ai"],
+        "core_constraint": core_constraint,
+        "composer_name":   best.get("name", ""),
+    }
+
+
+def _fetch_recipe_info_with_delay(machine_name: str):
+    """Sleep then fetch recipe p2 info — designed to run in a worker thread."""
+    time.sleep(PACKAGIST_DELAY)
+    return machine_name, get_recipe_info(machine_name)
 
 
 # ---------------------------------------------------------------------------
@@ -479,6 +679,64 @@ def _fetch_label_with_delay(machine_name: str, version: str):
     """Sleep then fetch the info.yml label — designed to run in a worker thread."""
     time.sleep(GITLAB_DELAY)
     return machine_name, get_module_label(machine_name, version)
+
+
+# ---------------------------------------------------------------------------
+# Recipe label — git.drupalcode.org (reads the recipe.yml `name` key)
+# ---------------------------------------------------------------------------
+
+_DEV_SUFFIX_RE = re.compile(r'-dev$')
+
+
+def _git_ref_for_version(version: str) -> str:
+    """Convert a Composer dev-version string to the git ref GitLab actually
+    serves raw files from.
+
+    Composer's "-dev" suffix (e.g. "1.x-dev") marks a branch alias, not a
+    real git tag — GitLab has no "1.x-dev" ref, only "1.x". Confirmed live:
+    .../−/raw/1.x/composer.json → 200, .../−/raw/1.x-dev/composer.json → 404.
+    Stable versions (e.g. "1.1.0") pass through unchanged since they ARE
+    real tags.
+
+    '1.x-dev' → '1.x'
+    '1.1.0'   → '1.1.0'
+    """
+    return _DEV_SUFFIX_RE.sub('', version)
+
+
+def get_recipe_label(machine_name: str, version: str) -> str | None:
+    """Fetch a recipe's human-readable label from its recipe.yml file.
+
+    Recipes don't have a {name}.info.yml like modules do — their display
+    title lives in the `name:` key of a fixed-filename recipe.yml at the
+    repo root instead. Reuses _INFO_NAME_RE since it's a generic top-level
+    `name:` matcher, not module-specific.
+
+    Returns None if the file can't be fetched or has no `name:` key.
+    """
+    ref = _git_ref_for_version(version)
+    url = RECIPE_YML_URL.format(name=machine_name, ref=ref)
+    try:
+        status, body, _ = _http_get(url)
+    except RuntimeError:
+        return None
+    if status != 200 or not body:
+        return None
+
+    match = _INFO_NAME_RE.search(body.decode("utf-8", errors="replace"))
+    if not match:
+        return None
+
+    label = match.group(1).strip()
+    if len(label) >= 2 and label[0] == label[-1] and label[0] in "'\"":
+        label = label[1:-1]
+    return label or None
+
+
+def _fetch_recipe_label_with_delay(machine_name: str, version: str):
+    """Sleep then fetch the recipe.yml label — designed to run in a worker thread."""
+    time.sleep(GITLAB_DELAY)
+    return machine_name, get_recipe_label(machine_name, version)
 
 
 # ---------------------------------------------------------------------------
@@ -621,202 +879,6 @@ def detect_stability(version: str) -> str:
 
 
 # ---------------------------------------------------------------------------
-# HTML output
-# ---------------------------------------------------------------------------
-
-def render_html(rows: list[dict]) -> str:
-    """Return a self-contained HTML file with a sortable, filterable results table."""
-    today   = datetime.now().strftime("%Y-%m-%d")
-    v_label = "/".join(str(v) for v in sorted(TARGET_VERSIONS))
-    count   = len(rows)
-
-    def esc(s: str) -> str:
-        return html.escape(str(s), quote=True)
-
-    row_lines = []
-    for r in rows:
-        label_esc    = esc(r["label"])
-        machine_esc  = esc(r["machine_name"])
-        url_esc      = esc(r["url"])
-        ver_raw      = r["version"]
-        ver_disp     = esc(ver_raw) if ver_raw else "—"
-        ver_val      = esc(ver_raw) if ver_raw else ""
-        date         = r["release_date"]
-        date_val     = "" if date == "—" else esc(date)
-        usage_raw    = str(r["usage"]) if r["usage"] else ""
-        usage_disp   = f"{r['usage']:,}" if r["usage"] else "—"
-        sec_covered  = r["security_covered"]
-        sec_disp     = SECURITY_COVERED_EMOJI if sec_covered else SECURITY_NOT_COVERED_EMOJI
-        sec_val      = "1" if sec_covered else "0"
-        row_lines.append(
-            f'      <tr>'
-            f'<td data-val="{label_esc}"><a href="{url_esc}">{label_esc}</a></td>'
-            f'<td data-val="{machine_esc}">{machine_esc}</td>'
-            f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
-            f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
-            f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
-            f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
-            f'</tr>'
-        )
-
-    tbody = "\n".join(row_lines)
-
-    css = """\
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      max-width: 1100px;
-      margin: 2rem auto;
-      padding: 0 1rem;
-      color: #222;
-      background: #f7f8fa;
-    }
-    h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
-    h1 a { color: inherit; }
-    .meta { color: #666; font-size: 0.875rem; margin-bottom: 1rem; }
-    #filter {
-      display: block;
-      margin-bottom: 1rem;
-      padding: 0.45rem 0.75rem;
-      font-size: 1rem;
-      width: 300px;
-      border: 1px solid #bbb;
-      border-radius: 4px;
-      outline-color: #2d6a9f;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #fff;
-      box-shadow: 0 1px 4px rgba(0,0,0,.1);
-    }
-    thead { background: #2d6a9f; color: #fff; }
-    th {
-      padding: 0.6rem 1rem;
-      text-align: left;
-      cursor: pointer;
-      user-select: none;
-      white-space: nowrap;
-    }
-    th:hover { background: #245a8c; }
-    th[data-sort="asc"]::after  { content: " ▲"; }
-    th[data-sort="desc"]::after { content: " ▼"; }
-    th:not([data-sort])::after  { content: " ⇅"; color: rgba(255,255,255,.5); }
-    td {
-      padding: 0.5rem 1rem;
-      border-bottom: 1px solid #eee;
-    }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: #f0f7ff; }
-    .col-version  { font-family: ui-monospace, monospace; white-space: nowrap; }
-    .col-date     { white-space: nowrap; }
-    .col-security { text-align: center; }
-    th.col-security { text-align: center; }
-    .col-usage    { text-align: right; }
-    th.col-usage  { text-align: right; }
-    #no-results {
-      display: none;
-      padding: 1.5rem;
-      text-align: center;
-      color: #888;
-      background: #fff;
-      border-top: 1px solid #eee;
-    }"""
-
-    js = """\
-    (function () {
-      var thead = document.querySelector('#tbl thead tr');
-      var tbody = document.getElementById('tbody');
-      var filter = document.getElementById('filter');
-      var noResults = document.getElementById('no-results');
-      var sortCol = -1, sortDir = 1;
-
-      function cellVal(row, col) {
-        return row.children[col].dataset.val;
-      }
-
-      function sortTable(col, type) {
-        if (sortCol === col) {
-          sortDir = -sortDir;
-        } else {
-          sortCol = col;
-          sortDir = (type === 'num') ? -1 : 1;
-        }
-        var rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.sort(function (a, b) {
-          var av = cellVal(a, col), bv = cellVal(b, col);
-          if (type === 'num') {
-            av = (av === '') ? -Infinity : Number(av);
-            bv = (bv === '') ? -Infinity : Number(bv);
-          } else {
-            if (av === '' && bv === '') return 0;
-            if (av === '') return 1;
-            if (bv === '') return -1;
-          }
-          return (av < bv ? -1 : av > bv ? 1 : 0) * sortDir;
-        });
-        rows.forEach(function (r) { tbody.appendChild(r); });
-        Array.from(thead.children).forEach(function (th) { delete th.dataset.sort; });
-        thead.children[col].dataset.sort = (sortDir === 1) ? 'asc' : 'desc';
-      }
-
-      Array.from(thead.querySelectorAll('th')).forEach(function (th) {
-        th.addEventListener('click', function () {
-          sortTable(Number(th.dataset.col), th.dataset.type);
-        });
-      });
-
-      sortTable(5, 'num');
-
-      filter.addEventListener('input', function () {
-        var q = filter.value.toLowerCase();
-        var visible = 0;
-        Array.from(tbody.querySelectorAll('tr')).forEach(function (row) {
-          var show = cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
-          row.style.display = show ? '' : 'none';
-          if (show) visible++;
-        });
-        noResults.style.display = (visible === 0) ? '' : 'none';
-      });
-    })();"""
-
-    return (
-        '<!DOCTYPE html>\n'
-        '<html lang="en">\n'
-        '<head>\n'
-        '  <meta charset="UTF-8">\n'
-        '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
-        '  <title>Drupal AI Dependents</title>\n'
-        f'  <style>\n{css}\n  </style>\n'
-        '</head>\n'
-        '<body>\n'
-        '  <h1>Drupal Modules &mdash; '
-        '<a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>\n'
-        f'  <p class="meta">Generated {today} &middot; {count} modules'
-        f' &middot; Drupal {v_label} compatible &middot; all stability levels</p>\n'
-        '  <input id="filter" type="search" placeholder="Filter by module name…">\n'
-        '  <table id="tbl">\n'
-        '    <thead>\n'
-        '      <tr>\n'
-        '        <th data-col="0" data-type="text">Label</th>\n'
-        '        <th data-col="1" data-type="text">machine name</th>\n'
-        '        <th data-col="2" data-type="text">Version</th>\n'
-        '        <th data-col="3" data-type="date">Released</th>\n'
-        '        <th data-col="4" data-type="num" class="col-security">Security coverage</th>\n'
-        '        <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>\n'
-        '      </tr>\n'
-        '    </thead>\n'
-        '    <tbody id="tbody">\n'
-        f'{tbody}\n'
-        '    </tbody>\n'
-        '  </table>\n'
-        '  <p id="no-results">No modules match your filter.</p>\n'
-        f'  <script>\n{js}\n  </script>\n'
-        '</body>\n'
-        '</html>\n'
-    )
-
-
-# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -832,18 +894,11 @@ def main() -> None:
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
-        "--output", "-o", metavar="FILE",
-        help="Write markdown to FILE instead of stdout",
-    )
-    parser.add_argument(
-        "--html", metavar="FILE",
-        help="Write a self-contained HTML table to FILE (sortable by any column, filterable by name)",
-    )
-    parser.add_argument(
         "--json", metavar="FILE",
-        help="Write raw results to FILE as JSON (re-render later with render_md.py / render_html.py)",
+        help="Write raw results to FILE as JSON. Omit to print JSON to stdout. "
+             "Render with render_md.py / render_html.py — this script only collects data.",
     )
-    # args.output / args.html / args.json will be filename strings if provided, or None if omitted.
+    # args.json will be a filename string if provided, or None if omitted (print to stdout).
     args = parser.parse_args()
 
     # -------------------------------------------------------------------------
@@ -969,6 +1024,105 @@ def main() -> None:
     )
 
     # -------------------------------------------------------------------------
+    # Step 1b: Collect candidate recipe names (3 sources, merged)
+    # -------------------------------------------------------------------------
+    # Recipes are verified separately from modules (different registry, no
+    # usage/security data), so they get their own candidate-discovery step.
+    print("\nCollecting recipe candidates …", file=sys.stderr)
+
+    print("  [1/3] Reusing AI ecosystem names not matched as modules …", file=sys.stderr)
+    eco_unmatched = [n for n in eco_names if n not in p2_map]
+    print(f"        {len(eco_unmatched)} names", file=sys.stderr)
+
+    print("  [2/3] Searching Packagist for type=drupal-recipe, q=ai …", file=sys.stderr)
+    recipe_search_names = get_recipe_search_candidates()
+    print(f"        {len(recipe_search_names)} names found", file=sys.stderr)
+
+    print("  [3/3] Fetching curated AI recipe list …", file=sys.stderr)
+    curated_recipe_names = get_curated_recipe_candidates()
+    print(f"        {len(curated_recipe_names)} names found", file=sys.stderr)
+
+    seen_recipes: set[str] = set()
+    all_recipe_candidates = []
+    for n in eco_unmatched + recipe_search_names + curated_recipe_names:
+        if n not in seen_recipes:
+            seen_recipes.add(n)
+            all_recipe_candidates.append(n)
+    print(f"  {len(all_recipe_candidates)} unique recipe candidates after merge\n", file=sys.stderr)
+
+    # -------------------------------------------------------------------------
+    # Step 2d: Verify each recipe candidate against repo.packagist.org
+    # -------------------------------------------------------------------------
+    print("Verifying recipes via repo.packagist.org p2 files …", file=sys.stderr)
+
+    recipe_rows    = []
+    recipe_skipped = 0
+    recipe_total   = len(all_recipe_candidates)
+    recipe_p2_map  = {}
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        future_to_name = {
+            pool.submit(_fetch_recipe_info_with_delay, n): n for n in all_recipe_candidates
+        }
+        done = 0
+        for fut in as_completed(future_to_name):
+            done += 1
+            name = future_to_name[fut]
+            try:
+                _, result = fut.result()
+            except Exception as exc:
+                print(f"  [{done}/{recipe_total}] {name}: error — {exc}", file=sys.stderr)
+                result = None
+            if result is not None:
+                recipe_p2_map[name] = result
+                print(f"  [{done}/{recipe_total}] {name}: ok", file=sys.stderr)
+            else:
+                recipe_skipped += 1
+                print(f"  [{done}/{recipe_total}] {name}: skip", file=sys.stderr)
+
+    # Phase 2e: concurrent recipe.yml label fetches for verified recipes only.
+    print("\nFetching recipe labels from recipe.yml files …", file=sys.stderr)
+    verified_recipes = [(n, recipe_p2_map[n]) for n in all_recipe_candidates if n in recipe_p2_map]
+    recipe_label_map = {}
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        future_to_name = {
+            pool.submit(_fetch_recipe_label_with_delay, n, info["version"]): n
+            for n, info in verified_recipes
+        }
+        done = 0
+        for fut in as_completed(future_to_name):
+            done += 1
+            name = future_to_name[fut]
+            try:
+                _, label = fut.result()
+            except Exception as exc:
+                print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
+                label = None
+            if label:
+                recipe_label_map[name] = label
+            print(f"  [{done}/{len(verified_recipes)}] {name}: {label or '(using fallback name)'}", file=sys.stderr)
+
+    for machine_name, info in verified_recipes:
+        recipe_rows.append({
+            "machine_name": info["composer_name"] or f"drupal/{machine_name}",
+            "label":        recipe_label_map.get(machine_name) or human_name(machine_name),
+            "url":          DRUPAL_PROJECT_URL.format(name=machine_name),
+            "version":      info["version"],
+            "release_date": info["date"] or "—",
+            "stability":    detect_stability(info["version"]),
+        })
+
+    # No usage signal exists for recipes, so sort alphabetically by label
+    # instead of by usage (modules' sort key below).
+    recipe_rows.sort(key=lambda r: r["label"].lower())
+
+    print(
+        f"\nResults: {len(recipe_rows)} confirmed recipes ({recipe_skipped} skipped)",
+        file=sys.stderr,
+    )
+
+    # -------------------------------------------------------------------------
     # Step 3: Sort results by usage count, highest first
     # -------------------------------------------------------------------------
 
@@ -980,77 +1134,28 @@ def main() -> None:
     rows.sort(key=lambda r: r["usage"] if r["usage"] else -1, reverse=True)
 
     # -------------------------------------------------------------------------
-    # Step 4: Write JSON if requested
+    # Step 4: Write or print JSON
     # -------------------------------------------------------------------------
+    # This script only collects and verifies data — rendering is render_md.py's
+    # and render_html.py's job. Keeping JSON as the single output format means
+    # those two renderers (which get updated when columns/filters change) are
+    # never at risk of drifting out of sync with a third, inline renderer here.
+
+    payload = {
+        "generated":       datetime.now().strftime("%Y-%m-%d"),
+        "drupal_versions": sorted(TARGET_VERSIONS),
+        "modules":         rows,
+        "recipes":         recipe_rows,
+    }
 
     if args.json:
-        payload = {
-            "generated":      datetime.now().strftime("%Y-%m-%d"),
-            "drupal_versions": sorted(TARGET_VERSIONS),
-            "modules":        rows,
-        }
         with open(args.json, "w", encoding="utf-8") as fh:
             json.dump(payload, fh, indent=2, ensure_ascii=False)
         print(f"JSON written to {args.json}", file=sys.stderr)
-
-    # -------------------------------------------------------------------------
-    # Step 6: Render the markdown table
-    # -------------------------------------------------------------------------
-
-    today   = datetime.now().strftime("%Y-%m-%d")  # like PHP's date('Y-m-d')
-
-    # " ".join(iterable) concatenates a list with a separator —
-    # like PHP's implode("/", [...])
-    # `str(v) for v in sorted(TARGET_VERSIONS)` is a generator expression:
-    # it converts each number in the sorted set to a string, like
-    # PHP's array_map('strval', $sorted_versions)
-    v_label = "/".join(str(v) for v in sorted(TARGET_VERSIONS))
-
-    # Build the markdown output as a list of strings, then join them.
-    # f-strings use {variable} interpolation — like PHP's "..." with double
-    # quotes, or more precisely like "Value is {$var}" in a heredoc.
-    lines = [
-        f"# Drupal Modules with a Hard Dependency on [AI](https://www.drupal.org/project/ai)\n",
-        f"*Generated {today} · {len(rows)} modules · Drupal {v_label} compatible · all stability levels*\n",
-        "| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |",
-        "|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|",
-    ]
-
-    for r in rows:
-        # f"{r['usage']:,}" formats a number with thousands separators:
-        # 10508 → "10,508". The `:,` is a format spec inside an f-string,
-        # similar to PHP's number_format($n, 0, '.', ',')
-        usage_str = f"{r['usage']:,}" if r["usage"] else "—"
-        security_str = SECURITY_COVERED_EMOJI if r["security_covered"] else SECURITY_NOT_COVERED_EMOJI
-        lines.append(
-            f"| [{r['label']}]({r['url']}) | {r['machine_name']} | {r['url']} | `{r['version']}` |"
-            f" {r['release_date']} | {security_str} | {usage_str} |"
-        )
-
-    # "\n".join(lines) is exactly PHP's implode("\n", $lines)
-    output = "\n".join(lines) + "\n"
-
-    # -------------------------------------------------------------------------
-    # Step 7: Write to file or print to stdout
-    # -------------------------------------------------------------------------
-
-    if args.output:
-        # `with open(...) as fh:` is a context manager that ensures the file
-        # is closed when the block exits — like PHP's fopen/fclose wrapped in
-        # a try/finally. "w" = write mode, like PHP's fopen($path, 'w').
-        with open(args.output, "w", encoding="utf-8") as fh:
-            fh.write(output)
-        print(f"Wrote {len(rows)} rows to {args.output}", file=sys.stderr)
     else:
-        # print() with no file argument writes to STDOUT —
-        # the markdown table is the only thing on stdout, so it can be
-        # cleanly piped or redirected: python3 script.py > results.md
-        print(output)
-
-    if args.html:
-        with open(args.html, "w", encoding="utf-8") as fh:
-            fh.write(render_html(rows))
-        print(f"HTML written to {args.html}", file=sys.stderr)
+        # print() with no file argument writes to STDOUT, so it can be
+        # cleanly piped or redirected: python3 script.py > results.json
+        print(json.dumps(payload, indent=2, ensure_ascii=False))
 
 
 # This block only runs when the script is executed directly:

@@ -2,8 +2,11 @@
 """
 Render a self-contained HTML table from results.json produced by drupal_ai_dependents.py.
 
-Features: sortable columns, name filter, stability-level checkboxes
-(stable/rc/beta/alpha/dev), security coverage checkboxes (covered/not covered).
+Features: a Modules/Recipes tabbed view, sortable columns, name filter,
+stability-level checkboxes (stable/rc/beta/alpha/dev) and security coverage
+checkboxes (covered/not covered) on the Modules tab — recipes have neither
+usage tracking nor meaningful security-advisory data, so the Recipes tab
+only offers sorting and a name filter.
 
 Usage:
   python3 render_html.py results.json -o output.html
@@ -131,56 +134,91 @@ _CSS = """\
     .stab-rc     { background: #cce5ff; color: #004085; }
     .stab-beta   { background: #fff3cd; color: #856404; }
     .stab-alpha  { background: #fde8d8; color: #7d3800; }
-    .stab-dev    { background: #e2e3e5; color: #383d41; }"""
+    .stab-dev    { background: #e2e3e5; color: #383d41; }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid #ddd;
+    }
+    .tab-btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      background: none;
+      font-size: 1rem;
+      cursor: pointer;
+      color: #555;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+    }
+    .tab-btn.active {
+      color: #2d6a9f;
+      border-bottom-color: #2d6a9f;
+      font-weight: 600;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }"""
 
 # JS stored as a plain string (not an f-string) to avoid escaping every { }.
 _JS = """\
     (function () {
-      var thead    = document.querySelector('#tbl thead tr');
-      var tbody    = document.getElementById('tbody');
-      var filter   = document.getElementById('filter');
-      var noRes    = document.getElementById('no-results');
-      var sortCol  = -1, sortDir = 1;
+      // Column-sort mechanics are identical for both tables, so this factory
+      // is shared. Filtering is NOT shared — the modules table filters by
+      // name + stability + security, the recipes table only by name, and
+      // forcing the simpler recipes filter through the modules' shape would
+      // add a pointless conditional to already-tested code.
+      function makeSorter(theadSel, tbodySel) {
+        var thead = document.querySelector(theadSel);
+        var tbody = document.querySelector(tbodySel);
+        var sortCol = -1, sortDir = 1;
 
-      function cellVal(row, col) {
-        return row.children[col].dataset.val;
-      }
-
-      function sortTable(col, type) {
-        if (sortCol === col) {
-          sortDir = -sortDir;
-        } else {
-          sortCol = col;
-          sortDir = (type === 'num') ? -1 : 1;
+        function cellVal(row, col) {
+          return row.children[col].dataset.val;
         }
-        var rows = Array.from(tbody.querySelectorAll('tr'));
-        rows.sort(function (a, b) {
-          var av = cellVal(a, col), bv = cellVal(b, col);
-          if (type === 'num') {
-            av = (av === '') ? -Infinity : Number(av);
-            bv = (bv === '') ? -Infinity : Number(bv);
+
+        function sortTable(col, type) {
+          if (sortCol === col) {
+            sortDir = -sortDir;
           } else {
-            if (av === '' && bv === '') return 0;
-            if (av === '') return 1;
-            if (bv === '') return -1;
+            sortCol = col;
+            sortDir = (type === 'num') ? -1 : 1;
           }
-          return (av < bv ? -1 : av > bv ? 1 : 0) * sortDir;
+          var rows = Array.from(tbody.querySelectorAll('tr'));
+          rows.sort(function (a, b) {
+            var av = cellVal(a, col), bv = cellVal(b, col);
+            if (type === 'num') {
+              av = (av === '') ? -Infinity : Number(av);
+              bv = (bv === '') ? -Infinity : Number(bv);
+            } else {
+              if (av === '' && bv === '') return 0;
+              if (av === '') return 1;
+              if (bv === '') return -1;
+            }
+            return (av < bv ? -1 : av > bv ? 1 : 0) * sortDir;
+          });
+          rows.forEach(function (r) { tbody.appendChild(r); });
+          Array.from(thead.children).forEach(function (th) { delete th.dataset.sort; });
+          thead.children[col].dataset.sort = (sortDir === 1) ? 'asc' : 'desc';
+        }
+
+        Array.from(thead.querySelectorAll('th')).forEach(function (th) {
+          th.addEventListener('click', function () {
+            sortTable(Number(th.dataset.col), th.dataset.type);
+          });
         });
-        rows.forEach(function (r) { tbody.appendChild(r); });
-        Array.from(thead.children).forEach(function (th) { delete th.dataset.sort; });
-        thead.children[col].dataset.sort = (sortDir === 1) ? 'asc' : 'desc';
+
+        return { sortTable: sortTable, cellVal: cellVal, tbody: tbody };
       }
 
-      Array.from(thead.querySelectorAll('th')).forEach(function (th) {
-        th.addEventListener('click', function () {
-          sortTable(Number(th.dataset.col), th.dataset.type);
-        });
-      });
+      // ---- Modules tab: sorting + name/stability/security filter ----
+      var modulesSorter = makeSorter('#tbl-modules thead tr', '#tbody-modules');
+      modulesSorter.sortTable(5, 'num');
 
-      sortTable(5, 'num');
+      var filterModules = document.getElementById('filter-modules');
+      var noResModules   = document.getElementById('no-results-modules');
 
-      function applyFilter() {
-        var q = filter.value.toLowerCase();
+      function applyModulesFilter() {
+        var q = filterModules.value.toLowerCase();
         var stabChecked = new Set(
           Array.from(document.querySelectorAll('.stab-cb:checked'))
                .map(function (cb) { return cb.value; })
@@ -190,30 +228,66 @@ _JS = """\
                .map(function (cb) { return cb.value; })
         );
         var visible = 0;
-        Array.from(tbody.querySelectorAll('tr')).forEach(function (row) {
-          var nameMatch = cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
+        Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
+          var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var stabMatch = stabChecked.has(row.dataset.stability);
           var secMatch = secChecked.has(row.dataset.security);
           var show = nameMatch && stabMatch && secMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
-        noRes.style.display = (visible === 0) ? '' : 'none';
+        noResModules.style.display = (visible === 0) ? '' : 'none';
       }
 
-      filter.addEventListener('input', applyFilter);
+      filterModules.addEventListener('input', applyModulesFilter);
       Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
-        cb.addEventListener('change', applyFilter);
+        cb.addEventListener('change', applyModulesFilter);
+      });
+
+      // ---- Recipes tab: sorting + name-only filter ----
+      // No stability or security data exists for recipes, so there's
+      // nothing to check here beyond the name filter. No default sortTable()
+      // call here (unlike modules) — rows already arrive alphabetical-by-
+      // label from the Python side (no usage signal to sort by instead),
+      // so calling sortTable() on load would just contradict that ordering.
+      var recipesSorter = makeSorter('#tbl-recipes thead tr', '#tbody-recipes');
+
+      var filterRecipes = document.getElementById('filter-recipes');
+      var noResRecipes   = document.getElementById('no-results-recipes');
+
+      function applyRecipesFilter() {
+        var q = filterRecipes.value.toLowerCase();
+        var visible = 0;
+        Array.from(recipesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
+          var show = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
+          row.style.display = show ? '' : 'none';
+          if (show) visible++;
+        });
+        noResRecipes.style.display = (visible === 0) ? '' : 'none';
+      }
+
+      filterRecipes.addEventListener('input', applyRecipesFilter);
+
+      // ---- Tab switching ----
+      Array.from(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          Array.from(document.querySelectorAll('.tab-btn')).forEach(function (b) { b.classList.remove('active'); });
+          Array.from(document.querySelectorAll('.tab-panel')).forEach(function (p) { p.classList.remove('active'); });
+          btn.classList.add('active');
+          document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+        });
       });
     })();"""
 
 
 def render_html(payload: dict) -> str:
-    """Return a self-contained HTML string with sortable columns and stability filter."""
-    rows    = payload["modules"]
-    today   = payload["generated"]
-    v_label = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
-    count   = len(rows)
+    """Return a self-contained HTML string with a tabbed Modules/Recipes view."""
+    rows         = payload["modules"]
+    recipe_rows  = payload.get("recipes", [])  # back-compat: older files have no "recipes" key
+    today        = payload["generated"]
+    v_label      = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
+    count        = len(rows)
+    recipe_count = len(recipe_rows)
 
     def esc(s) -> str:
         return html.escape(str(s), quote=True)
@@ -250,6 +324,30 @@ def render_html(payload: dict) -> str:
 
     tbody = "\n".join(row_lines)
 
+    # Recipes have no usage tracking and no meaningful security-advisory
+    # status, so these rows omit both the badge and the security cell
+    # entirely rather than inventing an "N/A" state.
+    recipe_row_lines = []
+    for r in recipe_rows:
+        label_esc   = esc(r["label"])
+        machine_esc = esc(r["machine_name"])
+        url_esc     = esc(r["url"])
+        ver_raw     = r["version"]
+        ver_disp    = esc(ver_raw) if ver_raw else "—"
+        ver_val     = esc(ver_raw) if ver_raw else ""
+        date        = r["release_date"]
+        date_val    = "" if date == "—" else esc(date)
+        recipe_row_lines.append(
+            f'      <tr>'
+            f'<td data-val="{label_esc}"><a href="{url_esc}">{label_esc}</a></td>'
+            f'<td data-val="{machine_esc}">{machine_esc}</td>'
+            f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
+            f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
+            f'</tr>'
+        )
+
+    recipe_tbody = "\n".join(recipe_row_lines)
+
     checkboxes = "\n      ".join(
         f'<label><input type="checkbox" class="stab-cb" value="{level}" checked>'
         f' {_STABILITY_META[level][0]}</label>'
@@ -272,35 +370,60 @@ def render_html(payload: dict) -> str:
         f'  <style>\n{_CSS}\n  </style>\n'
         '</head>\n'
         '<body>\n'
-        '  <h1>Drupal Modules &mdash; '
+        '  <h1>Drupal Modules &amp; Recipes &mdash; '
         '<a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>\n'
         f'  <p class="meta">Generated {today} &middot; {count} modules'
-        f' &middot; Drupal {v_label} compatible</p>\n'
-        '  <div class="controls">\n'
-        '    <input id="filter" type="search" placeholder="Filter by module name&hellip;">\n'
-        '    <span class="stab-filters">Show:\n'
-        f'      {checkboxes}\n'
-        '    </span>\n'
-        '    <span class="stab-filters">Security:\n'
-        f'      {security_checkboxes}\n'
-        '    </span>\n'
+        f' &middot; {recipe_count} recipes &middot; Drupal {v_label} compatible</p>\n'
+        '  <div class="tabs">\n'
+        f'    <button class="tab-btn active" data-tab="modules">Modules ({count})</button>\n'
+        f'    <button class="tab-btn" data-tab="recipes">Recipes ({recipe_count})</button>\n'
         '  </div>\n'
-        '  <table id="tbl">\n'
-        '    <thead>\n'
-        '      <tr>\n'
-        '        <th data-col="0" data-type="text">Label</th>\n'
-        '        <th data-col="1" data-type="text">machine name</th>\n'
-        '        <th data-col="2" data-type="text">Version</th>\n'
-        '        <th data-col="3" data-type="date">Released</th>\n'
-        '        <th data-col="4" data-type="num" class="col-security">Security coverage</th>\n'
-        '        <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>\n'
-        '      </tr>\n'
-        '    </thead>\n'
-        '    <tbody id="tbody">\n'
+        '  <div class="tab-panel active" id="panel-modules">\n'
+        '    <div class="controls">\n'
+        '      <input id="filter-modules" type="search" placeholder="Filter by module name&hellip;">\n'
+        '      <span class="stab-filters">Show:\n'
+        f'        {checkboxes}\n'
+        '      </span>\n'
+        '      <span class="stab-filters">Security:\n'
+        f'        {security_checkboxes}\n'
+        '      </span>\n'
+        '    </div>\n'
+        '    <table id="tbl-modules">\n'
+        '      <thead>\n'
+        '        <tr>\n'
+        '          <th data-col="0" data-type="text">Label</th>\n'
+        '          <th data-col="1" data-type="text">machine name</th>\n'
+        '          <th data-col="2" data-type="text">Version</th>\n'
+        '          <th data-col="3" data-type="date">Released</th>\n'
+        '          <th data-col="4" data-type="num" class="col-security">Security coverage</th>\n'
+        '          <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>\n'
+        '        </tr>\n'
+        '      </thead>\n'
+        '      <tbody id="tbody-modules">\n'
         f'{tbody}\n'
-        '    </tbody>\n'
-        '  </table>\n'
-        '  <p id="no-results">No modules match your filter.</p>\n'
+        '      </tbody>\n'
+        '    </table>\n'
+        '    <p id="no-results-modules">No modules match your filter.</p>\n'
+        '  </div>\n'
+        '  <div class="tab-panel" id="panel-recipes">\n'
+        '    <div class="controls">\n'
+        '      <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">\n'
+        '    </div>\n'
+        '    <table id="tbl-recipes">\n'
+        '      <thead>\n'
+        '        <tr>\n'
+        '          <th data-col="0" data-type="text">Label</th>\n'
+        '          <th data-col="1" data-type="text">machine name</th>\n'
+        '          <th data-col="2" data-type="text">Version</th>\n'
+        '          <th data-col="3" data-type="date">Released</th>\n'
+        '        </tr>\n'
+        '      </thead>\n'
+        '      <tbody id="tbody-recipes">\n'
+        f'{recipe_tbody}\n'
+        '      </tbody>\n'
+        '    </table>\n'
+        '    <p id="no-results-recipes">No recipes match your filter.</p>\n'
+        '  </div>\n'
         f'  <script>\n{_JS}\n  </script>\n'
         '</body>\n'
         '</html>\n'
@@ -324,7 +447,9 @@ def main() -> None:
     html_out = render_html(payload)
     with open(args.output, "w", encoding="utf-8") as fh:
         fh.write(html_out)
-    print(f"HTML written to {args.output} ({len(payload['modules'])} modules)", file=sys.stderr)
+    module_count = len(payload['modules'])
+    recipe_count = len(payload.get('recipes', []))
+    print(f"HTML written to {args.output} ({module_count} modules, {recipe_count} recipes)", file=sys.stderr)
 
 
 if __name__ == "__main__":

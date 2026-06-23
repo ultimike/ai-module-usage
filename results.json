@@ -1845,5 +1845,247 @@
       "security_covered": false,
       "stability": "alpha"
     }
+  ],
+  "recipes": [
+    {
+      "machine_name": "drupal/drupal_cms_ai",
+      "label": "AI Assistant",
+      "url": "https://www.drupal.org/project/drupal_cms_ai",
+      "version": "2.1.3",
+      "release_date": "2026-06-01",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_audio_transcription",
+      "label": "AI Audio Transcription",
+      "url": "https://www.drupal.org/project/ai_recipe_audio_transcription",
+      "version": "1.x-dev",
+      "release_date": "2026-06-11",
+      "stability": "dev"
+    },
+    {
+      "machine_name": "drupal/ai_chatbot_recipe",
+      "label": "AI Chatbot",
+      "url": "https://www.drupal.org/project/ai_chatbot_recipe",
+      "version": "1.16.0",
+      "release_date": "2025-09-26",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/drupal_cms_ai_ckeditor",
+      "label": "AI CKEditor",
+      "url": "https://www.drupal.org/project/drupal_cms_ai_ckeditor",
+      "version": "1.0.1",
+      "release_date": "2026-02-22",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_content_classification",
+      "label": "AI Content Classification recipe",
+      "url": "https://www.drupal.org/project/ai_recipe_content_classification",
+      "version": "1.0.0",
+      "release_date": "2025-10-09",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_content_pre_moderation",
+      "label": "AI Content Pre-Moderation",
+      "url": "https://www.drupal.org/project/ai_recipe_content_pre_moderation",
+      "version": "2.0.0-alpha1",
+      "release_date": "2026-04-30",
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_content_suggestions",
+      "label": "AI Content Suggestions",
+      "url": "https://www.drupal.org/project/ai_recipe_content_suggestions",
+      "version": "1.x-dev",
+      "release_date": "2026-06-11",
+      "stability": "dev"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_content_search_vector",
+      "label": "AI Content vector search",
+      "url": "https://www.drupal.org/project/ai_recipe_content_search_vector",
+      "version": "1.x-dev",
+      "release_date": "2026-06-11",
+      "stability": "dev"
+    },
+    {
+      "machine_name": "drupal/ai_ecosystem",
+      "label": "AI Ecosystem Recipe",
+      "url": "https://www.drupal.org/project/ai_ecosystem",
+      "version": "1.0.0-alpha2",
+      "release_date": "2024-10-29",
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_guardrails_pii",
+      "label": "AI Guardrails PII",
+      "url": "https://www.drupal.org/project/ai_recipe_guardrails_pii",
+      "version": "1.0.0",
+      "release_date": "2026-03-18",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_guardrails_prompt_safety",
+      "label": "AI Guardrails Prompt Safety",
+      "url": "https://www.drupal.org/project/ai_recipe_guardrails_prompt_safety",
+      "version": "1.0.0",
+      "release_date": "2026-03-18",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_image_alt_text",
+      "label": "AI Image Alternative Text",
+      "url": "https://www.drupal.org/project/ai_recipe_image_alt_text",
+      "version": "1.x-dev",
+      "release_date": "2026-06-11",
+      "stability": "dev"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_image_classification",
+      "label": "AI Image Classification recipe",
+      "url": "https://www.drupal.org/project/ai_recipe_image_classification",
+      "version": "1.1.0",
+      "release_date": "2026-02-12",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_validations_image_safety",
+      "label": "AI image safety validation",
+      "url": "https://www.drupal.org/project/ai_recipe_validations_image_safety",
+      "version": "1.0.x-dev",
+      "release_date": "2026-06-12",
+      "stability": "dev"
+    },
+    {
+      "machine_name": "drupal/ai_recipe_seo_optimizer",
+      "label": "AI SEO Optimizer recipe",
+      "url": "https://www.drupal.org/project/ai_recipe_seo_optimizer",
+      "version": "0.1.1",
+      "release_date": "2025-12-03",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_provider_amazeeio_recipe",
+      "label": "amazee.ai AI Provider Install",
+      "url": "https://www.drupal.org/project/ai_provider_amazeeio_recipe",
+      "version": "1.3.0",
+      "release_date": "2026-03-26",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/drupal_module_chatbot_recipe",
+      "label": "Drupal Module Chatbot Recipe",
+      "url": "https://www.drupal.org/project/drupal_module_chatbot_recipe",
+      "version": "1.0.x-dev",
+      "release_date": "2025-06-24",
+      "stability": "dev"
+    },
+    {
+      "machine_name": "drupal/govnl_cms_ai",
+      "label": "GovNL AI Assistant",
+      "url": "https://www.drupal.org/project/govnl_cms_ai",
+      "version": "1.0.0",
+      "release_date": "2026-05-27",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/quiz_questions_by_eca_and_ai",
+      "label": "Quiz Questions By Eca And Ai",
+      "url": "https://www.drupal.org/project/quiz_questions_by_eca_and_ai",
+      "version": "dev-main",
+      "release_date": "2025-10-26",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/ai_dev_recipe",
+      "label": "Recipe for AI Module development",
+      "url": "https://www.drupal.org/project/ai_dev_recipe",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-09-23",
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "drupal/saplings_ai_ckeditor_experience",
+      "label": "Saplings - AI CKEditor Experience",
+      "url": "https://www.drupal.org/project/saplings_ai_ckeditor_experience",
+      "version": "1.0.3",
+      "release_date": "2025-06-24",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/saplings_ai_agents",
+      "label": "Saplings AI Agents",
+      "url": "https://www.drupal.org/project/saplings_ai_agents",
+      "version": "1.0.4",
+      "release_date": "2025-07-08",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/saplings_ai_mcp",
+      "label": "Saplings AI MCP",
+      "url": "https://www.drupal.org/project/saplings_ai_mcp",
+      "version": "1.0.6",
+      "release_date": "2025-11-26",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/thunder_ai",
+      "label": "Thunder AI",
+      "url": "https://www.drupal.org/project/thunder_ai",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-05-17",
+      "stability": "beta"
+    },
+    {
+      "machine_name": "drupal/varbase_ai_agents",
+      "label": "Varbase AI Agents",
+      "url": "https://www.drupal.org/project/varbase_ai_agents",
+      "version": "1.0.4",
+      "release_date": "2025-11-17",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/varbase_ai_default",
+      "label": "Varbase AI Default",
+      "url": "https://www.drupal.org/project/varbase_ai_default",
+      "version": "1.0.2",
+      "release_date": "2025-07-22",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/varbase_ai_editor_assistant",
+      "label": "Varbase AI Editor Assistant",
+      "url": "https://www.drupal.org/project/varbase_ai_editor_assistant",
+      "version": "1.0.1",
+      "release_date": "2025-07-01",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/varbase_ai_image_alt",
+      "label": "Varbase AI Image Alt",
+      "url": "https://www.drupal.org/project/varbase_ai_image_alt",
+      "version": "1.0.1",
+      "release_date": "2025-07-01",
+      "stability": "stable"
+    },
+    {
+      "machine_name": "drupal/varbase_ai_safety",
+      "label": "Varbase AI Safety",
+      "url": "https://www.drupal.org/project/varbase_ai_safety",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-06-21",
+      "stability": "alpha"
+    },
+    {
+      "machine_name": "drupal/varbase_ai_taxonomy_tagging",
+      "label": "Varbase AI Taxonomy Tagging",
+      "url": "https://www.drupal.org/project/varbase_ai_taxonomy_tagging",
+      "version": "1.0.1",
+      "release_date": "2025-07-01",
+      "stability": "stable"
+    }
   ]
 }
