@@ -2,7 +2,8 @@
 """
 Render a self-contained HTML table from results.json produced by drupal_ai_dependents.py.
 
-Features: sortable columns, name filter, stability-level checkboxes (stable/rc/beta/alpha/dev).
+Features: sortable columns, name filter, stability-level checkboxes
+(stable/rc/beta/alpha/dev), security coverage checkboxes (covered/not covered).
 
 Usage:
   python3 render_html.py results.json -o output.html
@@ -16,6 +17,11 @@ import sys
 
 STABILITY_ORDER = ["stable", "rc", "beta", "alpha", "dev"]
 
+# Security advisory coverage indicators — kept in sync with the constants of
+# the same name in drupal_ai_dependents.py.
+SECURITY_COVERED_EMOJI     = "✅"
+SECURITY_NOT_COVERED_EMOJI = "🚫"
+
 # (display label, CSS class)
 _STABILITY_META = {
     "stable": ("Stable", "stab-stable"),
@@ -23,6 +29,14 @@ _STABILITY_META = {
     "beta":   ("Beta",   "stab-beta"),
     "alpha":  ("Alpha",  "stab-alpha"),
     "dev":    ("Dev",    "stab-dev"),
+}
+
+SECURITY_ORDER = ["covered", "not-covered"]
+
+# (display label, emoji) keyed by the same value stored in data-security.
+_SECURITY_META = {
+    "covered":     ("Covered", SECURITY_COVERED_EMOJI),
+    "not-covered": ("Not covered", SECURITY_NOT_COVERED_EMOJI),
 }
 
 # CSS stored as a plain string (not an f-string) to avoid escaping every { }.
@@ -90,10 +104,12 @@ _CSS = """\
     }
     tr:last-child td { border-bottom: none; }
     tbody tr:hover td { background: #f0f7ff; }
-    .col-version { font-family: ui-monospace, monospace; white-space: nowrap; }
-    .col-date    { white-space: nowrap; }
-    .col-usage   { text-align: right; }
-    th.col-usage { text-align: right; }
+    .col-version  { font-family: ui-monospace, monospace; white-space: nowrap; }
+    .col-date     { white-space: nowrap; }
+    .col-security { text-align: center; }
+    th.col-security { text-align: center; }
+    .col-usage    { text-align: right; }
+    th.col-usage  { text-align: right; }
     #no-results {
       display: none;
       padding: 1.5rem;
@@ -161,19 +177,24 @@ _JS = """\
         });
       });
 
-      sortTable(3, 'num');
+      sortTable(5, 'num');
 
       function applyFilter() {
         var q = filter.value.toLowerCase();
-        var checked = new Set(
+        var stabChecked = new Set(
           Array.from(document.querySelectorAll('.stab-cb:checked'))
+               .map(function (cb) { return cb.value; })
+        );
+        var secChecked = new Set(
+          Array.from(document.querySelectorAll('.sec-cb:checked'))
                .map(function (cb) { return cb.value; })
         );
         var visible = 0;
         Array.from(tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
-          var stabMatch = checked.has(row.dataset.stability);
-          var show = nameMatch && stabMatch;
+          var stabMatch = stabChecked.has(row.dataset.stability);
+          var secMatch = secChecked.has(row.dataset.security);
+          var show = nameMatch && stabMatch && secMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
@@ -181,7 +202,7 @@ _JS = """\
       }
 
       filter.addEventListener('input', applyFilter);
-      Array.from(document.querySelectorAll('.stab-cb')).forEach(function (cb) {
+      Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
         cb.addEventListener('change', applyFilter);
       });
     })();"""
@@ -199,23 +220,30 @@ def render_html(payload: dict) -> str:
 
     row_lines = []
     for r in rows:
-        stability  = r.get("stability", "stable")
-        name_esc   = esc(r["name"])
-        url_esc    = esc(r["url"])
-        ver_raw    = r["version"]
-        ver_disp   = esc(ver_raw) if ver_raw else "—"
-        ver_val    = esc(ver_raw) if ver_raw else ""
-        date       = r["release_date"]
-        date_val   = "" if date == "—" else esc(date)
-        usage_raw  = str(r["usage"]) if r["usage"] else ""
-        usage_disp = f"{r['usage']:,}" if r["usage"] else "—"
-        label, css_class = _STABILITY_META.get(stability, ("Stable", "stab-stable"))
-        badge = f'<span class="badge {css_class}">{label}</span>'
+        stability    = r.get("stability", "stable")
+        label_esc    = esc(r["label"])
+        machine_esc  = esc(r["machine_name"])
+        url_esc      = esc(r["url"])
+        ver_raw      = r["version"]
+        ver_disp     = esc(ver_raw) if ver_raw else "—"
+        ver_val      = esc(ver_raw) if ver_raw else ""
+        date         = r["release_date"]
+        date_val     = "" if date == "—" else esc(date)
+        usage_raw    = str(r["usage"]) if r["usage"] else ""
+        usage_disp   = f"{r['usage']:,}" if r["usage"] else "—"
+        sec_covered  = r["security_covered"]
+        sec_disp     = SECURITY_COVERED_EMOJI if sec_covered else SECURITY_NOT_COVERED_EMOJI
+        sec_val      = "1" if sec_covered else "0"
+        sec_status   = "covered" if sec_covered else "not-covered"
+        stab_label, css_class = _STABILITY_META.get(stability, ("Stable", "stab-stable"))
+        badge = f'<span class="badge {css_class}">{stab_label}</span>'
         row_lines.append(
-            f'      <tr data-stability="{esc(stability)}">'
-            f'<td data-val="{name_esc}"><a href="{url_esc}">{name_esc}</a></td>'
+            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}">'
+            f'<td data-val="{label_esc}"><a href="{url_esc}">{label_esc}</a></td>'
+            f'<td data-val="{machine_esc}">{machine_esc}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}{badge}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
+            f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
             f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
             f'</tr>'
         )
@@ -226,6 +254,12 @@ def render_html(payload: dict) -> str:
         f'<label><input type="checkbox" class="stab-cb" value="{level}" checked>'
         f' {_STABILITY_META[level][0]}</label>'
         for level in STABILITY_ORDER
+    )
+
+    security_checkboxes = "\n      ".join(
+        f'<label><input type="checkbox" class="sec-cb" value="{status}" checked>'
+        f' {_SECURITY_META[status][0]}</label>'
+        for status in SECURITY_ORDER
     )
 
     return (
@@ -247,14 +281,19 @@ def render_html(payload: dict) -> str:
         '    <span class="stab-filters">Show:\n'
         f'      {checkboxes}\n'
         '    </span>\n'
+        '    <span class="stab-filters">Security:\n'
+        f'      {security_checkboxes}\n'
+        '    </span>\n'
         '  </div>\n'
         '  <table id="tbl">\n'
         '    <thead>\n'
         '      <tr>\n'
-        '        <th data-col="0" data-type="text">Module</th>\n'
-        '        <th data-col="1" data-type="text">Version</th>\n'
-        '        <th data-col="2" data-type="date">Released</th>\n'
-        '        <th data-col="3" data-type="num" class="col-usage">Installs</th>\n'
+        '        <th data-col="0" data-type="text">Label</th>\n'
+        '        <th data-col="1" data-type="text">machine name</th>\n'
+        '        <th data-col="2" data-type="text">Version</th>\n'
+        '        <th data-col="3" data-type="date">Released</th>\n'
+        '        <th data-col="4" data-type="num" class="col-security">Security coverage</th>\n'
+        '        <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>\n'
         '      </tr>\n'
         '    </thead>\n'
         '    <tbody id="tbody">\n'

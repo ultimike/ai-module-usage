@@ -1,6 +1,6 @@
 # Drupal AI Dependents
 
-Generates a markdown table of all Drupal modules that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, showing each module's name, URL, latest release version, release date, and active install count.
+Generates a markdown table of all Drupal modules that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, showing each module's label, machine name, URL, latest release version, release date, security advisory coverage, and active install count.
 
 ## Requirements
 
@@ -12,12 +12,12 @@ Generates a markdown table of all Drupal modules that declare a **hard dependenc
 ### Recommended workflow — collect once, render as many times as you like
 
 ```bash
-# Run the slow network fetch (~45-60 min) and save to JSON
+# Run the network fetch (~17-20 min) and save to JSON
 python3 drupal_ai_dependents.py --json results.json
 
 # Re-render from the saved JSON (fast — no network calls)
 python3 render_md.py results.json -o results.md
-python3 render_html.py results.json -o results.html
+python3 render_html.py results.json -o index.html
 ```
 
 ### All-in-one — collect and render in a single run
@@ -30,7 +30,7 @@ python3 drupal_ai_dependents.py
 python3 drupal_ai_dependents.py -o results.md
 
 # Save JSON + markdown + HTML in one run
-python3 drupal_ai_dependents.py --json results.json -o results.md --html results.html
+python3 drupal_ai_dependents.py --json results.json -o results.md --html index.html
 ```
 
 ## Output
@@ -45,38 +45,43 @@ The `--json FILE` flag writes a structured JSON file that can be re-rendered wit
   "drupal_versions": [10, 11],
   "modules": [
     {
-      "machine_name": "ai_provider_openai",
-      "name": "Ai Provider Openai",
+      "machine_name": "drupal/ai_provider_openai",
+      "label": "OpenAI Provider",
       "url": "https://www.drupal.org/project/ai_provider_openai",
       "version": "1.2.1",
       "release_date": "2026-02-25",
       "usage": 13133,
+      "security_covered": true,
       "stability": "stable"
     }
   ]
 }
 ```
 
-The `stability` field is derived from the version string: `stable`, `rc`, `beta`, `alpha`, or `dev`.
+- `machine_name` is the `name` field from the module's `composer.json` (e.g. `drupal/ai_provider_openai`), not just the bare project machine name.
+- `label` is the `name` key from the module's `*.info.yml` file (its actual display title), fetched from `git.drupalcode.org`. Falls back to a title-cased version of the machine name if the file can't be fetched.
+- `security_covered` reflects whether the project is covered by Drupal's security advisory policy (`field_security_advisory_coverage == "covered"` on drupal.org).
+- `stability` is derived from the version string: `stable`, `rc`, `beta`, `alpha`, or `dev`.
 
 ### Markdown
 
 A markdown table sorted by active installs (descending), for example:
 
-| Module | URL | Latest Version | Release Date | Usage (installs) |
-|--------|-----|:--------------:|:------------:|----------------:|
-| Ai Provider Openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | 10,508 |
-| Ai Image Alt Text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 8,894 |
+| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |
+|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|
+| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 |
+| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 |
 
-Modules with no tracked install count show `—` in the usage column.
+The Label column links to the module's project page. Modules with no tracked install count show `—` in the usage column. Security coverage shows ✅ when covered by Drupal's security advisory policy, 🚫 otherwise.
 
 ### HTML
 
-`render_html.py results.json -o results.html` generates a self-contained HTML file with no external dependencies (all CSS and JavaScript is embedded). The table supports:
+`render_html.py results.json -o index.html` generates a self-contained HTML file with no external dependencies (all CSS and JavaScript is embedded). The table supports:
 
 - **Sort by any column** — click a column header to sort ascending; click again to sort descending. Sort direction is indicated by ▲/▼ in the header.
 - **Filter by module name** — type in the search box to instantly hide non-matching rows.
 - **Filter by stability level** — checkboxes let you show or hide stable, RC, beta, alpha, and dev releases independently. Each version cell displays a small colored badge indicating stability.
+- **Filter by security coverage** — checkboxes let you show or hide modules that are covered vs. not covered by Drupal's security advisory policy.
 
 Default sort is by install count (descending), matching the markdown output order.
 
@@ -115,7 +120,8 @@ The p2 file also provides:
 ### Stage 3 — Additional data
 
 - **Release date fallback:** If the p2 file has no datestamp, `updates.drupal.org/release-history/{name}/current` is queried.
-- **Usage/install count:** `www.drupal.org/api-d7/node.json` is queried for the `project_usage` field, which reports active installs across all tracked versions.
+- **Module label:** `git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml` is fetched and its `name:` key is read — this is the module's actual display title, distinct from both the machine name and the composer package name.
+- **Usage/install count and security coverage:** `www.drupal.org/api-d7/node.json` is queried once per module for both the `project_usage` field (summed across all tracked versions) and `field_security_advisory_coverage` (`"covered"` or `"not-covered"`).
 
 ## Rate limiting
 
@@ -127,9 +133,12 @@ ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
 PACKAGES_DELAY       = 3.0   # packages.drupal.org (search pages + p2 files)
 RELEASE_DELAY        = 3.0   # updates.drupal.org (date fallback only)
 DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
+GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml label fetch)
 ```
 
-With ~730 candidates to verify and 3-second delays before every request, a full run takes approximately **45–60 minutes**. Do not reduce these values significantly — the Drupal.org JSON API will return `503 Service Unavailable` responses if called too frequently.
+The p2 verification and info.yml label phases each run 3 concurrent workers, every worker sleeping its phase's delay before its own request. Both packages.drupal.org and git.drupalcode.org are CDN-backed static file servers and handle this rate comfortably. The drupal.org JSON API (usage counts + security coverage) remains sequential at `DRUPAL_API_DELAY` — do not reduce that value, as it returned `503 Service Unavailable` during development when called faster than ~1 per second.
+
+A full run takes approximately **17–20 minutes**.
 
 If a `503` is received, the script automatically retries up to 4 times, honouring the server's `Retry-After` response header if present, or falling back to exponential backoff starting at 2 seconds.
 
@@ -149,14 +158,25 @@ Collecting candidates …
   733 unique candidates after merge
 
 Verifying via packages.drupal.org p2 files …
-  [1/733] issues …
-    → skipped
-  [2/733] ai_provider_openai …
-  [3/733] ai_agents …
+  [47/733] issues: skip
+  [51/733] ai_provider_openai: ok
+  [89/733] ai_agents: ok
+  …
+
+Fetching module labels from info.yml files …
+  [1/182] ai_provider_openai: OpenAI Provider
+  [2/182] ai_agents: AI Agents
+  …
+
+Fetching usage counts …
+  [1/182] ai_provider_openai: usage=13133 security_covered=True
+  [2/182] ai_agents: usage=10758 security_covered=True
   …
 
 Results: 182 confirmed modules (551 skipped, 3 used date fallback)
 ```
+
+The p2 verification and info.yml label phases each complete candidates out-of-order (3 workers run concurrently), so progress numbers are not sequential within those phases. The usage-count phase runs in order. Every module prints a line in each phase — this matters for the usage-count phase in particular, since it's fully sequential at 3s/module and can otherwise look stalled for many minutes.
 
 Because progress goes to `stderr` and the markdown table goes to `stdout`, they do not interfere when redirecting output to a file.
 
@@ -164,7 +184,7 @@ Because progress goes to `stderr` and the markdown table goes to `stdout`, they 
 
 **Coverage depends on candidate sources.** The script checks ~730 candidates drawn from the ecosystem page and a package name search for "ai". A module that hard-depends on drupal/ai but has no connection to "ai" in its name or description, and has not been added to the AI ecosystem listing, will be missed. There is no reverse-dependency index in the Composer protocol that would enable exhaustive enumeration of all 18,000+ packages on packages.drupal.org.
 
-**The dependency check uses the latest version only.** If a module's newest release dropped the drupal/ai dependency but an older release had it, the module will not appear in the list. Conversely, if only a dev release has the dependency, that release will be included (all stability levels are checked).
+**The latest stable release is preferred.** The script picks the newest stable release that passes all checks. If no stable release exists it falls back to the newest pre-release (rc, beta, alpha, dev). If a module's latest stable release dropped the drupal/ai dependency, the module will not appear even if a dev release still has it.
 
 **Install counts are approximate.** The `project_usage` field from the Drupal.org API reports sites that have submitted an update check recently. It undercounts sites with update checking disabled, and may overcount sites reporting from multiple environments.
 

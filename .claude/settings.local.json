@@ -13,7 +13,16 @@
       "Bash(python3 drupal_ai_dependents.py)",
       "Bash(echo \"--- EXIT $? ---\")",
       "WebFetch(domain:packages.drupal.org)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(curl -s -m 10 -o /dev/null -w \"%{http_code}\\\\n\" \"https://git.drupalcode.org/project/token/-/raw/8.x-1.13/token.info.yml\")",
+      "Bash(curl -s -m 10 \"https://git.drupalcode.org/project/ai/-/raw/1.2.1/ai.info.yml\")",
+      "Bash(curl -s -m 10 -o /dev/null -w \"%{http_code}\\\\n\" \"https://ftp.drupal.org/files/projects/ai-1.2.1.zip\")",
+      "Bash(curl -s -m 15 \"https://www.drupal.org/api-d7/node.json?field_project_machine_name=token&type=project_module\")",
+      "Bash(curl -s -m 15 \"https://www.drupal.org/api-d7/node.json?type=project_module&field_security_advisory_coverage=not-covered&limit=3\")",
+      "Bash(curl -s -m 15 \"https://packages.drupal.org/files/packages/8/p2/drupal/ai.json\")",
+      "Bash(node -e \"try{require\\('jsdom'\\);console.log\\('jsdom available'\\)}catch\\(e\\){console.log\\('no jsdom'\\)}\")",
+      "Bash(npm ls *)",
+      "Bash(find / -maxdepth 4 -iname \"jsdom\" -type d)"
     ]
   }
 }

@@ -28,11 +28,13 @@ import html               # html.escape() for safe HTML attribute/text escaping
 import json               # like PHP's json_decode() / json_encode()
 import re                 # like PHP's preg_match() / preg_replace()
 import sys                # access to stdin/stdout/stderr and script exit
+import threading          # Lock for thread-safe rate limiting
 import time               # like PHP's sleep() and microtime()
 import urllib.error       # HTTP error types thrown by urllib (like curl errors)
 import urllib.parse       # URL building — like PHP's http_build_query()
 import urllib.request     # makes HTTP requests — like PHP's curl or file_get_contents()
 import xml.etree.ElementTree as ET  # XML parser — like PHP's SimpleXMLElement
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone  # date handling — like PHP's DateTime
 
 
@@ -48,6 +50,7 @@ P2_URL               = "https://packages.drupal.org/files/packages/8/p2/drupal/{
 RELEASE_HISTORY_URL  = "https://updates.drupal.org/release-history/{name}/current"
 DRUPAL_API_URL       = "https://www.drupal.org/api-d7/node.json"
 DRUPAL_PROJECT_URL   = "https://www.drupal.org/project/{name}"
+INFO_YML_URL         = "https://git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml"
 
 # A Python `set` is like a PHP array used as a lookup table (array_flip'd),
 # where only unique values matter and order doesn't. Membership checks are O(1).
@@ -60,9 +63,14 @@ ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
 PACKAGES_DELAY       = 3.0   # packages.drupal.org (search pages + p2 files)
 RELEASE_DELAY        = 3.0   # updates.drupal.org (date fallback only)
 DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
+GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml label fetch)
 
 MAX_RETRIES   = 4    # how many times to retry a failed API call before giving up
 RETRY_BACKOFF = 2.0  # starting wait in seconds; doubles after each retry
+
+# Security advisory coverage indicators, shared by both renderers.
+SECURITY_COVERED_EMOJI     = "✅"
+SECURITY_NOT_COVERED_EMOJI = "🚫"
 
 # Request headers sent with every HTTP call. The dict literal here is like
 # PHP's associative array: ["User-Agent" => "..."]
@@ -383,52 +391,94 @@ def get_p2_info(machine_name: str) -> dict | None:
     if versions[0].get("type") != "drupal-module":
         return None
 
-    # Iterate through versions newest-first to find the latest one that
-    # satisfies all our requirements.
+    # Collect all versions that satisfy requirements, then pick the best one.
+    candidates = []
     for v in versions:
-        # `v.get("require") or {}` safely gets the require dict.
-        # The `or {}` fallback handles the case where require is null/missing,
-        # avoiding a TypeError on the `in` check below.
-        # This is like PHP's $require = $v['require'] ?? [];
         require = v.get("require") or {}
-
-        # Check 2: does this version declare drupal/ai as a dependency?
         if "drupal/ai" not in require:
-            continue  # skip to next version, like PHP's `continue`
-
-        # Check 3: does the drupal/core constraint include Drupal 10 or 11?
+            continue
         core_constraint = require.get("drupal/core", "")
         if not _core_is_d10_d11(core_constraint):
             continue
+        candidates.append(v)
 
-        # Extract the release date from the Drupal-specific extra metadata.
-        # In composer.json this looks like: "extra": {"drupal": {"datestamp": 1772029063}}
-        # Chaining .get() calls safely navigates nested dicts without KeyErrors —
-        # like PHP's $v['extra']['drupal']['datestamp'] ?? null but without
-        # throwing notices on missing intermediate keys.
-        datestamp = (v.get("extra") or {}).get("drupal", {}).get("datestamp")
+    if not candidates:
+        return None
 
-        # Convert the Unix timestamp to a YYYY-MM-DD string if we have one.
-        # This is a conditional expression (ternary): value_if_true if condition else value_if_false
-        # timezone.utc ensures we interpret the timestamp as UTC, like
-        # PHP's (new DateTime())->setTimestamp($ts)->format('Y-m-d')
-        date = (
-            datetime.fromtimestamp(int(datestamp), tz=timezone.utc).strftime("%Y-%m-%d")
-            if datestamp
-            else None
-        )
+    # Prefer the newest stable release; fall back to the newest pre-release
+    # if no stable version exists (e.g. module is still in beta).
+    best = next(
+        (v for v in candidates if detect_stability(v.get("version", "")) == "stable"),
+        candidates[0],
+    )
 
-        # Return a dict (associative array) with everything callers need.
-        # Once we find the first valid version, we stop — no need to check older ones.
-        return {
-            "version":         v.get("version", ""),
-            "date":            date,
-            "ai_constraint":   require["drupal/ai"],    # e.g. "^1.2.0"
-            "core_constraint": core_constraint,         # e.g. "^10.3 || ^11"
-        }
+    require = best.get("require") or {}
+    core_constraint = require.get("drupal/core", "")
+    datestamp = (best.get("extra") or {}).get("drupal", {}).get("datestamp")
+    date = (
+        datetime.fromtimestamp(int(datestamp), tz=timezone.utc).strftime("%Y-%m-%d")
+        if datestamp
+        else None
+    )
+    return {
+        "version":         best.get("version", ""),
+        "date":            date,
+        "ai_constraint":   require["drupal/ai"],
+        "core_constraint": core_constraint,
+        # The package's own composer.json "name" field, e.g. "drupal/ai_agents" —
+        # already present in the p2 payload, so no extra request is needed.
+        "composer_name":   best.get("name", ""),
+    }
 
-    # If we checked every version and none passed, return None.
-    return None
+
+def _fetch_p2_with_delay(machine_name: str):
+    """Sleep then fetch p2 info — designed to run in a worker thread."""
+    time.sleep(PACKAGES_DELAY)
+    return machine_name, get_p2_info(machine_name)
+
+
+# ---------------------------------------------------------------------------
+# Module label — git.drupalcode.org (reads the *.info.yml `name` key)
+# ---------------------------------------------------------------------------
+
+# Matches a top-level `name:` key in a .info.yml file, e.g. `name: AI Core`.
+# Anchored with MULTILINE so `^`/`$` match line boundaries, not the whole file.
+_INFO_NAME_RE = re.compile(r'^name:\s*(.+?)\s*$', re.MULTILINE)
+
+
+def get_module_label(machine_name: str, version: str) -> str | None:
+    """Fetch a module's human-readable label from its {name}.info.yml file.
+
+    Reads the raw file straight from git.drupalcode.org (Drupal.org's GitLab
+    instance) at the tag matching the module's release version — this is the
+    only place the `name:` key (the actual project label) lives; it isn't
+    part of composer.json or any JSON API response.
+
+    Returns None if the file can't be fetched or has no `name:` key.
+    """
+    url = INFO_YML_URL.format(name=machine_name, version=version)
+    try:
+        status, body, _ = _http_get(url)
+    except RuntimeError:
+        return None
+    if status != 200 or not body:
+        return None
+
+    match = _INFO_NAME_RE.search(body.decode("utf-8", errors="replace"))
+    if not match:
+        return None
+
+    label = match.group(1).strip()
+    # Strip a single layer of quotes — YAML allows name: 'X' or name: "X".
+    if len(label) >= 2 and label[0] == label[-1] and label[0] in "'\"":
+        label = label[1:-1]
+    return label or None
+
+
+def _fetch_label_with_delay(machine_name: str, version: str):
+    """Sleep then fetch the info.yml label — designed to run in a worker thread."""
+    time.sleep(GITLAB_DELAY)
+    return machine_name, get_module_label(machine_name, version)
 
 
 # ---------------------------------------------------------------------------
@@ -492,35 +542,48 @@ def get_release_date_fallback(machine_name: str, version: str) -> str | None:
 # Usage count — Drupal.org API
 # ---------------------------------------------------------------------------
 
-def get_usage_count(machine_name: str) -> int | None:
-    """Fetch the total active install count from the Drupal.org JSON API.
+def get_usage_and_security(machine_name: str) -> tuple[int | None, bool]:
+    """Fetch the active install count and security advisory coverage.
+
+    Both come from the same Drupal.org JSON API node, so they're fetched
+    together to avoid a second API round-trip.
 
     The API returns a `project_usage` object like:
       {"1.0.x": 1500, "1.1.x": 3200}
     We sum all version counts to get a single total.
-    Returns None if the API call fails or no usage data exists.
+
+    `field_security_advisory_coverage` is `"covered"` for projects covered
+    by Drupal's security advisory policy, `"not-covered"` otherwise. Any
+    other/missing value is treated as not covered.
+
+    Returns (usage_or_None, is_security_covered).
     """
     data = _drupal_api_get({
         "field_project_machine_name": machine_name,
         "limit": 1,  # we only need the one matching project node
     })
     if not data:
-        return None
+        return None, False
 
     # data.get("list", []) retrieves the array of node results.
     nodes = data.get("list", [])
     if not nodes:
-        return None
+        return None, False
 
     # nodes[0] is the first (and only) result — like PHP's $nodes[0].
-    usage = nodes[0].get("project_usage") or {}
+    node = nodes[0]
+    usage = node.get("project_usage") or {}
 
     # This is a generator expression inside sum() — a concise way to
     # convert all values to int and add them up. It's equivalent to:
     #   $total = 0;
     #   foreach ($usage as $v) { $total += (int)$v; }
     # The API returns counts as strings, so we cast each with int().
-    return sum(int(v) for v in usage.values()) if usage else None
+    total_usage = sum(int(v) for v in usage.values()) if usage else None
+
+    is_covered = node.get("field_security_advisory_coverage") == "covered"
+
+    return total_usage, is_covered
 
 
 # ---------------------------------------------------------------------------
@@ -572,20 +635,26 @@ def render_html(rows: list[dict]) -> str:
 
     row_lines = []
     for r in rows:
-        name_esc   = esc(r["name"])
-        url_esc    = esc(r["url"])
-        ver_raw    = r["version"]
-        ver_disp   = esc(ver_raw) if ver_raw else "—"
-        ver_val    = esc(ver_raw) if ver_raw else ""
-        date       = r["release_date"]
-        date_val   = "" if date == "—" else esc(date)
-        usage_raw  = str(r["usage"]) if r["usage"] else ""
-        usage_disp = f"{r['usage']:,}" if r["usage"] else "—"
+        label_esc    = esc(r["label"])
+        machine_esc  = esc(r["machine_name"])
+        url_esc      = esc(r["url"])
+        ver_raw      = r["version"]
+        ver_disp     = esc(ver_raw) if ver_raw else "—"
+        ver_val      = esc(ver_raw) if ver_raw else ""
+        date         = r["release_date"]
+        date_val     = "" if date == "—" else esc(date)
+        usage_raw    = str(r["usage"]) if r["usage"] else ""
+        usage_disp   = f"{r['usage']:,}" if r["usage"] else "—"
+        sec_covered  = r["security_covered"]
+        sec_disp     = SECURITY_COVERED_EMOJI if sec_covered else SECURITY_NOT_COVERED_EMOJI
+        sec_val      = "1" if sec_covered else "0"
         row_lines.append(
             f'      <tr>'
-            f'<td data-val="{name_esc}"><a href="{url_esc}">{name_esc}</a></td>'
+            f'<td data-val="{label_esc}"><a href="{url_esc}">{label_esc}</a></td>'
+            f'<td data-val="{machine_esc}">{machine_esc}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
+            f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
             f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
             f'</tr>'
         )
@@ -638,10 +707,12 @@ def render_html(rows: list[dict]) -> str:
     }
     tr:last-child td { border-bottom: none; }
     tbody tr:hover td { background: #f0f7ff; }
-    .col-version { font-family: ui-monospace, monospace; white-space: nowrap; }
-    .col-date    { white-space: nowrap; }
-    .col-usage   { text-align: right; }
-    th.col-usage { text-align: right; }
+    .col-version  { font-family: ui-monospace, monospace; white-space: nowrap; }
+    .col-date     { white-space: nowrap; }
+    .col-security { text-align: center; }
+    th.col-security { text-align: center; }
+    .col-usage    { text-align: right; }
+    th.col-usage  { text-align: right; }
     #no-results {
       display: none;
       padding: 1.5rem;
@@ -694,7 +765,7 @@ def render_html(rows: list[dict]) -> str:
         });
       });
 
-      sortTable(3, 'num');
+      sortTable(5, 'num');
 
       filter.addEventListener('input', function () {
         var q = filter.value.toLowerCase();
@@ -726,10 +797,12 @@ def render_html(rows: list[dict]) -> str:
         '  <table id="tbl">\n'
         '    <thead>\n'
         '      <tr>\n'
-        '        <th data-col="0" data-type="text">Module</th>\n'
-        '        <th data-col="1" data-type="text">Version</th>\n'
-        '        <th data-col="2" data-type="date">Released</th>\n'
-        '        <th data-col="3" data-type="num" class="col-usage">Installs</th>\n'
+        '        <th data-col="0" data-type="text">Label</th>\n'
+        '        <th data-col="1" data-type="text">machine name</th>\n'
+        '        <th data-col="2" data-type="text">Version</th>\n'
+        '        <th data-col="3" data-type="date">Released</th>\n'
+        '        <th data-col="4" data-type="num" class="col-security">Security coverage</th>\n'
+        '        <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>\n'
         '      </tr>\n'
         '    </thead>\n'
         '    <tbody id="tbody">\n'
@@ -805,55 +878,88 @@ def main() -> None:
     # -------------------------------------------------------------------------
     # Step 2: Verify each candidate against packages.drupal.org
     # -------------------------------------------------------------------------
+    # Phase 2a: concurrent p2 fetches (3 workers, each sleeping PACKAGES_DELAY
+    # before its own request). packages.drupal.org serves static CDN files and
+    # tolerates this rate; drupal.org's sensitive API is handled separately below.
     print("Verifying via packages.drupal.org p2 files …", file=sys.stderr)
 
     rows          = []   # will hold one dict per confirmed module
     skipped       = 0    # count of candidates that failed verification
     date_fallbacks = 0   # count of modules that needed the updates.drupal.org fallback
     total         = len(all_candidates)
+    p2_map        = {}   # machine_name → p2 result dict (only passing modules)
 
-    # enumerate() adds a counter to a loop — like PHP's
-    # foreach ($all_candidates as $i => $machine_name)
-    # The second argument `1` makes the counter start at 1 instead of 0.
-    for i, machine_name in enumerate(all_candidates, 1):
-        print(f"  [{i}/{total}] {machine_name} …", file=sys.stderr)
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        future_to_name = {pool.submit(_fetch_p2_with_delay, n): n for n in all_candidates}
+        done = 0
+        for fut in as_completed(future_to_name):
+            done += 1
+            name = future_to_name[fut]
+            try:
+                _, result = fut.result()
+            except Exception as exc:
+                print(f"  [{done}/{total}] {name}: error — {exc}", file=sys.stderr)
+                result = None
+            if result is not None:
+                p2_map[name] = result
+                print(f"  [{done}/{total}] {name}: ok", file=sys.stderr)
+            else:
+                skipped += 1
+                print(f"  [{done}/{total}] {name}: skip", file=sys.stderr)
 
-        # Sleep BEFORE the request (not after) so there's always a gap
-        # between consecutive calls to the same server.
-        time.sleep(PACKAGES_DELAY)
-        p2 = get_p2_info(machine_name)
+    # Phase 2b: concurrent info.yml label fetches for verified modules only
+    # (3 workers, same pattern as phase 2a). git.drupalcode.org is a static
+    # GitLab raw-file endpoint, so it tolerates the same burst rate as
+    # packages.drupal.org.
+    print("\nFetching module labels from info.yml files …", file=sys.stderr)
+    verified = [(n, p2_map[n]) for n in all_candidates if n in p2_map]
+    label_map = {}  # machine_name → label (only when found)
 
-        # `is None` is the correct way to check for null in Python —
-        # equivalent to PHP's === null. Using `== None` would also match
-        # other falsy values and is considered bad practice.
-        if p2 is None:
-            print(f"    → skipped", file=sys.stderr)
-            skipped += 1
-            continue  # move to the next iteration of the for loop
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        future_to_name = {
+            pool.submit(_fetch_label_with_delay, n, p2["version"]): n
+            for n, p2 in verified
+        }
+        done = 0
+        for fut in as_completed(future_to_name):
+            done += 1
+            name = future_to_name[fut]
+            try:
+                _, label = fut.result()
+            except Exception as exc:
+                print(f"  [{done}/{len(verified)}] {name}: error — {exc}", file=sys.stderr)
+                label = None
+            if label:
+                label_map[name] = label
+            print(f"  [{done}/{len(verified)}] {name}: {label or '(using fallback name)'}", file=sys.stderr)
 
-        # Use the date from the p2 file if available; otherwise fall back
-        # to querying updates.drupal.org.
+    # Phase 2c: sequential usage + security coverage fetches for verified
+    # modules only. Preserves all_candidates order (ecosystem-first) for
+    # deterministic output. drupal.org's JSON API stays strictly sequential
+    # at DRUPAL_API_DELAY.
+    print("\nFetching usage counts …", file=sys.stderr)
+    for i, (machine_name, p2) in enumerate(verified, 1):
         date = p2["date"]
         if not date:
             time.sleep(RELEASE_DELAY)
             date = get_release_date_fallback(machine_name, p2["version"])
             date_fallbacks += 1
             if date:
-                print(f"    date from updates.drupal.org", file=sys.stderr)
+                print(f"  [{i}/{len(verified)}] {machine_name}: date from updates.drupal.org", file=sys.stderr)
 
         time.sleep(DRUPAL_API_DELAY)
-        usage = get_usage_count(machine_name)
+        usage, security_covered = get_usage_and_security(machine_name)
+        print(f"  [{i}/{len(verified)}] {machine_name}: usage={usage} security_covered={security_covered}", file=sys.stderr)
 
-        # Append a dict to our results list. In PHP this would be:
-        # $rows[] = ["name" => ..., "url" => ..., ...]
         rows.append({
-            "machine_name": machine_name,
-            "name":         human_name(machine_name),
-            "url":          DRUPAL_PROJECT_URL.format(name=machine_name),
-            "version":      p2["version"],
-            "release_date": date or "—",  # `or` here means "if falsy, use this instead"
-            "usage":        usage,
-            "stability":    detect_stability(p2["version"]),
+            "machine_name":      p2["composer_name"] or f"drupal/{machine_name}",
+            "label":             label_map.get(machine_name) or human_name(machine_name),
+            "url":               DRUPAL_PROJECT_URL.format(name=machine_name),
+            "version":           p2["version"],
+            "release_date":      date or "—",
+            "usage":             usage,
+            "security_covered":  security_covered,
+            "stability":         detect_stability(p2["version"]),
         })
 
     print(
@@ -906,8 +1012,8 @@ def main() -> None:
     lines = [
         f"# Drupal Modules with a Hard Dependency on [AI](https://www.drupal.org/project/ai)\n",
         f"*Generated {today} · {len(rows)} modules · Drupal {v_label} compatible · all stability levels*\n",
-        "| Module | URL | Latest Version | Release Date | Usage (installs) |",
-        "|--------|-----|:--------------:|:------------:|----------------:|",
+        "| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |",
+        "|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|",
     ]
 
     for r in rows:
@@ -915,8 +1021,10 @@ def main() -> None:
         # 10508 → "10,508". The `:,` is a format spec inside an f-string,
         # similar to PHP's number_format($n, 0, '.', ',')
         usage_str = f"{r['usage']:,}" if r["usage"] else "—"
+        security_str = SECURITY_COVERED_EMOJI if r["security_covered"] else SECURITY_NOT_COVERED_EMOJI
         lines.append(
-            f"| {r['name']} | {r['url']} | `{r['version']}` | {r['release_date']} | {usage_str} |"
+            f"| [{r['label']}]({r['url']}) | {r['machine_name']} | {r['url']} | `{r['version']}` |"
+            f" {r['release_date']} | {security_str} | {usage_str} |"
         )
 
     # "\n".join(lines) is exactly PHP's implode("\n", $lines)
