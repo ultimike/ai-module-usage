@@ -1,5 +1,5 @@
 {
-  "generated": "2026-06-23",
+  "generated": "2026-06-24",
   "drupal_versions": [
     10,
     11
@@ -1309,11 +1309,11 @@
       "machine_name": "drupal/aidmi",
       "label": "AIDmi - AI Describe My Image",
       "url": "https://www.drupal.org/project/aidmi",
-      "version": "1.1.0-rc1",
-      "release_date": "2026-06-16",
+      "version": "1.1.0",
+      "release_date": "2026-06-24",
       "usage": 1,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "stable"
     },
     {
       "machine_name": "drupal/views_nl_filter",
@@ -1514,6 +1514,16 @@
       "usage": null,
       "security_covered": true,
       "stability": "alpha"
+    },
+    {
+      "machine_name": "drupal/better_ai_report",
+      "label": "Better AI Report",
+      "url": "https://www.drupal.org/project/better_ai_report",
+      "version": "1.0.0",
+      "release_date": "2026-06-23",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable"
     },
     {
       "machine_name": "drupal/chromium_tool",
@@ -1784,16 +1794,6 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable"
-    },
-    {
-      "machine_name": "drupal/ai_agents_ossa",
-      "label": "AI Agents OSSA",
-      "url": "https://www.drupal.org/project/ai_agents_ossa",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-03-25",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha"
     },
     {
       "machine_name": "drupal/ai_eval",

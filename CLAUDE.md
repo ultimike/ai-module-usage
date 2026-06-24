@@ -22,7 +22,10 @@ markdown, separate tabs in HTML).
 - URL (`https://www.drupal.org/project/{name}`)
 - Latest version compatible with Drupal 10 or 11
 - Release date
-- Security coverage — ✅/🚫 based on Drupal's security advisory policy
+- Security coverage — three states based on Drupal's security advisory policy and stability:
+  - Filled shield (`images/shield-icon-black.svg`, 50% opacity) — covered + stable release
+  - Outline shield (inline SVG, stroke only, 50% opacity) — covered + pre-release (rc/beta/alpha/dev)
+  - 🚫 — not covered by the security advisory policy
 - Active install count ("Drupal.org usage")
 
 **Recipes table:** Label, machine name, URL, version, release date — no
@@ -461,11 +464,18 @@ Design notes for `render_html.py`:
   sort on load is column 5 (usage), descending.
 - `html.escape()` is used on all row values to prevent XSS from any
   unexpected characters in API responses.
-- Security coverage uses `SECURITY_COVERED_EMOJI` (✅) / `SECURITY_NOT_COVERED_EMOJI`
-  (🚫) — `render_md.py` and `render_html.py` each define their own local
-  copy of these constants, since they're standalone scripts that only read
-  `results.json` (not importable modules, and not used by
-  `drupal_ai_dependents.py` itself, which doesn't render anything).
+- Security coverage uses three constants defined locally in each renderer
+  (not shared with `drupal_ai_dependents.py`, which doesn't render anything):
+  - `SECURITY_COVERED_STABLE_HTML` / `SECURITY_COVERED_STABLE_MD` — filled shield
+    (`<img src="images/shield-icon-black.svg" style="opacity:0.5">`) for covered + stable.
+    HTML uses the img tag directly; Markdown uses the same img tag (renders in GitHub MD).
+  - `SECURITY_COVERED_PRERELEASE_HTML` / `SECURITY_COVERED_PRERELEASE_MD` — outline shield
+    for covered + pre-release. HTML uses an inline `<svg>` (stroke only, no fill, `style="opacity:0.5"`);
+    Markdown uses an `<img>` with a self-contained SVG data URI (`style="opacity:0.5"`).
+  - `SECURITY_NOT_COVERED_EMOJI` (🚫) — unchanged, used by both renderers.
+  The choice between filled vs. outline is made per-row by comparing `stability == "stable"`.
+  `data-security` on `<tr>` remains `"covered"` / `"not-covered"` — both shield variants
+  belong to the same filter state.
 
 ---
 

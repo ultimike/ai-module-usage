@@ -1123,6 +1123,36 @@ def main() -> None:
     )
 
     # -------------------------------------------------------------------------
+    # Per-source discovery summary
+    # -------------------------------------------------------------------------
+    eco_set    = set(eco_names)
+    search_set = set(search_names)
+    mod_eco    = sum(1 for n in p2_map if n in eco_set)
+    mod_search = sum(1 for n in p2_map if n in search_set)
+    mod_both   = sum(1 for n in p2_map if n in eco_set and n in search_set)
+
+    eco_unmatched_set = set(eco_unmatched)
+    rec_search_set    = set(recipe_search_names)
+    curated_set       = set(curated_recipe_names)
+    rec_eco     = sum(1 for n in recipe_p2_map if n in eco_unmatched_set)
+    rec_search  = sum(1 for n in recipe_p2_map if n in rec_search_set)
+    rec_curated = sum(1 for n in recipe_p2_map if n in curated_set)
+    rec_overlap = rec_eco + rec_search + rec_curated - len(recipe_p2_map)
+
+    print("\nConfirmed by source:", file=sys.stderr)
+    print(f"  Modules ({len(rows)}):", file=sys.stderr)
+    print(f"    ecosystem page:              {mod_eco:3}  ({mod_eco - mod_both} unique to this source)", file=sys.stderr)
+    print(f"    packages.drupal.org search:  {mod_search:3}  ({mod_search - mod_both} unique to this source)", file=sys.stderr)
+    if mod_both:
+        print(f"    in both sources:             {mod_both:3}", file=sys.stderr)
+    print(f"  Recipes ({len(recipe_rows)}):", file=sys.stderr)
+    print(f"    ecosystem (unmatched modules): {rec_eco:3}", file=sys.stderr)
+    print(f"    Packagist type+keyword search: {rec_search:3}", file=sys.stderr)
+    print(f"    curated AI recipe list:        {rec_curated:3}", file=sys.stderr)
+    if rec_overlap > 0:
+        print(f"    ({rec_overlap} recipe(s) counted in multiple sources above)", file=sys.stderr)
+
+    # -------------------------------------------------------------------------
     # Step 3: Sort results by usage count, highest first
     # -------------------------------------------------------------------------
 

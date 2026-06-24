@@ -73,7 +73,7 @@ Two sections, each with their own table. Modules is sorted by active installs (d
 | OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 |
 | AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 |
 
-The Label column links to the module's project page. Modules with no tracked install count show `—` in the usage column. Security coverage shows ✅ when covered by Drupal's security advisory policy, 🚫 otherwise.
+The Label column links to the module's project page. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
 
 Recipes is sorted alphabetically by label, with no Security coverage or Drupal.org usage columns:
 
@@ -91,7 +91,7 @@ Recipes is sorted alphabetically by label, with no Security coverage or Drupal.o
 The Modules tab additionally supports:
 
 - **Filter by stability level** — checkboxes let you show or hide stable, RC, beta, alpha, and dev releases independently. Each version cell displays a small colored badge indicating stability.
-- **Filter by security coverage** — checkboxes let you show or hide modules that are covered vs. not covered by Drupal's security advisory policy.
+- **Filter by security coverage** — checkboxes let you show or hide modules that are covered vs. not covered by Drupal's security advisory policy. The security cell uses three states: a filled shield (`images/shield-icon-black.svg`, 50% opacity) for covered stable releases, an outline shield (inline SVG, 50% opacity) for covered pre-releases, and 🚫 for not covered. Both shield variants belong to the "covered" filter state.
 
 The Recipes tab has no stability or security checkboxes — neither concept applies to recipes. Modules default to sorting by install count (descending); Recipes default to the alphabetical-by-label order already produced server-side (no usage signal exists to sort by instead).
 

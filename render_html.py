@@ -20,9 +20,22 @@ import sys
 
 STABILITY_ORDER = ["stable", "rc", "beta", "alpha", "dev"]
 
-# Security advisory coverage indicators — kept in sync with the constants of
-# the same name in drupal_ai_dependents.py.
-SECURITY_COVERED_EMOJI     = "✅"
+# Security advisory coverage icons.
+# Filled shield — covered + stable release — Drupal.org's own SVG.
+SECURITY_COVERED_STABLE_HTML = (
+    '<img src="images/shield-icon-black.svg" width="16" height="16" style="opacity:0.5" '
+    'alt="Security covered" title="Security covered (stable release)">'
+)
+# Outline shield — covered + pre-release — inline SVG, stroke only, no fill.
+SECURITY_COVERED_PRERELEASE_HTML = (
+    '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" '
+    'viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" '
+    'stroke-linejoin="round" style="opacity:0.5" '
+    'aria-label="Security covered (pre-release)" '
+    'title="Security covered (pre-release)">'
+    '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>'
+    '</svg>'
+)
 SECURITY_NOT_COVERED_EMOJI = "🚫"
 
 # (display label, CSS class)
@@ -36,9 +49,10 @@ _STABILITY_META = {
 
 SECURITY_ORDER = ["covered", "not-covered"]
 
-# (display label, emoji) keyed by the same value stored in data-security.
+# (display label, icon) keyed by the same value stored in data-security.
+# The "Covered" checkbox uses the filled-shield icon (stable) as its label.
 _SECURITY_META = {
-    "covered":     ("Covered", SECURITY_COVERED_EMOJI),
+    "covered":     ("Covered", SECURITY_COVERED_STABLE_HTML),
     "not-covered": ("Not covered", SECURITY_NOT_COVERED_EMOJI),
 }
 
@@ -212,7 +226,7 @@ _JS = """\
 
       // ---- Modules tab: sorting + name/stability/security filter ----
       var modulesSorter = makeSorter('#tbl-modules thead tr', '#tbody-modules');
-      modulesSorter.sortTable(5, 'num');
+      modulesSorter.sortTable(4, 'num');
 
       var filterModules = document.getElementById('filter-modules');
       var noResModules   = document.getElementById('no-results-modules');
@@ -306,15 +320,19 @@ def render_html(payload: dict) -> str:
         usage_raw    = str(r["usage"]) if r["usage"] else ""
         usage_disp   = f"{r['usage']:,}" if r["usage"] else "—"
         sec_covered  = r["security_covered"]
-        sec_disp     = SECURITY_COVERED_EMOJI if sec_covered else SECURITY_NOT_COVERED_EMOJI
+        if sec_covered:
+            sec_disp = (SECURITY_COVERED_STABLE_HTML
+                        if stability == "stable"
+                        else SECURITY_COVERED_PRERELEASE_HTML)
+        else:
+            sec_disp = SECURITY_NOT_COVERED_EMOJI
         sec_val      = "1" if sec_covered else "0"
         sec_status   = "covered" if sec_covered else "not-covered"
         stab_label, css_class = _STABILITY_META.get(stability, ("Stable", "stab-stable"))
         badge = f'<span class="badge {css_class}">{stab_label}</span>'
         row_lines.append(
             f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}">'
-            f'<td data-val="{label_esc}"><a href="{url_esc}">{label_esc}</a></td>'
-            f'<td data-val="{machine_esc}">{machine_esc}</td>'
+            f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a></td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}{badge}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
@@ -339,8 +357,7 @@ def render_html(payload: dict) -> str:
         date_val    = "" if date == "—" else esc(date)
         recipe_row_lines.append(
             f'      <tr>'
-            f'<td data-val="{label_esc}"><a href="{url_esc}">{label_esc}</a></td>'
-            f'<td data-val="{machine_esc}">{machine_esc}</td>'
+            f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a></td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'</tr>'
@@ -392,11 +409,10 @@ def render_html(payload: dict) -> str:
         '      <thead>\n'
         '        <tr>\n'
         '          <th data-col="0" data-type="text">Label</th>\n'
-        '          <th data-col="1" data-type="text">machine name</th>\n'
-        '          <th data-col="2" data-type="text">Version</th>\n'
-        '          <th data-col="3" data-type="date">Released</th>\n'
-        '          <th data-col="4" data-type="num" class="col-security">Security coverage</th>\n'
-        '          <th data-col="5" data-type="num" class="col-usage">Drupal.org usage</th>\n'
+        '          <th data-col="1" data-type="text">Version</th>\n'
+        '          <th data-col="2" data-type="date">Released</th>\n'
+        '          <th data-col="3" data-type="num" class="col-security">Security coverage</th>\n'
+        '          <th data-col="4" data-type="num" class="col-usage">Drupal.org usage</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-modules">\n'
@@ -413,9 +429,8 @@ def render_html(payload: dict) -> str:
         '      <thead>\n'
         '        <tr>\n'
         '          <th data-col="0" data-type="text">Label</th>\n'
-        '          <th data-col="1" data-type="text">machine name</th>\n'
-        '          <th data-col="2" data-type="text">Version</th>\n'
-        '          <th data-col="3" data-type="date">Released</th>\n'
+        '          <th data-col="1" data-type="text">Version</th>\n'
+        '          <th data-col="2" data-type="date">Released</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-recipes">\n'
