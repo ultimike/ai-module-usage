@@ -70,6 +70,7 @@ RECIPE_P2_URL        = "https://repo.packagist.org/p2/drupal/{name}.json"
 RECIPE_P2_DEV_URL    = "https://repo.packagist.org/p2/drupal/{name}~dev.json"
 RECIPE_YML_URL       = "https://git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml"
 CURATED_RECIPES_URL  = "https://git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml?ref_type=heads"
+PACKAGIST_STATS_URL  = "https://packagist.org/packages/drupal/{name}.json"
 
 # A Python `set` is like a PHP array used as a lookup table (array_flip'd),
 # where only unique values matter and order doesn't. Membership checks are O(1).
@@ -740,6 +741,47 @@ def _fetch_recipe_label_with_delay(machine_name: str, version: str):
 
 
 # ---------------------------------------------------------------------------
+# Recipe stats (downloads + stars) — packagist.org statistics API
+# ---------------------------------------------------------------------------
+
+def get_recipe_stats(machine_name: str) -> tuple[int | None, int | None]:
+    """Fetch Packagist stats for a recipe in one request.
+
+    Returns (downloads, stars) where:
+    - downloads: package.downloads.total (total Composer install count)
+    - stars:     package.favers          (Packagist "star" count)
+    Both values are None on any error (non-200, missing key, decode failure).
+    """
+    url = PACKAGIST_STATS_URL.format(name=machine_name)
+    try:
+        status, body, _ = _http_get(url)
+    except RuntimeError:
+        return None, None
+    if status != 200 or not body:
+        return None, None
+    try:
+        data = json.loads(body)
+    except json.JSONDecodeError:
+        return None, None
+    pkg = data.get("package") or {}
+    try:
+        downloads = int(pkg["downloads"]["total"])
+    except (KeyError, TypeError, ValueError):
+        downloads = None
+    try:
+        stars = int(pkg["favers"])
+    except (KeyError, TypeError, ValueError):
+        stars = None
+    return downloads, stars
+
+
+def _fetch_recipe_stats_with_delay(machine_name: str):
+    """Sleep then fetch recipe stats — designed to run in a worker thread."""
+    time.sleep(PACKAGIST_DELAY)
+    return machine_name, get_recipe_stats(machine_name)
+
+
+# ---------------------------------------------------------------------------
 # Release date fallback — updates.drupal.org
 # ---------------------------------------------------------------------------
 
@@ -1103,7 +1145,31 @@ def main() -> None:
                 recipe_label_map[name] = label
             print(f"  [{done}/{len(verified_recipes)}] {name}: {label or '(using fallback name)'}", file=sys.stderr)
 
+    # Phase 2f: concurrent recipe stats fetches from packagist.org.
+    # Downloads and stars (favers) come from the same API response, so one
+    # request per recipe covers both. Same PACKAGIST_DELAY and 3-worker limit.
+    print("\nFetching recipe stats (downloads + stars) from Packagist …", file=sys.stderr)
+    recipe_stats_map = {}  # machine_name → (downloads, stars)
+
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        future_to_name = {
+            pool.submit(_fetch_recipe_stats_with_delay, n): n
+            for n, _ in verified_recipes
+        }
+        done = 0
+        for fut in as_completed(future_to_name):
+            done += 1
+            name = future_to_name[fut]
+            try:
+                _, (dl, stars) = fut.result()
+            except Exception as exc:
+                print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
+                dl = stars = None
+            recipe_stats_map[name] = (dl, stars)
+            print(f"  [{done}/{len(verified_recipes)}] {name}: downloads={dl} stars={stars}", file=sys.stderr)
+
     for machine_name, info in verified_recipes:
+        dl, stars = recipe_stats_map.get(machine_name, (None, None))
         recipe_rows.append({
             "machine_name": info["composer_name"] or f"drupal/{machine_name}",
             "label":        recipe_label_map.get(machine_name) or human_name(machine_name),
@@ -1111,11 +1177,12 @@ def main() -> None:
             "version":      info["version"],
             "release_date": info["date"] or "—",
             "stability":    detect_stability(info["version"]),
+            "downloads":    dl,
+            "stars":        stars,
         })
 
-    # No usage signal exists for recipes, so sort alphabetically by label
-    # instead of by usage (modules' sort key below).
-    recipe_rows.sort(key=lambda r: r["label"].lower())
+    # Sort by Packagist downloads descending (None/0 last), then alphabetically.
+    recipe_rows.sort(key=lambda r: (-(r["downloads"] or 0), r["label"].lower()))
 
     print(
         f"\nResults: {len(recipe_rows)} confirmed recipes ({recipe_skipped} skipped)",

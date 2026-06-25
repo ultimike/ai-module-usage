@@ -125,8 +125,12 @@ _CSS = """\
     .col-date     { white-space: nowrap; }
     .col-security { text-align: center; }
     th.col-security { text-align: center; }
-    .col-usage    { text-align: right; }
-    th.col-usage  { text-align: right; }
+    .col-usage        { text-align: right; }
+    th.col-usage      { text-align: right; }
+    .col-downloads    { text-align: right; }
+    th.col-downloads  { text-align: right; }
+    .col-stars        { text-align: right; }
+    th.col-stars      { text-align: right; }
     #no-results {
       display: none;
       padding: 1.5rem;
@@ -260,11 +264,11 @@ _JS = """\
 
       // ---- Recipes tab: sorting + name-only filter ----
       // No stability or security data exists for recipes, so there's
-      // nothing to check here beyond the name filter. No default sortTable()
-      // call here (unlike modules) — rows already arrive alphabetical-by-
-      // label from the Python side (no usage signal to sort by instead),
-      // so calling sortTable() on load would just contradict that ordering.
+      // nothing to check here beyond the name filter. Sort by Packagist
+      // downloads descending on load (column 3, numeric) — same pattern
+      // as modules' usage sort.
       var recipesSorter = makeSorter('#tbl-recipes thead tr', '#tbody-recipes');
+      recipesSorter.sortTable(3, 'num');
 
       var filterRecipes = document.getElementById('filter-recipes');
       var noResRecipes   = document.getElementById('no-results-recipes');
@@ -355,11 +359,19 @@ def render_html(payload: dict) -> str:
         ver_val     = esc(ver_raw) if ver_raw else ""
         date        = r["release_date"]
         date_val    = "" if date == "—" else esc(date)
+        downloads   = r.get("downloads")
+        dl_raw      = str(downloads) if downloads is not None else ""
+        dl_disp     = f"{downloads:,}" if downloads is not None else "—"
+        stars       = r.get("stars")
+        stars_raw   = str(stars) if stars is not None else ""
+        stars_disp  = f"{stars:,}" if stars is not None else "—"
         recipe_row_lines.append(
             f'      <tr>'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a></td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
+            f'<td data-val="{dl_raw}" class="col-downloads">{dl_disp}</td>'
+            f'<td data-val="{stars_raw}" class="col-stars">{stars_disp}</td>'
             f'</tr>'
         )
 
@@ -431,6 +443,8 @@ def render_html(payload: dict) -> str:
         '          <th data-col="0" data-type="text">Label</th>\n'
         '          <th data-col="1" data-type="text">Version</th>\n'
         '          <th data-col="2" data-type="date">Released</th>\n'
+        '          <th data-col="3" data-type="num" class="col-downloads">Packagist downloads</th>\n'
+        '          <th data-col="4" data-type="num" class="col-stars">Packagist stars</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-recipes">\n'

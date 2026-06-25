@@ -1,6 +1,6 @@
 # Drupal AI Dependents
 
-`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns, no security coverage or usage — recipes have neither in any meaningful sense, see [Recipes](#recipes) below).
+`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below).
 
 ## Requirements
 
@@ -49,7 +49,9 @@ python3 render_html.py results.json -o index.html
       "url": "https://www.drupal.org/project/ai_recipe_image_classification",
       "version": "1.1.0",
       "release_date": "2026-02-12",
-      "stability": "stable"
+      "stability": "stable",
+      "downloads": 1234,
+      "stars": 56
     }
   ]
 }
@@ -59,8 +61,9 @@ python3 render_html.py results.json -o index.html
 - `label` is the module's actual display title — the `name` key from its `*.info.yml` file (modules) or `recipe.yml` file (recipes), fetched from `git.drupalcode.org`. Falls back to a title-cased version of the machine name if the file can't be fetched.
 - `security_covered` reflects whether the project is covered by Drupal's security advisory policy (`field_security_advisory_coverage == "covered"` on drupal.org). **Recipe rows have no `security_covered` key at all** — not `null`, simply absent — since recipes have no meaningful security-advisory status for this purpose.
 - `usage` is the summed `project_usage` install count. **Recipe rows have no `usage` key at all**, since Drupal.org's API has no usage-tracking data for recipes whatsoever (confirmed: the field is entirely absent from the API response, not zero).
+- `downloads` and `stars` come from the same request to `packagist.org/packages/drupal/{name}.json` — `package.downloads.total` and `package.favers` respectively. (`favers` is Packagist's internal field name for its star count.) **Module rows have neither key** — modules live only on `packages.drupal.org`, not the main Packagist registry. Both are `null` if the stats call failed; `0` is a real zero (package exists but has no downloads/stars yet).
 - `stability` is derived from the version string: `stable`, `rc`, `beta`, `alpha`, or `dev`.
-- Recipe rows are sorted alphabetically by `label` rather than by usage, since there's no usage signal to sort by.
+- Recipe rows are sorted by `downloads` descending (`null`/0 last), then alphabetically by `label` for ties.
 
 Older `results.json` files from before recipe support was added (no `"recipes"` key at all) are still readable — both renderers fall back to an empty list via `payload.get("recipes", [])`.
 
@@ -75,11 +78,11 @@ Two sections, each with their own table. Modules is sorted by active installs (d
 
 The Label column links to the module's project page. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
 
-Recipes is sorted alphabetically by label, with no Security coverage or Drupal.org usage columns:
+Recipes is sorted by Packagist downloads descending, with no Security coverage or Drupal.org usage columns:
 
-| Label | machine name | URL | Latest Version | Release Date |
-|-------|--------------|-----|:--------------:|:------------:|
-| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 |
+| Label | machine name | URL | Latest Version | Release Date | Packagist downloads | Packagist stars |
+|-------|--------------|-----|:--------------:|:------------:|--------------------:|----------------:|
+| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 | 1,234 | 56 |
 
 ### HTML
 
@@ -93,13 +96,13 @@ The Modules tab additionally supports:
 - **Filter by stability level** — checkboxes let you show or hide stable, RC, beta, alpha, and dev releases independently. Each version cell displays a small colored badge indicating stability.
 - **Filter by security coverage** — checkboxes let you show or hide modules that are covered vs. not covered by Drupal's security advisory policy. The security cell uses three states: a filled shield (`images/shield-icon-black.svg`, 50% opacity) for covered stable releases, an outline shield (inline SVG, 50% opacity) for covered pre-releases, and 🚫 for not covered. Both shield variants belong to the "covered" filter state.
 
-The Recipes tab has no stability or security checkboxes — neither concept applies to recipes. Modules default to sorting by install count (descending); Recipes default to the alphabetical-by-label order already produced server-side (no usage signal exists to sort by instead).
+The Recipes tab has no stability or security checkboxes — neither concept applies to recipes. Modules default to sorting by install count (descending); Recipes default to sorting by Packagist downloads (descending).
 
 ## Recipes
 
 Drupal **recipes** (project type `drupal-recipe`, applied via `drush recipe` rather than installed as a module) are tracked separately from modules because they genuinely have neither install-tracking nor a meaningful security-advisory status — not because the data is missing, but because it doesn't exist for that project type. Confirmed live: Drupal.org's API returns no `project_usage` field at all for a recipe (absent, not zero).
 
-Recipes also live on a different package registry entirely: they're not on packages.drupal.org (the source for everything else in this script), only on the main Packagist registry (`packagist.org`/`repo.packagist.org`). See [How it works](#how-it-works) below for the discovery/verification details.
+Recipes also live on a different package registry entirely: they're not on packages.drupal.org (the source for everything else in this script), only on the main Packagist registry (`packagist.org`/`repo.packagist.org`). Because they're on Packagist, their total download counts and star counts **are** available via `packagist.org/packages/drupal/{name}.json` and are shown in the Recipes table as substitute popularity signals. Both values come from the same API request. Note that downloads count Composer install events (cumulative total), not active sites like the module usage figures; stars count Packagist ★ events. See [How it works](#how-it-works) below for the discovery/verification details.
 
 ## How it works
 
@@ -162,7 +165,17 @@ Unlike packages.drupal.org's p2 files, Packagist's have a real ISO-8601 `time` f
 
 **Recipe label:** `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml` is fetched and its `name:` key is read. Recipes don't have a `{name}.info.yml` like modules — their title lives in this fixed-filename `recipe.yml` instead. Composer's `"-dev"` version suffix isn't a real git ref (e.g. `"1.x-dev"` → branch `"1.x"`), so the version is converted before building this URL.
 
-No usage or security-coverage call is ever made for recipes — that data doesn't exist for this project type (see [Recipes](#recipes) above).
+No Drupal.org usage or security-coverage call is ever made for recipes — that data doesn't exist for this project type (see [Recipes](#recipes) above).
+
+### Stage 3b — Recipe download counts
+
+For each verified recipe, the script fetches:
+
+```
+packagist.org/packages/drupal/{name}.json
+```
+
+Both `package.downloads.total` (downloads) and `package.favers` (stars) are extracted from the same response — no second request is needed for stars. This phase runs 3 concurrent workers (same `PACKAGIST_DELAY` as the other Packagist calls) after recipe label fetching.
 
 ## Rate limiting
 
@@ -178,7 +191,7 @@ GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label f
 PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2)
 ```
 
-The p2 verification, info.yml label, recipe p2 verification, and recipe label phases each run 3 concurrent workers (one phase at a time, not overlapping), every worker sleeping its phase's delay before its own request. packages.drupal.org, git.drupalcode.org, and (assumed, not separately stress-tested) packagist.org/repo.packagist.org are all CDN-backed static file/JSON servers and handle this rate comfortably. The drupal.org JSON API (usage counts + security coverage) remains sequential at `DRUPAL_API_DELAY` — do not reduce that value, as it returned `503 Service Unavailable` during development when called faster than ~1 per second. It's only ever called for modules, never recipes.
+The p2 verification, info.yml label, recipe p2 verification, recipe label, and recipe download phases each run 3 concurrent workers (one phase at a time, not overlapping), every worker sleeping its phase's delay before its own request. packages.drupal.org, git.drupalcode.org, and (assumed, not separately stress-tested) packagist.org/repo.packagist.org are all CDN-backed static file/JSON servers and handle this rate comfortably. The drupal.org JSON API (usage counts + security coverage) remains sequential at `DRUPAL_API_DELAY` — do not reduce that value, as it returned `503 Service Unavailable` during development when called faster than ~1 per second. It's only ever called for modules, never recipes.
 
 A full run takes approximately **20–25 minutes** (recipe verification adds roughly 3-5 minutes on top of the module pipeline's ~17-20).
 
@@ -237,6 +250,11 @@ Fetching recipe labels from recipe.yml files …
   [2/18] drupal_cms_ai: AI Assistant
   …
 
+Fetching recipe stats (downloads + stars) from Packagist …
+  [1/18] ai_recipe_image_classification: downloads=1234 stars=56
+  [2/18] drupal_cms_ai: downloads=5678 stars=12
+  …
+
 Results: 18 confirmed recipes (124 skipped)
 ```
 
@@ -260,4 +278,4 @@ Because progress goes to `stderr` and the markdown table goes to `stdout`, they 
 
 **Recipe coverage is keyword-narrowed too.** The Packagist recipe search uses `q=ai`, same as the module search — a recipe with no "ai" in its name/description that still hard-depends on `drupal/ai` could be missed. The curated YAML list mitigates known gaps (like `drupal_cms_ai`) but is a supplement, not the primary discovery mechanism; the Packagist type+keyword search is.
 
-**Recipes have no usage or security-coverage data, full stop.** This isn't a gap in the script — Drupal.org's API has no `project_usage` field at all for a recipe (confirmed: absent, not zero). The Recipes table reflects this by omitting both columns entirely.
+**Recipes have no Drupal.org usage or security-coverage data.** This isn't a gap in the script — Drupal.org's API has no `project_usage` field at all for a recipe (confirmed: absent, not zero). Packagist download and star counts are shown instead as substitute popularity signals; note downloads count Composer install events (cumulative total), not active sites like the module usage figures.

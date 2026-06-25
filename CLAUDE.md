@@ -28,13 +28,16 @@ markdown, separate tabs in HTML).
   - 🚫 — not covered by the security advisory policy
 - Active install count ("Drupal.org usage")
 
-**Recipes table:** Label, machine name, URL, version, release date — no
-security coverage or usage columns. Recipes (Drupal projects of type
-`drupal-recipe`, applied via `drush recipe` rather than installed as code)
-genuinely have neither: `project_usage` is absent from Drupal.org's API
-response for a recipe (not zero — absent), confirmed live, and recipes
-aren't on packages.drupal.org at all to begin with (see Data Sources §6-9
-below). The table omits both columns rather than inventing an "N/A" state.
+**Recipes table:** Label, machine name, URL, version, release date,
+Packagist downloads, Packagist stars — no Drupal.org security coverage or usage columns.
+Recipes (Drupal projects of type `drupal-recipe`, applied via `drush recipe`
+rather than installed as code) genuinely have neither of those: `project_usage`
+is absent from Drupal.org's API response for a recipe (not zero — absent),
+confirmed live, and recipes aren't on packages.drupal.org at all to begin with
+(see Data Sources §6-9 below). The table omits both Drupal.org columns rather
+than inventing an "N/A" state. Packagist total-download counts (see §10 below)
+are a meaningful substitute popularity signal and are shown in the downloads
+column instead.
 
 Run time: **~20-25 minutes**. The p2 verification and info.yml/recipe.yml
 label phases each use 3 concurrent workers (ThreadPoolExecutor), every
@@ -198,6 +201,25 @@ likely also affects the module pipeline (a module with only a dev release
 would currently be invisible to `get_p2_info()`), but that's an existing,
 unaddressed gap — out of scope for this change (see Known Limitations).
 
+### 10. Recipe stats (downloads + stars) — `packagist.org/packages/drupal/{name}.json`
+
+Each verified recipe's download count and star count are fetched from this
+endpoint in **a single request** — both values live in the same JSON response,
+so there is no extra network overhead for stars vs. downloads.
+
+- `package.downloads.total` — integer count of all Composer installs recorded
+  for the package. Closest available substitute for Drupal.org `project_usage`.
+- `package.favers` — integer count of Packagist "star" events (the ★ button on
+  a package's Packagist page). Packagist's internal name for this field is
+  `favers`; the UI and our output label both call it "stars".
+
+Fetched in a dedicated parallel phase (`get_recipe_stats()`, 3 workers,
+`PACKAGIST_DELAY`) after recipe label fetching and before assembling
+`recipe_rows`. Both values are `None` on any error (non-200, missing key, JSON
+decode failure). A value of `0` is a real zero (package exists but has no
+downloads/stars yet). Both keys are **absent from module rows** — module
+packages live only on packages.drupal.org, not the main Packagist registry.
+
 ### 9. Recipe label — `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml`
 
 Recipes don't have a `{name}.info.yml` — their display title lives in the
@@ -230,6 +252,7 @@ release), but retrofitting it is out of scope for this change.
 | `repo.packagist.org` p2 files | Same Composer v2 p2 shape as packages.drupal.org's, but has a real `time` field — no datestamp workaround needed. **Splits stable/tagged releases from dev/branch snapshots into separate files** (`{name}.json` vs `{name}~dev.json`) — a dev-only package returns an empty version list from the main URL; both must be fetched and merged. |
 | `git.drupalcode.org` recipe.yml | Fixed filename (`recipe.yml`, not `{name}.info.yml`). Composer `"x.y-dev"` version strings are NOT real git refs — GitLab serves the underlying branch (e.g. `"1.x"`) with the `-dev` suffix stripped. |
 | curated YAML (`ai_dashboard_recommended_recipes.yml`) | Hand-maintained, not authoritative — every name still goes through full p2 verification. Catches at least one recipe (`drupal_cms_ai`) absent from the ecosystem page. |
+| `packagist.org` stats API | `packagist.org/packages/drupal/{name}.json` → `package.downloads.total` (downloads) and `package.favers` (stars). Both values come from the same response; no second request is made. Only called for recipes (not modules). Returns HTTP 404 for packages not on main Packagist — but only verified recipes are queried here, so 404s shouldn't occur in practice. |
 
 ---
 
@@ -441,10 +464,9 @@ replacement; use `render_html.py` directly.)
   code.
 - The modules table defaults to sorting by usage (col 5) descending on
   load, matching the row order the Python side already produced. The
-  recipes table has **no** default `sortTable()` call — its rows already
-  arrive alphabetical-by-label from the Python side (no usage signal to
-  sort by instead), so calling `sortTable()` on load would just contradict
-  that ordering.
+  recipes table defaults to sorting by Packagist downloads (col 3)
+  descending on load (`recipesSorter.sortTable(3, 'num')`), matching the
+  Python-side sort order.
 
 Design notes for `render_html.py`:
 - CSS and JS are stored as regular Python string variables (not f-strings) to
@@ -458,10 +480,17 @@ Design notes for `render_html.py`:
   - Released (col 3): `YYYY-MM-DD` string; `""` for `"—"` (sorts to bottom)
   - Security coverage (col 4): `"1"`/`"0"`, sorted numerically
   - Drupal.org usage (col 5): integer as string; `""` for unknown (treated as -Infinity)
+- Recipe table `data-val` attributes:
+  - Label (col 0): plain text
+  - Version (col 1): raw semver string; `""` for missing
+  - Released (col 2): `YYYY-MM-DD` string; `""` for `"—"`
+  - Packagist downloads (col 3): integer as string; `""` for unknown (treated as -Infinity)
+  - Packagist stars (col 4): integer as string; `""` for unknown (treated as -Infinity)
 - Sort state is tracked with `sortCol` (column index, -1 = none) and
   `sortDir` (1 = asc, -1 = desc). First click on a text column → ascending;
   first click on a numeric column → descending. Re-click reverses. Default
-  sort on load is column 5 (usage), descending.
+  sort on load is column 5 (usage) for modules, column 3 (downloads) for
+  recipes — both descending.
 - `html.escape()` is used on all row values to prevent XSS from any
   unexpected characters in API responses.
 - Security coverage uses three constants defined locally in each renderer
@@ -515,7 +544,9 @@ The payload is written after the sort step:
       "url":          "https://www.drupal.org/project/ai_recipe_image_classification",
       "version":      "1.1.0",
       "release_date": "2026-02-12",
-      "stability":    "stable"
+      "stability":    "stable",
+      "downloads":    1234,
+      "stars":        56
     }
   ]
 }
@@ -523,9 +554,11 @@ The payload is written after the sort step:
 
 Recipe rows have no `usage` or `security_covered` keys at all — not `null`,
 simply absent — since both concepts genuinely don't apply (see "What the
-script does" above). `recipe_rows` is sorted alphabetically by `label`
-(`recipe_rows.sort(key=lambda r: r["label"].lower())`) rather than by usage,
-since there's no usage signal to sort by.
+script does" above). Recipe rows DO have `downloads` and `stars` keys (integers or `null`) from
+Packagist's stats API — both come from a single request per recipe. Module rows
+have neither key. `recipe_rows` is sorted by `downloads` descending (`None`/0
+last), then alphabetically by `label` as a tiebreaker:
+`recipe_rows.sort(key=lambda r: (-(r["downloads"] or 0), r["label"].lower()))`
 
 - `machine_name` is the composer.json `name` field for the package (e.g.
   `drupal/ai_provider_openai`), taken from the same p2 response already

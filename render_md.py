@@ -59,16 +59,20 @@ def render_md(payload: dict) -> str:
             f" {r['release_date']} | {security_str} | {usage_str} |"
         )
 
-    # Recipes have no usage tracking and no meaningful security-advisory
-    # status, so this table omits both columns rather than inventing an
-    # "N/A" state for them.
+    # Recipes have no Drupal.org usage tracking and no meaningful security-advisory
+    # status, so those two columns are omitted. Packagist total downloads are
+    # available and provide a comparable popularity signal.
     lines.append("\n## Recipes\n")
-    lines.append("| Label | URL | Latest Version | Release Date |")
-    lines.append("|-------|-----|:--------------:|:------------:|")
+    lines.append("| Label | URL | Latest Version | Release Date | Packagist downloads | Packagist stars |")
+    lines.append("|-------|-----|:--------------:|:------------:|--------------------:|----------------:|")
     for r in recipe_rows:
+        downloads = r.get("downloads")
+        downloads_str = f"{downloads:,}" if downloads is not None else "—"
+        stars = r.get("stars")
+        stars_str = f"{stars:,}" if stars is not None else "—"
         lines.append(
             f"| [{r['label']}]({r['url']}) | {r['url']} | `{r['version']}` |"
-            f" {r['release_date']} |"
+            f" {r['release_date']} | {downloads_str} | {stars_str} |"
         )
 
     return "\n".join(lines) + "\n"
