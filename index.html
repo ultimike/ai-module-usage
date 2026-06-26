@@ -123,6 +123,14 @@
     }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
+    .legend {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
   </style>
 </head>
 <body>
@@ -345,6 +353,11 @@
       <tr data-stability="alpha" data-security="not-covered"><td data-val="AI Upgrade Assistant"><a href="https://www.drupal.org/project/ai_upgrade_assistant" title="drupal/ai_upgrade_assistant">AI Upgrade Assistant</a></td><td data-val="1.0.0-alpha30" class="col-version">1.0.0-alpha30<span class="badge stab-alpha">Alpha</span></td><td data-val="2026-02-14" class="col-date">2026-02-14</td><td data-val="0" class="col-security">🚫</td><td data-val="" class="col-usage">—</td></tr>
       </tbody>
     </table>
+    <p class="legend">Security coverage:
+      <img src="images/shield-icon-black.svg" width="16" height="16" style="opacity:0.5" alt="Security covered" title="Security covered (stable release)"> Covered (stable) &nbsp;&middot;&nbsp;
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" style="opacity:0.5" aria-label="Security covered (pre-release)" title="Security covered (pre-release)"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Covered (pre-release) &nbsp;&middot;&nbsp;
+      🚫 Not covered by security advisory policy
+    </p>
     <p id="no-results-modules">No modules match your filter.</p>
   </div>
   <div class="tab-panel" id="panel-recipes">

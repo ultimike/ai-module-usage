@@ -59,6 +59,13 @@ def render_md(payload: dict) -> str:
             f" {r['release_date']} | {security_str} | {usage_str} |"
         )
 
+    lines.append(
+        f"\n*Security coverage:*"
+        f" {SECURITY_COVERED_STABLE_MD} Covered (stable release)"
+        f" &nbsp;·&nbsp; {SECURITY_COVERED_PRERELEASE_MD} Covered (pre-release)"
+        f" &nbsp;·&nbsp; {SECURITY_NOT_COVERED_EMOJI} Not covered by security advisory policy"
+    )
+
     # Recipes have no Drupal.org usage tracking and no meaningful security-advisory
     # status, so those two columns are omitted. Packagist total downloads are
     # available and provide a comparable popularity signal.

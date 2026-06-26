@@ -175,7 +175,15 @@ _CSS = """\
       font-weight: 600;
     }
     .tab-panel { display: none; }
-    .tab-panel.active { display: block; }"""
+    .tab-panel.active { display: block; }
+    .legend {
+      font-size: 0.8rem;
+      color: #555;
+      margin-top: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }"""
 
 # JS stored as a plain string (not an f-string) to avoid escaping every { }.
 _JS = """\
@@ -431,6 +439,11 @@ def render_html(payload: dict) -> str:
         f'{tbody}\n'
         '      </tbody>\n'
         '    </table>\n'
+        '    <p class="legend">Security coverage:\n'
+        f'      {SECURITY_COVERED_STABLE_HTML} Covered (stable) &nbsp;&middot;&nbsp;\n'
+        f'      {SECURITY_COVERED_PRERELEASE_HTML} Covered (pre-release) &nbsp;&middot;&nbsp;\n'
+        f'      {SECURITY_NOT_COVERED_EMOJI} Not covered by security advisory policy\n'
+        '    </p>\n'
         '    <p id="no-results-modules">No modules match your filter.</p>\n'
         '  </div>\n'
         '  <div class="tab-panel" id="panel-recipes">\n'

@@ -192,6 +192,8 @@
 | [Siliconflow Provider](https://www.drupal.org/project/ai_provider_siliconflow) | https://www.drupal.org/project/ai_provider_siliconflow | `1.0.2` | 2025-08-27 | 🚫 | — |
 | [AI Upgrade Assistant](https://www.drupal.org/project/ai_upgrade_assistant) | https://www.drupal.org/project/ai_upgrade_assistant | `1.0.0-alpha30` | 2026-02-14 | 🚫 | — |
 
+*Security coverage:* <img src="images/shield-icon-black.svg" width="16" height="16" style="opacity:0.5" alt="Security covered (stable)"> Covered (stable release) &nbsp;·&nbsp; <img src="data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%20width%3D%2716%27%20height%3D%2716%27%20viewBox%3D%270%200%2024%2024%27%20fill%3D%27none%27%20stroke%3D%27%23444%27%20stroke-width%3D%272.5%27%3E%3Cpath%20d%3D%27M12%2022s8-4%208-10V5l-8-3-8%203v7c0%206%208%2010%208%2010z%27%2F%3E%3C%2Fsvg%3E" width="16" height="16" style="opacity:0.5" alt="Security covered (pre-release)"> Covered (pre-release) &nbsp;·&nbsp; 🚫 Not covered by security advisory policy
+
 ## Recipes
 
 | Label | URL | Latest Version | Release Date | Packagist downloads | Packagist stars |
