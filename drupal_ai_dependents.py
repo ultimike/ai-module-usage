@@ -639,51 +639,84 @@ def _fetch_recipe_info_with_delay(machine_name: str):
 
 
 # ---------------------------------------------------------------------------
-# Module label — git.drupalcode.org (reads the *.info.yml `name` key)
+# Module label + description — git.drupalcode.org (*.info.yml `name`/`description`)
 # ---------------------------------------------------------------------------
 
-# Matches a top-level `name:` key in a .info.yml file, e.g. `name: AI Core`.
-# Anchored with MULTILINE so `^`/`$` match line boundaries, not the whole file.
-_INFO_NAME_RE = re.compile(r'^name:\s*(.+?)\s*$', re.MULTILINE)
+# Matches top-level `name:` / `description:` keys in a .info.yml (or recipe.yml)
+# file, e.g. `name: AI Core` or `description: Build AI agents.`. Anchored with
+# MULTILINE so `^`/`$` match line boundaries, not the whole file. Same loose,
+# no-YAML-library approach used throughout this script — only single-line
+# scalar values are handled (block scalars `>` / `|` are treated as absent,
+# see _strip_yaml_quotes / _parse_info_yml below).
+_INFO_NAME_RE        = re.compile(r'^name:\s*(.+?)\s*$', re.MULTILINE)
+_INFO_DESCRIPTION_RE = re.compile(r'^description:\s*(.+?)\s*$', re.MULTILINE)
+
+# A bare YAML block-scalar indicator (`>`, `|`, `>-`, `|+2`, …) as the whole
+# value means the real text is on the following indented lines, which the
+# single-line regex above can't capture — treat that as "no description".
+_YAML_BLOCK_INDICATOR_RE = re.compile(r'^[|>][+-]?\d*$')
 
 
-def get_module_label(machine_name: str, version: str) -> str | None:
-    """Fetch a module's human-readable label from its {name}.info.yml file.
+def _strip_yaml_quotes(value: str) -> str:
+    """Strip a single layer of matching quotes from a YAML scalar."""
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in "'\"":
+        return value[1:-1]
+    return value
 
-    Reads the raw file straight from git.drupalcode.org (Drupal.org's GitLab
-    instance) at the tag matching the module's release version — this is the
-    only place the `name:` key (the actual project label) lives; it isn't
-    part of composer.json or any JSON API response.
 
-    Returns None if the file can't be fetched or has no `name:` key.
+def _parse_info_yml(text: str) -> tuple[str | None, str | None]:
+    """Extract the `name:` (label) and `description:` scalars from an
+    info.yml / recipe.yml file's raw text.
+
+    Both are optional top-level keys. Returns (label_or_None,
+    description_or_None) with one layer of YAML quotes stripped from each and
+    block-scalar placeholders discarded.
+    """
+    name_match = _INFO_NAME_RE.search(text)
+    desc_match = _INFO_DESCRIPTION_RE.search(text)
+
+    label = _strip_yaml_quotes(name_match.group(1).strip()) if name_match else None
+
+    description = None
+    if desc_match:
+        description = _strip_yaml_quotes(desc_match.group(1).strip())
+        if _YAML_BLOCK_INDICATOR_RE.match(description):
+            description = None
+
+    return (label or None, description or None)
+
+
+def get_module_label_and_description(
+    machine_name: str, version: str
+) -> tuple[str | None, str | None]:
+    """Fetch a module's label and description from its {name}.info.yml file.
+
+    Reads the raw file straight from git.drupalcode.org at the tag matching
+    the module's release version. The `name:` key lives only here, it isn't
+    part of composer.json or any JSON API response,  and the same file's
+    `description:` key carries the module's own full description.
+
+    Returns (label_or_None, description_or_None).
     """
     url = INFO_YML_URL.format(name=machine_name, version=version)
     try:
         status, body, _ = _http_get(url)
     except RuntimeError:
-        return None
+        return None, None
     if status != 200 or not body:
-        return None
+        return None, None
 
-    match = _INFO_NAME_RE.search(body.decode("utf-8", errors="replace"))
-    if not match:
-        return None
-
-    label = match.group(1).strip()
-    # Strip a single layer of quotes — YAML allows name: 'X' or name: "X".
-    if len(label) >= 2 and label[0] == label[-1] and label[0] in "'\"":
-        label = label[1:-1]
-    return label or None
+    return _parse_info_yml(body.decode("utf-8", errors="replace"))
 
 
 def _fetch_label_with_delay(machine_name: str, version: str):
-    """Sleep then fetch the info.yml label — designed to run in a worker thread."""
+    """Sleep then fetch the info.yml label+description, runs in a worker thread."""
     time.sleep(GITLAB_DELAY)
-    return machine_name, get_module_label(machine_name, version)
+    return machine_name, get_module_label_and_description(machine_name, version)
 
 
 # ---------------------------------------------------------------------------
-# Recipe label — git.drupalcode.org (reads the recipe.yml `name` key)
+# Recipe label and description — git.drupalcode.org (recipe.yml `name`/`description`)
 # ---------------------------------------------------------------------------
 
 _DEV_SUFFIX_RE = re.compile(r'-dev$')
@@ -705,39 +738,36 @@ def _git_ref_for_version(version: str) -> str:
     return _DEV_SUFFIX_RE.sub('', version)
 
 
-def get_recipe_label(machine_name: str, version: str) -> str | None:
-    """Fetch a recipe's human-readable label from its recipe.yml file.
+def get_recipe_label_and_description(
+    machine_name: str, version: str
+) -> tuple[str | None, str | None]:
+    """Fetch a recipe's label and description from its recipe.yml file.
 
     Recipes don't have a {name}.info.yml like modules do — their display
-    title lives in the `name:` key of a fixed-filename recipe.yml at the
-    repo root instead. Reuses _INFO_NAME_RE since it's a generic top-level
-    `name:` matcher, not module-specific.
+    title and description live in the `name:` / `description:` keys of a
+    fixed-filename recipe.yml at the repo root instead. Reuses the shared
+    _parse_info_yml() since those keys aren't module-specific. Both come from
+    this single fetch; no extra request is needed for the description.
 
-    Returns None if the file can't be fetched or has no `name:` key.
+    Returns (label_or_None, description_or_None). The description is None when
+    the recipe.yml has no `description:` key (no other source is consulted).
     """
     ref = _git_ref_for_version(version)
     url = RECIPE_YML_URL.format(name=machine_name, ref=ref)
     try:
         status, body, _ = _http_get(url)
     except RuntimeError:
-        return None
+        return None, None
     if status != 200 or not body:
-        return None
+        return None, None
 
-    match = _INFO_NAME_RE.search(body.decode("utf-8", errors="replace"))
-    if not match:
-        return None
-
-    label = match.group(1).strip()
-    if len(label) >= 2 and label[0] == label[-1] and label[0] in "'\"":
-        label = label[1:-1]
-    return label or None
+    return _parse_info_yml(body.decode("utf-8", errors="replace"))
 
 
 def _fetch_recipe_label_with_delay(machine_name: str, version: str):
-    """Sleep then fetch the recipe.yml label — designed to run in a worker thread."""
+    """Sleep then fetch the recipe.yml label+description — runs in a worker thread."""
     time.sleep(GITLAB_DELAY)
-    return machine_name, get_recipe_label(machine_name, version)
+    return machine_name, get_recipe_label_and_description(machine_name, version)
 
 
 # ---------------------------------------------------------------------------
@@ -1008,9 +1038,10 @@ def main() -> None:
     # (3 workers, same pattern as phase 2a). git.drupalcode.org is a static
     # GitLab raw-file endpoint, so it tolerates the same burst rate as
     # packages.drupal.org.
-    print("\nFetching module labels from info.yml files …", file=sys.stderr)
+    print("\nFetching module labels + descriptions from info.yml files …", file=sys.stderr)
     verified = [(n, p2_map[n]) for n in all_candidates if n in p2_map]
     label_map = {}  # machine_name → label (only when found)
+    desc_map  = {}  # machine_name → description from info.yml (only when found)
 
     with ThreadPoolExecutor(max_workers=3) as pool:
         future_to_name = {
@@ -1022,13 +1053,16 @@ def main() -> None:
             done += 1
             name = future_to_name[fut]
             try:
-                _, label = fut.result()
+                _, (label, description) = fut.result()
             except Exception as exc:
                 print(f"  [{done}/{len(verified)}] {name}: error — {exc}", file=sys.stderr)
-                label = None
+                label = description = None
             if label:
                 label_map[name] = label
-            print(f"  [{done}/{len(verified)}] {name}: {label or '(using fallback name)'}", file=sys.stderr)
+            if description:
+                desc_map[name] = description
+            print(f"  [{done}/{len(verified)}] {name}: {label or '(using fallback name)'}"
+                  f"{' +desc' if description else ''}", file=sys.stderr)
 
     # Phase 2c: sequential usage + security coverage fetches for verified
     # modules only. Preserves all_candidates order (ecosystem-first) for
@@ -1051,6 +1085,7 @@ def main() -> None:
         rows.append({
             "machine_name":      p2["composer_name"] or f"drupal/{machine_name}",
             "label":             label_map.get(machine_name) or human_name(machine_name),
+            "description":       desc_map.get(machine_name),
             "url":               DRUPAL_PROJECT_URL.format(name=machine_name),
             "version":           p2["version"],
             "release_date":      date or "—",
@@ -1122,10 +1157,12 @@ def main() -> None:
                 recipe_skipped += 1
                 print(f"  [{done}/{recipe_total}] {name}: skip", file=sys.stderr)
 
-    # Phase 2e: concurrent recipe.yml label fetches for verified recipes only.
-    print("\nFetching recipe labels from recipe.yml files …", file=sys.stderr)
+    # Phase 2e: concurrent recipe.yml label + description fetches for verified
+    # recipes only.
+    print("\nFetching recipe labels + descriptions from recipe.yml files …", file=sys.stderr)
     verified_recipes = [(n, recipe_p2_map[n]) for n in all_recipe_candidates if n in recipe_p2_map]
     recipe_label_map = {}
+    recipe_desc_map  = {}  # machine_name → description from recipe.yml (only when found)
 
     with ThreadPoolExecutor(max_workers=3) as pool:
         future_to_name = {
@@ -1137,13 +1174,16 @@ def main() -> None:
             done += 1
             name = future_to_name[fut]
             try:
-                _, label = fut.result()
+                _, (label, description) = fut.result()
             except Exception as exc:
                 print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
-                label = None
+                label = description = None
             if label:
                 recipe_label_map[name] = label
-            print(f"  [{done}/{len(verified_recipes)}] {name}: {label or '(using fallback name)'}", file=sys.stderr)
+            if description:
+                recipe_desc_map[name] = description
+            print(f"  [{done}/{len(verified_recipes)}] {name}: {label or '(using fallback name)'}"
+                  f"{' +desc' if description else ''}", file=sys.stderr)
 
     # Phase 2f: concurrent recipe stats fetches from packagist.org.
     # Downloads and stars (favers) come from the same API response, so one
@@ -1173,6 +1213,7 @@ def main() -> None:
         recipe_rows.append({
             "machine_name": info["composer_name"] or f"drupal/{machine_name}",
             "label":        recipe_label_map.get(machine_name) or human_name(machine_name),
+            "description":  recipe_desc_map.get(machine_name),
             "url":          DRUPAL_PROJECT_URL.format(name=machine_name),
             "version":      info["version"],
             "release_date": info["date"] or "—",

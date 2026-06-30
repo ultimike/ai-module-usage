@@ -1,6 +1,6 @@
 # Drupal AI Dependents
 
-`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below).
+`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables.
 
 ## Requirements
 
@@ -34,6 +34,7 @@ python3 render_html.py results.json -o index.html
     {
       "machine_name": "drupal/ai_provider_openai",
       "label": "OpenAI Provider",
+      "description": "Adds OpenAI as a provider for the AI module.",
       "url": "https://www.drupal.org/project/ai_provider_openai",
       "version": "1.2.1",
       "release_date": "2026-02-25",
@@ -46,6 +47,7 @@ python3 render_html.py results.json -o index.html
     {
       "machine_name": "drupal/ai_recipe_image_classification",
       "label": "AI Image Classification recipe",
+      "description": "Configures automatic image classification using AI.",
       "url": "https://www.drupal.org/project/ai_recipe_image_classification",
       "version": "1.1.0",
       "release_date": "2026-02-12",
@@ -59,6 +61,7 @@ python3 render_html.py results.json -o index.html
 
 - `machine_name` is the `name` field from the project's `composer.json` (e.g. `drupal/ai_provider_openai`), not just the bare project machine name.
 - `label` is the module's actual display title — the `name` key from its `*.info.yml` file (modules) or `recipe.yml` file (recipes), fetched from `git.drupalcode.org`. Falls back to a title-cased version of the machine name if the file can't be fetched.
+- `description` is the `description:` key from its `*.info.yml` / `recipe.yml` file.
 - `security_covered` reflects whether the project is covered by Drupal's security advisory policy (`field_security_advisory_coverage == "covered"` on drupal.org). **Recipe rows have no `security_covered` key at all** — not `null`, simply absent — since recipes have no meaningful security-advisory status for this purpose.
 - `usage` is the summed `project_usage` install count. **Recipe rows have no `usage` key at all**, since Drupal.org's API has no usage-tracking data for recipes whatsoever (confirmed: the field is entirely absent from the API response, not zero).
 - `downloads` and `stars` come from the same request to `packagist.org/packages/drupal/{name}.json` — `package.downloads.total` and `package.favers` respectively. (`favers` is Packagist's internal field name for its star count.) **Module rows have neither key** — modules live only on `packages.drupal.org`, not the main Packagist registry. Both are `null` if the stats call failed; `0` is a real zero (package exists but has no downloads/stars yet).
@@ -76,7 +79,7 @@ Two sections, each with their own table. Modules is sorted by active installs (d
 | OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 |
 | AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 |
 
-The Label column links to the module's project page. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
+The Label column links to the module's project page, with the project's description (when present) shown as a small second line beneath the link (`<br><sub>…</sub>`). Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
 
 Recipes is sorted by Packagist downloads descending, with no Security coverage or Drupal.org usage columns:
 
@@ -137,7 +140,7 @@ The p2 file also provides:
 ### Stage 3 — Additional data
 
 - **Release date fallback:** If the p2 file has no datestamp, `updates.drupal.org/release-history/{name}/current` is queried.
-- **Module label:** `git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml` is fetched and its `name:` key is read — this is the module's actual display title, distinct from both the machine name and the composer package name.
+- **Module label + description:** `git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml` is fetched and both its `name:` key (the module's actual display title, distinct from the machine name and composer package name) and its `description:` key (the maintainer-authored description) are read from that single request.
 - **Usage/install count and security coverage:** `www.drupal.org/api-d7/node.json` is queried once per module for both the `project_usage` field (summed across all tracked versions) and `field_security_advisory_coverage` (`"covered"` or `"not-covered"`).
 
 ### Stage 1b — Recipe candidate discovery (three sources)
@@ -163,7 +166,7 @@ Same Composer v2 p2 format and the same three checks as module verification (typ
 
 Unlike packages.drupal.org's p2 files, Packagist's have a real ISO-8601 `time` field on every version, so no date-fallback request is ever needed for recipes.
 
-**Recipe label:** `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml` is fetched and its `name:` key is read. Recipes don't have a `{name}.info.yml` like modules — their title lives in this fixed-filename `recipe.yml` instead. Composer's `"-dev"` version suffix isn't a real git ref (e.g. `"1.x-dev"` → branch `"1.x"`), so the version is converted before building this URL.
+**Recipe label + description:** `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml` is fetched and both its `name:` and `description:` keys are read (same single-fetch approach as modules). Recipes don't have a `{name}.info.yml` like modules — their title and description live in this fixed-filename `recipe.yml` instead. Composer's `"-dev"` version suffix isn't a real git ref (e.g. `"1.x-dev"` → branch `"1.x"`), so the version is converted before building this URL.
 
 No Drupal.org usage or security-coverage call is ever made for recipes — that data doesn't exist for this project type (see [Recipes](#recipes) above).
 
@@ -218,9 +221,9 @@ Verifying via packages.drupal.org p2 files …
   [89/733] ai_agents: ok
   …
 
-Fetching module labels from info.yml files …
-  [1/182] ai_provider_openai: OpenAI Provider
-  [2/182] ai_agents: AI Agents
+Fetching module labels + descriptions from info.yml files …
+  [1/182] ai_provider_openai: OpenAI Provider +desc
+  [2/182] ai_agents: AI Agents +desc
   …
 
 Fetching usage counts …
@@ -245,9 +248,9 @@ Verifying recipes via repo.packagist.org p2 files …
   [3/142] llms_txt: skip
   …
 
-Fetching recipe labels from recipe.yml files …
-  [1/18] ai_recipe_image_classification: AI Image Classification recipe
-  [2/18] drupal_cms_ai: AI Assistant
+Fetching recipe labels + descriptions from recipe.yml files …
+  [1/18] ai_recipe_image_classification: AI Image Classification recipe +desc
+  [2/18] drupal_cms_ai: AI Assistant +desc
   …
 
 Fetching recipe stats (downloads + stars) from Packagist …
