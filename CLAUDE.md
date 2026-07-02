@@ -18,6 +18,7 @@ markdown, separate tabs in HTML).
 
 **Modules table:**
 - Label — the module's actual display title, from its `*.info.yml` `name:` key (linked to the project page)
+- Description — the module's description, from its `*.info.yml` `description:` key
 - Machine name — the `name` field from the module's `composer.json` (e.g. `drupal/ai_agents`)
 - URL (`https://www.drupal.org/project/{name}`)
 - Latest version compatible with Drupal 10 or 11
@@ -28,8 +29,10 @@ markdown, separate tabs in HTML).
   - 🚫 — not covered by the security advisory policy
 - Active install count ("Drupal.org usage")
 
-**Recipes table:** Label, machine name, URL, version, release date,
-Packagist downloads, Packagist stars — no Drupal.org security coverage or usage columns.
+**Recipes table:** Label, Description (same source/treatment as modules, but
+from `recipe.yml`'s `description:` key), machine name, URL, version, release
+date, Packagist downloads, Packagist stars — no Drupal.org security coverage
+or usage columns.
 Recipes (Drupal projects of type `drupal-recipe`, applied via `drush recipe`
 rather than installed as code) genuinely have neither of those: `project_usage`
 is absent from Drupal.org's API response for a recipe (not zero — absent),
@@ -43,8 +46,10 @@ Run time: **~20-25 minutes**. The p2 verification and info.yml/recipe.yml
 label phases each use 3 concurrent workers (ThreadPoolExecutor), every
 worker respecting its phase's 3s per-worker delay. The drupal.org
 usage/security API remains sequential at 3s (most sensitive, and only
-queried for modules — recipes never touch it). JSON goes to stdout (or a
-file with `--json`); progress goes to stderr.
+queried for modules — recipes never touch it). Descriptions add **no**
+network requests: they're read from the info.yml/recipe.yml already fetched
+for the label, in the same parse. JSON goes to stdout (or a file with
+`--json`); progress goes to stderr.
 
 **Every phase prints one line per module** (`[i/N] {name}: ...`). This
 matters most for the usage-count phase, which is fully sequential at
@@ -136,17 +141,23 @@ This same API call also returns `field_security_advisory_coverage`
 (`"covered"` or `"not-covered"`) — `get_usage_and_security()` reads both
 fields from one response instead of making two separate calls.
 
-### 5. Module label — `git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml`
+### 5. Module label + description — `git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml`
 
 The project's actual display title lives in the `name:` key of its main
 `.info.yml` file — it is **not** part of composer.json or any JSON API
 response. Drupal.org's GitLab instance serves raw repo files at this URL
 pattern, tag-matched to the same version string returned by the p2 file
 (confirmed working for both old-style `8.x-*` tags and modern semver tags).
-Parsed with a simple regex (`_INFO_NAME_RE`) rather than a YAML library,
-since `pyyaml` isn't a stdlib dependency and the script only needs one
-top-level scalar key. Falls back to `human_name(machine_name)` (title-cased
-machine name) if the fetch or parse fails.
+`get_module_label_and_description()` reads **both** the `name:` (label) and
+`description:` keys from this single fetch — the description is the module's
+own full text, so no separate request or other source is ever consulted for
+it. Parsed with simple regexes (`_INFO_NAME_RE`, `_INFO_DESCRIPTION_RE`) via
+the shared `_parse_info_yml()` helper rather than a YAML library, since
+`pyyaml` isn't a stdlib dependency and the script only needs two top-level
+scalar keys (block scalars `>`/`|` are treated as absent — see
+`_YAML_BLOCK_INDICATOR_RE`). The label falls back to `human_name(machine_name)`
+(title-cased machine name) if the fetch or parse fails; the description is
+simply absent (`None`) when the info.yml has no `description:` key.
 
 ### 6. Recipe candidate discovery — Packagist type+keyword search
 
@@ -220,12 +231,15 @@ decode failure). A value of `0` is a real zero (package exists but has no
 downloads/stars yet). Both keys are **absent from module rows** — module
 packages live only on packages.drupal.org, not the main Packagist registry.
 
-### 9. Recipe label — `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml`
+### 9. Recipe label + description — `git.drupalcode.org/project/{name}/-/raw/{ref}/recipe.yml`
 
-Recipes don't have a `{name}.info.yml` — their display title lives in the
-`name:` key of a **fixed-filename** `recipe.yml` at the repo root instead
-(not name-templated, unlike modules' info.yml). Reuses `_INFO_NAME_RE`
-as-is since it's a generic top-level `name:` matcher.
+Recipes don't have a `{name}.info.yml` — their display title and description
+live in the `name:` / `description:` keys of a **fixed-filename** `recipe.yml`
+at the repo root instead (not name-templated, unlike modules' info.yml).
+`get_recipe_label_and_description()` reads both from this single fetch via the
+same shared `_parse_info_yml()` helper as modules, since those top-level keys
+aren't module-specific. The description is absent (`None`) when the recipe.yml
+has no `description:` key — no other source is consulted.
 
 **Important discovery made during development:** Composer's `"-dev"`
 version suffix (e.g. `"1.x-dev"`) is not a real git ref — GitLab has no
@@ -247,10 +261,10 @@ release), but retrofitting it is out of scope for this change.
 | `packages.drupal.org` p2 files | No `time` field. Date is in `extra.drupal.datestamp` as a Unix timestamp string. `type` for recipes is `drupal-recipe`, not `project_general`. Each version entry already includes the original composer.json `name` field (e.g. `drupal/ai_agents`) — no extra request needed for the "machine name" column. |
 | `updates.drupal.org` | Returns XML (not JSON). More tolerant of fast requests than the Drupal.org JSON API. |
 | `drupal.org/project/ai/ecosystem` | Page 0 has no `?page=0` parameter (omit it). Pagination detected by checking if `?page=N` appears in the HTML. |
-| `git.drupalcode.org` raw files | Tag names match the p2 `version` string directly (no `8.x-` prefix needed for modern packages). 404s if the module's main `.info.yml` isn't at the repo root under `{machine_name}.info.yml` (rare; handled by falling back to the title-cased machine name). |
+| `git.drupalcode.org` raw files | Tag names match the p2 `version` string directly (no `8.x-` prefix needed for modern packages). 404s if the module's main `.info.yml` isn't at the repo root under `{machine_name}.info.yml` (rare; handled by falling back to the title-cased machine name). Both the `name:` (label) and `description:` keys are read from this one file — info.yml is the **only** source for the module description. |
 | `packagist.org/search.json` | Unlike `packages.drupal.org/8/search.json`, `per_page=100` is actually honored (not capped at 50). Returns all packages of the given `type` regardless of AI-relatedness — same false-positive-tolerant design as the module search. |
 | `repo.packagist.org` p2 files | Same Composer v2 p2 shape as packages.drupal.org's, but has a real `time` field — no datestamp workaround needed. **Splits stable/tagged releases from dev/branch snapshots into separate files** (`{name}.json` vs `{name}~dev.json`) — a dev-only package returns an empty version list from the main URL; both must be fetched and merged. |
-| `git.drupalcode.org` recipe.yml | Fixed filename (`recipe.yml`, not `{name}.info.yml`). Composer `"x.y-dev"` version strings are NOT real git refs — GitLab serves the underlying branch (e.g. `"1.x"`) with the `-dev` suffix stripped. |
+| `git.drupalcode.org` recipe.yml | Fixed filename (`recipe.yml`, not `{name}.info.yml`). Composer `"x.y-dev"` version strings are NOT real git refs — GitLab serves the underlying branch (e.g. `"1.x"`) with the `-dev` suffix stripped. Both the `name:` (label) and `description:` keys are read from this one file — recipe.yml is the **only** source for the recipe description. |
 | curated YAML (`ai_dashboard_recommended_recipes.yml`) | Hand-maintained, not authoritative — every name still goes through full p2 verification. Catches at least one recipe (`drupal_cms_ai`) absent from the ecosystem page. |
 | `packagist.org` stats API | `packagist.org/packages/drupal/{name}.json` → `package.downloads.total` (downloads) and `package.favers` (stars). Both values come from the same response; no second request is made. Only called for recipes (not modules). Returns HTTP 404 for packages not on main Packagist — but only verified recipes are queried here, so 404s shouldn't occur in practice. |
 
@@ -293,6 +307,19 @@ recipes — packages.drupal.org simply doesn't carry them (confirmed via live
 `packages.drupal.org`, and recipe discovery hits `packagist.org` instead of
 `packages.drupal.org/8/search.json` — they're unrelated services with
 similar names.
+
+**The project description comes only from info.yml/recipe.yml — the
+`<meta name="description">` source was considered and dropped.** The project
+page's meta tag (`www.drupal.org/project/{name}`) was prototyped as a source
+(and as a fallback for projects whose info.yml/recipe.yml lacks a
+`description:` key), but it was rejected: it's a separate www.drupal.org
+request per project on the most rate-sensitive host (and would have made
+recipes touch www.drupal.org, which they otherwise never do), and it returns
+a **truncated** body summary rather than the maintainer-authored description.
+The info.yml/recipe.yml `description:` key is the full text and is already
+fetched for the label, so it's both better and free. A project with no
+`description:` key simply has no description (`null`) — do not re-add the meta
+fallback without a strong reason.
 
 ---
 
@@ -442,6 +469,14 @@ replacement; use `render_html.py` directly.)
 **`render_html.py`** features:
 - Each module `<tr>` has `data-stability="stable|rc|beta|alpha|dev"` and
   `data-security="covered|not-covered"`.
+- Each row's Label cell renders the project's `description` (when present) as a
+  muted second line (`<div class="desc">`) beneath the linked label, on **both**
+  the Modules and Recipes tabs. It's **display-only**: the Label column's
+  `data-val` stays the bare label text, so column sorting and the name filter
+  are unchanged (descriptions are not searched or sorted). `render_md.py` does
+  the equivalent with `<br><sub>…</sub>` via a shared `_label_cell()` helper that
+  HTML-escapes `<`/`>`/`&` and backslash-escapes any `|` (which would otherwise
+  break the markdown table row).
 - Version cell shows a small colored badge (green=stable, blue=rc, yellow=beta, orange=alpha, grey=dev).
 - Controls bar has stability checkboxes (`.stab-cb`) and security coverage
   checkboxes (`.sec-cb`), all checked by default; unchecking a value hides
@@ -474,14 +509,16 @@ Design notes for `render_html.py`:
   uses f-strings for the handful of variable substitutions.
 - All cell values used for sorting are stored in `data-val` attributes on each
   `<td>`. Sorting never reads rendered text — it reads the raw value:
-  - Label (col 0): plain text (for both sorting and the name filter)
+  - Label (col 0): plain text (for both sorting and the name filter) — the
+    `description` sub-line is rendered inside the same `<td>` but is **not**
+    part of `data-val`, so it never affects sorting or filtering
   - Machine name (col 1): plain text, not linked
   - Version (col 2): raw semver string; `""` for missing (sorts to bottom)
   - Released (col 3): `YYYY-MM-DD` string; `""` for `"—"` (sorts to bottom)
   - Security coverage (col 4): `"1"`/`"0"`, sorted numerically
   - Drupal.org usage (col 5): integer as string; `""` for unknown (treated as -Infinity)
 - Recipe table `data-val` attributes:
-  - Label (col 0): plain text
+  - Label (col 0): plain text (description sub-line excluded, same as modules)
   - Version (col 1): raw semver string; `""` for missing
   - Released (col 2): `YYYY-MM-DD` string; `""` for `"—"`
   - Packagist downloads (col 3): integer as string; `""` for unknown (treated as -Infinity)
@@ -529,6 +566,7 @@ The payload is written after the sort step:
     {
       "machine_name":     "drupal/ai_provider_openai",
       "label":            "OpenAI Provider",
+      "description":      "Adds OpenAI as a provider for the AI module.",
       "url":              "https://www.drupal.org/project/ai_provider_openai",
       "version":          "1.2.1",
       "release_date":     "2026-02-25",
@@ -541,6 +579,7 @@ The payload is written after the sort step:
     {
       "machine_name": "drupal/ai_recipe_image_classification",
       "label":        "AI Image Classification recipe",
+      "description":  "Configures automatic image classification using AI.",
       "url":          "https://www.drupal.org/project/ai_recipe_image_classification",
       "version":      "1.1.0",
       "release_date": "2026-02-12",
@@ -568,8 +607,14 @@ last), then alphabetically by `label` as a tiebreaker:
   bare name (e.g. `ai_provider_openai`) only exists as a local variable used
   to build URLs and fetch requests.
 - `label` is the `name:` key from the module's `*.info.yml`, fetched by
-  `get_module_label()`. Falls back to `human_name(machine_name)` (title-cased)
+  `get_module_label_and_description()` (recipes: `get_recipe_label_and_description()`
+  reading `recipe.yml`). Falls back to `human_name(machine_name)` (title-cased)
   when the file can't be fetched or parsed.
+- `description` is the `description:` key from the **same** `*.info.yml` /
+  `recipe.yml` parse (no extra request), or `null` when that key is absent.
+  Present on **both** module and recipe rows. There is no fallback source —
+  the meta-tag approach considered during development was dropped in favour of
+  using only the info.yml/recipe.yml description.
 - `security_covered` is a bool from `get_usage_and_security()`, derived from
   `field_security_advisory_coverage == "covered"` on the same Drupal.org API
   node already fetched for usage counts.
@@ -578,8 +623,10 @@ last), then alphabetically by `label` as a tiebreaker:
   Empty/missing version strings default to `"stable"`.
 
 Old `results.json` files without the `stability` field are handled gracefully
-in `render_html.py` via `r.get("stability", "stable")`. Older files predating
-the `label`/`machine_name`(composer-name)/`security_covered` fields are
+in `render_html.py` via `r.get("stability", "stable")`, and files predating
+the `description` field via `r.get("description")` in both renderers (a missing
+description simply renders no sub-line). Older files predating the
+`label`/`machine_name`(composer-name)/`security_covered` fields are
 **not** compatible with the current renderers — re-run the main script to
 regenerate `results.json` before re-rendering.
 

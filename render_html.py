@@ -121,6 +121,14 @@ _CSS = """\
     }
     tr:last-child td { border-bottom: none; }
     tbody tr:hover td { background: #f0f7ff; }
+    .desc {
+      color: #666;
+      font-size: 0.8rem;
+      font-weight: normal;
+      line-height: 1.35;
+      margin-top: 0.2rem;
+      max-width: 44rem;
+    }
     .col-version  { font-family: ui-monospace, monospace; white-space: nowrap; }
     .col-date     { white-space: nowrap; }
     .col-security { text-align: center; }
@@ -342,9 +350,11 @@ def render_html(payload: dict) -> str:
         sec_status   = "covered" if sec_covered else "not-covered"
         stab_label, css_class = _STABILITY_META.get(stability, ("Stable", "stab-stable"))
         badge = f'<span class="badge {css_class}">{stab_label}</span>'
+        desc = r.get("description")
+        desc_html = f'<div class="desc">{esc(desc)}</div>' if desc else ''
         row_lines.append(
             f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}">'
-            f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a></td>'
+            f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}{badge}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
@@ -373,9 +383,11 @@ def render_html(payload: dict) -> str:
         stars       = r.get("stars")
         stars_raw   = str(stars) if stars is not None else ""
         stars_disp  = f"{stars:,}" if stars is not None else "—"
+        desc        = r.get("description")
+        desc_html   = f'<div class="desc">{esc(desc)}</div>' if desc else ''
         recipe_row_lines.append(
             f'      <tr>'
-            f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a></td>'
+            f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{dl_raw}" class="col-downloads">{dl_disp}</td>'

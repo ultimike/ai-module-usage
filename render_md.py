@@ -7,6 +7,7 @@ Usage:
 """
 
 import argparse
+import html
 import json
 import sys
 
@@ -26,6 +27,17 @@ SECURITY_COVERED_PRERELEASE_MD = (
     'width="16" height="16" style="opacity:0.5" alt="Security covered (pre-release)">'
 )
 SECURITY_NOT_COVERED_EMOJI = "🚫"
+
+
+def _label_cell(r: dict) -> str:
+    """Build the label table cell. Project link, with the description."""
+    cell = f"[{r['label']}]({r['url']})"
+    desc = r.get("description")
+    if desc:
+        safe = html.escape(desc, quote=False).replace("|", "\\|")
+        safe = " ".join(safe.split())  # collapse any newlines/runs of whitespace
+        cell += f"<br><sub>{safe}</sub>"
+    return cell
 
 
 def render_md(payload: dict) -> str:
@@ -55,7 +67,7 @@ def render_md(payload: dict) -> str:
         else:
             security_str = SECURITY_NOT_COVERED_EMOJI
         lines.append(
-            f"| [{r['label']}]({r['url']}) | {r['url']} | `{r['version']}` |"
+            f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {security_str} | {usage_str} |"
         )
 
@@ -78,7 +90,7 @@ def render_md(payload: dict) -> str:
         stars = r.get("stars")
         stars_str = f"{stars:,}" if stars is not None else "—"
         lines.append(
-            f"| [{r['label']}]({r['url']}) | {r['url']} | `{r['version']}` |"
+            f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {downloads_str} | {stars_str} |"
         )
 
