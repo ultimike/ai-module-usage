@@ -14,7 +14,10 @@
       "release_date": "2026-06-24",
       "usage": 13737,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_image_alt_text",
@@ -25,7 +28,11 @@
       "release_date": "2025-12-05",
       "usage": 10951,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Media",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/ai_agents",
@@ -36,7 +43,10 @@
       "release_date": "2026-06-24",
       "usage": 10782,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_anthropic",
@@ -47,7 +57,10 @@
       "release_date": "2026-03-19",
       "usage": 8746,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_amazeeio",
@@ -58,7 +71,10 @@
       "release_date": "2026-05-28",
       "usage": 6274,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_dashboard",
@@ -69,7 +85,10 @@
       "release_date": "2026-03-05",
       "usage": 5767,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_seo",
@@ -80,7 +99,11 @@
       "release_date": "2026-05-27",
       "usage": 2715,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics",
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_azure",
@@ -91,7 +114,10 @@
       "release_date": "2026-06-24",
       "usage": 1519,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/gemini_provider",
@@ -102,7 +128,10 @@
       "release_date": "2026-03-22",
       "usage": 1086,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_litellm",
@@ -113,7 +142,10 @@
       "release_date": "2025-10-13",
       "usage": 818,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_milvus",
@@ -124,7 +156,10 @@
       "release_date": "2026-06-11",
       "usage": 599,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/metatag_ai",
@@ -135,7 +170,10 @@
       "release_date": "2026-01-21",
       "usage": 568,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/ai_translate",
@@ -146,7 +184,10 @@
       "release_date": "2026-02-11",
       "usage": 529,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_pinecone",
@@ -157,7 +198,10 @@
       "release_date": "2026-04-21",
       "usage": 426,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_ollama",
@@ -168,7 +212,10 @@
       "release_date": "2026-04-08",
       "usage": 382,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Local Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_integration_eca",
@@ -179,7 +226,10 @@
       "release_date": "2025-12-12",
       "usage": 342,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_tmgmt",
@@ -190,7 +240,11 @@
       "release_date": "2026-06-11",
       "usage": 282,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Local Providers",
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_postgres",
@@ -201,7 +255,10 @@
       "release_date": "2026-04-23",
       "usage": 248,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_context",
@@ -212,7 +269,11 @@
       "release_date": "2026-05-11",
       "usage": 247,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Agents",
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_aws_bedrock",
@@ -223,7 +284,10 @@
       "release_date": "2026-04-15",
       "usage": 216,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_media_image",
@@ -234,7 +298,10 @@
       "release_date": "2025-06-12",
       "usage": 208,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_search",
@@ -245,7 +312,12 @@
       "release_date": "2026-06-24",
       "usage": 191,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content",
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_summarize_document",
@@ -256,7 +328,11 @@
       "release_date": "2025-07-17",
       "usage": 163,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_groq",
@@ -267,7 +343,10 @@
       "release_date": "2025-10-13",
       "usage": 153,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_deepl",
@@ -278,7 +357,11 @@
       "release_date": "2026-01-21",
       "usage": 152,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers",
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/ckeditor_ai_agent",
@@ -289,7 +372,12 @@
       "release_date": "2026-06-08",
       "usage": 151,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Editorial",
+        "Content",
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_deepseek",
@@ -300,7 +388,10 @@
       "release_date": "2026-05-26",
       "usage": 142,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_mistral",
@@ -311,7 +402,10 @@
       "release_date": "2026-02-19",
       "usage": 121,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_google_vertex",
@@ -322,7 +416,10 @@
       "release_date": "2025-09-05",
       "usage": 103,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_suggestions",
@@ -333,7 +430,10 @@
       "release_date": "2026-05-25",
       "usage": 99,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/elevenlabs",
@@ -344,7 +444,10 @@
       "release_date": "2025-11-14",
       "usage": 99,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_strategy",
@@ -355,7 +458,10 @@
       "release_date": "2026-05-18",
       "usage": 98,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_openrouter",
@@ -366,7 +472,10 @@
       "release_date": "2026-06-26",
       "usage": 96,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_search_block",
@@ -377,7 +486,10 @@
       "release_date": "2026-06-18",
       "usage": 92,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/analyze_ai_sentiments",
@@ -388,7 +500,10 @@
       "release_date": "2026-04-07",
       "usage": 91,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_simple_pdf_to_text",
@@ -399,7 +514,11 @@
       "release_date": "2025-10-15",
       "usage": 90,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Automation",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/analyze_ai_content_marketing_audit",
@@ -410,7 +529,11 @@
       "release_date": "2026-04-07",
       "usage": 89,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/analyze_ai_brand_voice",
@@ -421,7 +544,11 @@
       "release_date": "2026-04-07",
       "usage": 87,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/analyze_ai_content_security_audit",
@@ -432,7 +559,12 @@
       "release_date": "2026-04-07",
       "usage": 82,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Analytics",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_huggingface",
@@ -443,7 +575,10 @@
       "release_date": "2026-02-26",
       "usage": 76,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_translate_paragraph_asymetric",
@@ -454,7 +589,11 @@
       "release_date": "2026-02-03",
       "usage": 64,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search",
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/flowdrop_ai_provider",
@@ -465,7 +604,10 @@
       "release_date": "2026-04-09",
       "usage": 59,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_alibabacloud",
@@ -476,7 +618,10 @@
       "release_date": "2025-09-09",
       "usage": 55,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_translate_textfield",
@@ -487,7 +632,10 @@
       "release_date": "2025-10-17",
       "usage": 51,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/tts",
@@ -498,7 +646,11 @@
       "release_date": "2024-10-20",
       "usage": 49,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_langdock",
@@ -509,7 +661,10 @@
       "release_date": "2026-03-25",
       "usage": 45,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai",
@@ -520,7 +675,11 @@
       "release_date": "2025-12-22",
       "usage": 42,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_x",
@@ -531,7 +690,10 @@
       "release_date": "2025-03-21",
       "usage": 37,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_sqlite",
@@ -542,7 +704,10 @@
       "release_date": "2025-05-21",
       "usage": 34,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_lmstudio",
@@ -553,7 +718,10 @@
       "release_date": "2025-11-12",
       "usage": 32,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Local Providers"
+      ]
     },
     {
       "machine_name": "drupal/search_api_solr_dense_vector",
@@ -564,7 +732,11 @@
       "release_date": "2026-01-29",
       "usage": 31,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_usage_limits",
@@ -575,7 +747,10 @@
       "release_date": "2025-09-26",
       "usage": 30,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_mariadb",
@@ -586,7 +761,10 @@
       "release_date": "2026-06-17",
       "usage": 28,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_qdrant",
@@ -597,7 +775,10 @@
       "release_date": "2026-07-01",
       "usage": 24,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_agents_debugger",
@@ -608,7 +789,12 @@
       "release_date": "2026-02-10",
       "usage": 22,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Agents",
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_openai_compatible",
@@ -619,7 +805,10 @@
       "release_date": "2026-04-07",
       "usage": 22,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_acquia",
@@ -630,7 +819,10 @@
       "release_date": "2026-02-18",
       "usage": 21,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_azure_ai_search",
@@ -641,7 +833,11 @@
       "release_date": "2025-12-19",
       "usage": 21,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_metering",
@@ -652,7 +848,10 @@
       "release_date": "2025-05-29",
       "usage": 21,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_auto_reference",
@@ -663,7 +862,11 @@
       "release_date": "2026-06-26",
       "usage": 18,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/feeds_tamper_ai",
@@ -674,7 +877,10 @@
       "release_date": "2026-05-04",
       "usage": 17,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_schemadotorg_jsonld",
@@ -685,7 +891,12 @@
       "release_date": "2026-04-30",
       "usage": 16,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content",
+        "Automation",
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/ai_ckeditor_extras",
@@ -696,7 +907,10 @@
       "release_date": "2026-03-12",
       "usage": 14,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial"
+      ]
     },
     {
       "machine_name": "drupal/ai_editoria11y",
@@ -707,7 +921,11 @@
       "release_date": "2026-03-05",
       "usage": 14,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Editorial",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_vllm",
@@ -718,7 +936,10 @@
       "release_date": "2025-03-04",
       "usage": 14,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Local Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_nanobanana",
@@ -729,7 +950,11 @@
       "release_date": "2025-11-21",
       "usage": 14,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_dxpr",
@@ -740,7 +965,10 @@
       "release_date": "2026-06-03",
       "usage": 13,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/fireworksai",
@@ -751,7 +979,10 @@
       "release_date": "2026-06-26",
       "usage": 13,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_webform_guard",
@@ -762,7 +993,10 @@
       "release_date": "2026-01-20",
       "usage": 13,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_related_content",
@@ -773,7 +1007,11 @@
       "release_date": "2026-06-25",
       "usage": 12,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content",
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/openai_batch",
@@ -784,7 +1022,11 @@
       "release_date": "2026-06-19",
       "usage": 12,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_translate_lb_asymmetric",
@@ -795,7 +1037,10 @@
       "release_date": "2026-02-03",
       "usage": 11,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_anythingllm",
@@ -806,7 +1051,10 @@
       "release_date": "2026-03-25",
       "usage": 10,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Local Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_browser",
@@ -817,7 +1065,10 @@
       "release_date": "2026-03-09",
       "usage": 10,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Local Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_yandex",
@@ -828,7 +1079,10 @@
       "release_date": "2025-10-18",
       "usage": 10,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_translate_plus",
@@ -839,7 +1093,10 @@
       "release_date": "2025-11-10",
       "usage": 10,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_advisor",
@@ -850,7 +1107,11 @@
       "release_date": "2025-08-27",
       "usage": 9,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/rag_search",
@@ -861,7 +1122,10 @@
       "release_date": "2026-04-17",
       "usage": 9,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_dropsolidai",
@@ -872,7 +1136,10 @@
       "release_date": "2025-10-10",
       "usage": 9,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/mcp_client",
@@ -883,7 +1150,10 @@
       "release_date": "2025-12-16",
       "usage": 9,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_automator_extractor",
@@ -894,7 +1164,10 @@
       "release_date": "2025-09-09",
       "usage": 8,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_opensearch",
@@ -905,7 +1178,11 @@
       "release_date": "2025-11-18",
       "usage": 8,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/pexels_ai",
@@ -916,7 +1193,11 @@
       "release_date": "2025-10-03",
       "usage": 8,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_llms_txt_generator",
@@ -927,7 +1208,10 @@
       "release_date": "2025-10-31",
       "usage": 8,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/deepgram",
@@ -938,7 +1222,11 @@
       "release_date": "2024-10-29",
       "usage": 8,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/flowdrop_ui_agents",
@@ -949,7 +1237,11 @@
       "release_date": "2026-04-15",
       "usage": 8,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/agui",
@@ -960,7 +1252,11 @@
       "release_date": "2026-07-02",
       "usage": 8,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Agents",
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_lifecycle",
@@ -971,7 +1267,11 @@
       "release_date": "2025-04-10",
       "usage": 7,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/vais",
@@ -982,7 +1282,10 @@
       "release_date": "2024-08-22",
       "usage": 7,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_rag_search_chat",
@@ -993,7 +1296,11 @@
       "release_date": "2026-06-09",
       "usage": 7,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search",
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/ai_migrate",
@@ -1004,7 +1311,11 @@
       "release_date": "2025-07-02",
       "usage": 5,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/metatag_ai_generate",
@@ -1015,7 +1326,10 @@
       "release_date": "2026-02-04",
       "usage": 5,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/metatag_ai_bulk_update",
@@ -1026,7 +1340,11 @@
       "release_date": "2026-03-25",
       "usage": 5,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Automation",
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/node_ai_assistant",
@@ -1037,7 +1355,10 @@
       "release_date": "2026-04-18",
       "usage": 5,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/ai_404_redirect",
@@ -1048,7 +1369,12 @@
       "release_date": "2025-12-22",
       "usage": 5,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Automation",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_document_ocr",
@@ -1059,7 +1385,10 @@
       "release_date": "2026-06-09",
       "usage": 4,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_validations",
@@ -1070,7 +1399,10 @@
       "release_date": "2026-07-01",
       "usage": 4,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_webform_sentiment",
@@ -1081,7 +1413,10 @@
       "release_date": "2025-05-27",
       "usage": 4,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/flowdrop_agents",
@@ -1092,7 +1427,10 @@
       "release_date": "2026-05-06",
       "usage": 4,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/schema_metatag_ai",
@@ -1103,7 +1441,10 @@
       "release_date": "2025-12-04",
       "usage": 4,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/nanobanana_editor",
@@ -1114,7 +1455,12 @@
       "release_date": "2026-04-15",
       "usage": 4,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers",
+        "Editorial",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_audio_field",
@@ -1125,7 +1471,10 @@
       "release_date": "2025-03-19",
       "usage": 3,
       "security_covered": false,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_apertus",
@@ -1136,7 +1485,10 @@
       "release_date": "2025-10-17",
       "usage": 3,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_simple_provider_installer",
@@ -1147,7 +1499,10 @@
       "release_date": "2024-12-03",
       "usage": 3,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_single_page_importer",
@@ -1158,7 +1513,10 @@
       "release_date": "2026-06-12",
       "usage": 3,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_workspace",
@@ -1169,7 +1527,10 @@
       "release_date": "2026-03-04",
       "usage": 3,
       "security_covered": false,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_aliyun_bailian",
@@ -1180,7 +1541,10 @@
       "release_date": "2025-06-20",
       "usage": 3,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/searxng",
@@ -1191,7 +1555,10 @@
       "release_date": "2025-11-28",
       "usage": 3,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/ai_budget_control",
@@ -1202,7 +1569,11 @@
       "release_date": "2026-04-08",
       "usage": 3,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Analytics",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/workers_ai_provider",
@@ -1213,7 +1584,10 @@
       "release_date": "2025-05-20",
       "usage": 3,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/media_accessibility_audit",
@@ -1224,7 +1598,13 @@
       "release_date": "2025-12-24",
       "usage": 3,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics",
+        "Media",
+        "SEO & Metadata",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/ai_jsonld_schema_generator",
@@ -1235,7 +1615,10 @@
       "release_date": "2026-03-17",
       "usage": 3,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/ai_automator_google_vision",
@@ -1246,7 +1629,11 @@
       "release_date": "2024-10-10",
       "usage": 2,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Automation",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_migration",
@@ -1257,7 +1644,12 @@
       "release_date": "2025-12-12",
       "usage": 2,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content",
+        "Search",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_cloudflare_gateway",
@@ -1268,7 +1660,11 @@
       "release_date": "2026-06-21",
       "usage": 2,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/drup_aid",
@@ -1279,7 +1675,10 @@
       "release_date": "2026-06-12",
       "usage": 2,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_elasticsearch",
@@ -1290,7 +1689,11 @@
       "release_date": "2026-05-09",
       "usage": 2,
       "security_covered": true,
-      "stability": "rc"
+      "stability": "rc",
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_xai",
@@ -1301,7 +1704,10 @@
       "release_date": "2025-02-19",
       "usage": 2,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_chatblock",
@@ -1312,7 +1718,10 @@
       "release_date": "2026-03-06",
       "usage": 2,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/llms_txt_ai",
@@ -1323,7 +1732,14 @@
       "release_date": "2023-10-30",
       "usage": 2,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers",
+        "Content",
+        "Chat",
+        "Automation",
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/aidmi",
@@ -1334,7 +1750,11 @@
       "release_date": "2026-06-24",
       "usage": 2,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Media",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/auphonic",
@@ -1345,7 +1765,11 @@
       "release_date": "2024-10-10",
       "usage": 2,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Media",
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_audio_generator",
@@ -1356,7 +1780,12 @@
       "release_date": "2026-04-16",
       "usage": 1,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content",
+        "Automation",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_chat",
@@ -1367,7 +1796,11 @@
       "release_date": "2026-02-26",
       "usage": 1,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/ai_empathy",
@@ -1378,7 +1811,10 @@
       "release_date": "2026-06-11",
       "usage": 1,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Evaluation & Testing"
+      ]
     },
     {
       "machine_name": "drupal/ai_seo_link_advisor",
@@ -1389,7 +1825,10 @@
       "release_date": "2026-02-15",
       "usage": 1,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/drupaleasy_ai_tools",
@@ -1400,7 +1839,11 @@
       "release_date": "2026-05-30",
       "usage": 1,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Tool",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_metatag_generator",
@@ -1411,7 +1854,10 @@
       "release_date": "2026-06-09",
       "usage": 1,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/ai_plus",
@@ -1422,7 +1868,11 @@
       "release_date": "2026-06-10",
       "usage": 1,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/gutenberg_ai_tools",
@@ -1433,7 +1883,11 @@
       "release_date": "2025-04-07",
       "usage": 1,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Tool",
+        "Editorial"
+      ]
     },
     {
       "machine_name": "drupal/ai_watchdog_analyst",
@@ -1444,7 +1898,11 @@
       "release_date": "2026-03-10",
       "usage": 1,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_llama_cpp",
@@ -1455,7 +1913,10 @@
       "release_date": "2026-06-01",
       "usage": 1,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Local Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_agent_memory",
@@ -1466,7 +1927,10 @@
       "release_date": "2026-06-10",
       "usage": 1,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_tool_get_ip_address",
@@ -1477,7 +1941,11 @@
       "release_date": "2025-12-09",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Tool",
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_tool_get_sitemap",
@@ -1488,7 +1956,11 @@
       "release_date": "2025-12-08",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Tool",
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/ai_agents_experimental_collection",
@@ -1499,7 +1971,10 @@
       "release_date": "2026-03-20",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_autoevals",
@@ -1510,7 +1985,11 @@
       "release_date": "2026-06-10",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Automation",
+        "Evaluation & Testing"
+      ]
     },
     {
       "machine_name": "drupal/ai_automator_pixabay",
@@ -1521,7 +2000,12 @@
       "release_date": "2024-10-10",
       "usage": null,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Search",
+        "Automation",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_image_filename",
@@ -1532,7 +2016,11 @@
       "release_date": "2026-06-01",
       "usage": null,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_log_analysis",
@@ -1543,7 +2031,11 @@
       "release_date": "2025-06-13",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_agent_migration",
@@ -1554,7 +2046,11 @@
       "release_date": "2025-06-29",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Automation",
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_monitoring",
@@ -1565,7 +2061,11 @@
       "release_date": "2026-05-11",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_evaluations",
@@ -1576,7 +2076,11 @@
       "release_date": "2026-04-20",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Chat",
+        "Evaluation & Testing"
+      ]
     },
     {
       "machine_name": "drupal/ai_pageindex",
@@ -1587,7 +2091,12 @@
       "release_date": "2026-06-27",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search",
+        "Media",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_baidu",
@@ -1598,7 +2107,10 @@
       "release_date": "2025-08-25",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_moonshot",
@@ -1609,7 +2121,10 @@
       "release_date": "2025-08-25",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_zhipuai",
@@ -1620,7 +2135,10 @@
       "release_date": "2025-08-26",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_search_sc",
@@ -1631,7 +2149,11 @@
       "release_date": "2026-04-17",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_semantic_expansion",
@@ -1642,7 +2164,10 @@
       "release_date": "2026-05-19",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_assemblyai",
@@ -1653,7 +2178,10 @@
       "release_date": "2026-02-23",
       "usage": null,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/better_ai_report",
@@ -1664,7 +2192,10 @@
       "release_date": "2026-06-23",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/chromium_tool",
@@ -1675,7 +2206,10 @@
       "release_date": "2025-09-26",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_dreamstudio",
@@ -1686,7 +2220,11 @@
       "release_date": "2025-06-20",
       "usage": null,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/generic_colors",
@@ -1697,7 +2235,10 @@
       "release_date": "2025-11-25",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_infomaniak",
@@ -1708,7 +2249,12 @@
       "release_date": "2025-12-30",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers",
+        "Chat",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_quant_cloud",
@@ -1719,7 +2265,13 @@
       "release_date": "2026-02-27",
       "usage": null,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers",
+        "Search",
+        "Chat",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/smart_paste",
@@ -1730,7 +2282,11 @@
       "release_date": "2024-12-23",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/twig_to_sdc",
@@ -1741,7 +2297,11 @@
       "release_date": "2024-12-06",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/writer_ai",
@@ -1752,7 +2312,10 @@
       "release_date": "2025-08-19",
       "usage": null,
       "security_covered": true,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_inspector",
@@ -1763,7 +2326,10 @@
       "release_date": "2026-06-28",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/flowdrop_ai_search",
@@ -1774,7 +2340,11 @@
       "release_date": "2026-05-12",
       "usage": null,
       "security_covered": true,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_entity_intake",
@@ -1785,7 +2355,10 @@
       "release_date": "2026-05-19",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/apex_ai",
@@ -1796,7 +2369,12 @@
       "release_date": "2025-05-24",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Automation",
+        "Analytics",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_mittwald",
@@ -1807,7 +2385,10 @@
       "release_date": "2026-05-05",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_bytedance",
@@ -1818,7 +2399,10 @@
       "release_date": "2025-12-17",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_ckeditor_wcag",
@@ -1829,7 +2413,11 @@
       "release_date": "2025-02-28",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/ai_rag_service",
@@ -1840,7 +2428,11 @@
       "release_date": "2026-06-21",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search",
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/ai_revision_assistant",
@@ -1851,7 +2443,14 @@
       "release_date": "2026-01-29",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Editorial",
+        "Content",
+        "Search",
+        "Analytics",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/smartlinker_ai",
@@ -1862,7 +2461,13 @@
       "release_date": "2026-03-23",
       "usage": null,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Content",
+        "Automation",
+        "Analytics"
+      ]
     },
     {
       "machine_name": "drupal/ai_audio_translate",
@@ -1873,7 +2478,11 @@
       "release_date": "2026-04-15",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Media",
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/search_ai_feedback",
@@ -1884,7 +2493,10 @@
       "release_date": "2026-06-26",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/ai_anthropic_provider_oauth",
@@ -1895,7 +2507,12 @@
       "release_date": "2026-03-24",
       "usage": null,
       "security_covered": false,
-      "stability": "beta"
+      "stability": "beta",
+      "categories": [
+        "Cloud Providers",
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/did_ai_provider",
@@ -1906,7 +2523,12 @@
       "release_date": "2025-10-09",
       "usage": null,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers",
+        "Automation",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_revision_log",
@@ -1917,7 +2539,12 @@
       "release_date": "2024-10-29",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Automation",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_rag_search_summary",
@@ -1928,7 +2555,11 @@
       "release_date": "2026-01-30",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/midgard",
@@ -1939,7 +2570,11 @@
       "release_date": "2026-06-17",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Analytics",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/crux",
@@ -1950,7 +2585,11 @@
       "release_date": "2025-12-11",
       "usage": null,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/views_nl_filter",
@@ -1961,7 +2600,10 @@
       "release_date": "2026-03-28",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/api_normalization",
@@ -1972,7 +2614,10 @@
       "release_date": "2025-02-02",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_factory",
@@ -1983,7 +2628,11 @@
       "release_date": "2026-05-24",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/aia",
@@ -1994,7 +2643,10 @@
       "release_date": "2026-05-30",
       "usage": null,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_agents_ossa",
@@ -2005,7 +2657,10 @@
       "release_date": "2026-03-25",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/ai_vdb_provider_openai",
@@ -2016,7 +2671,10 @@
       "release_date": "2026-06-29",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_eval",
@@ -2027,7 +2685,10 @@
       "release_date": "2026-04-25",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Evaluation & Testing"
+      ]
     },
     {
       "machine_name": "drupal/ai_tool_screenshot",
@@ -2038,7 +2699,10 @@
       "release_date": "2026-03-11",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_content_assistant",
@@ -2049,7 +2713,11 @@
       "release_date": "2026-06-05",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Content",
+        "Search"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_siliconflow",
@@ -2060,7 +2728,10 @@
       "release_date": "2025-08-27",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Cloud Providers"
+      ]
     },
     {
       "machine_name": "drupal/ai_upgrade_assistant",
@@ -2071,7 +2742,12 @@
       "release_date": "2026-02-14",
       "usage": null,
       "security_covered": false,
-      "stability": "alpha"
+      "stability": "alpha",
+      "categories": [
+        "Automation",
+        "Analytics",
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/rrf",
@@ -2082,7 +2758,11 @@
       "release_date": "2025-11-28",
       "usage": null,
       "security_covered": false,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
     }
   ],
   "recipes": [
@@ -2095,7 +2775,12 @@
       "release_date": "2026-06-01",
       "stability": "stable",
       "downloads": 162654,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Cloud Providers",
+        "Chat",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai_editor_assistant",
@@ -2106,7 +2791,10 @@
       "release_date": "2025-07-01",
       "stability": "stable",
       "downloads": 19222,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Editorial"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai_taxonomy_tagging",
@@ -2117,7 +2805,11 @@
       "release_date": "2025-07-01",
       "stability": "stable",
       "downloads": 18814,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai_image_alt",
@@ -2128,7 +2820,12 @@
       "release_date": "2025-07-01",
       "stability": "stable",
       "downloads": 18809,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Automation",
+        "Media",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai_agents",
@@ -2139,7 +2836,11 @@
       "release_date": "2025-11-17",
       "stability": "stable",
       "downloads": 16665,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Chat",
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai_default",
@@ -2150,7 +2851,12 @@
       "release_date": "2025-07-22",
       "stability": "stable",
       "downloads": 16529,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Cloud Providers",
+        "Editorial",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_guardrails_prompt_safety",
@@ -2161,7 +2867,11 @@
       "release_date": "2026-03-18",
       "stability": "stable",
       "downloads": 1615,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Search",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_guardrails_pii",
@@ -2172,7 +2882,10 @@
       "release_date": "2026-03-18",
       "stability": "stable",
       "downloads": 1596,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/varbase_ai_safety",
@@ -2183,7 +2896,11 @@
       "release_date": "2026-06-21",
       "stability": "alpha",
       "downloads": 1545,
-      "stars": 1
+      "stars": 1,
+      "categories": [
+        "Analytics",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_provider_amazeeio_recipe",
@@ -2194,7 +2911,11 @@
       "release_date": "2026-03-26",
       "stability": "stable",
       "downloads": 1388,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Cloud Providers",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/drupal_cms_ai_ckeditor",
@@ -2205,7 +2926,10 @@
       "release_date": "2026-02-22",
       "stability": "stable",
       "downloads": 236,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Editorial"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_image_classification",
@@ -2216,7 +2940,10 @@
       "release_date": "2026-02-12",
       "stability": "stable",
       "downloads": 158,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/saplings_ai_mcp",
@@ -2227,7 +2954,10 @@
       "release_date": "2025-11-26",
       "stability": "stable",
       "downloads": 110,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Tool"
+      ]
     },
     {
       "machine_name": "drupal/ai_ecosystem",
@@ -2238,7 +2968,10 @@
       "release_date": "2024-10-29",
       "stability": "alpha",
       "downloads": 85,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_seo_optimizer",
@@ -2249,7 +2982,10 @@
       "release_date": "2025-12-03",
       "stability": "stable",
       "downloads": 82,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "SEO & Metadata"
+      ]
     },
     {
       "machine_name": "drupal/saplings_ai_agents",
@@ -2260,7 +2996,11 @@
       "release_date": "2025-07-08",
       "stability": "stable",
       "downloads": 79,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Chat",
+        "Agents"
+      ]
     },
     {
       "machine_name": "drupal/saplings_ai_ckeditor_experience",
@@ -2271,7 +3011,12 @@
       "release_date": "2025-06-24",
       "stability": "stable",
       "downloads": 48,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Editorial",
+        "Content",
+        "Translation"
+      ]
     },
     {
       "machine_name": "drupal/ai_dev_recipe",
@@ -2282,7 +3027,10 @@
       "release_date": "2025-09-23",
       "stability": "alpha",
       "downloads": 32,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/thunder_ai",
@@ -2293,7 +3041,10 @@
       "release_date": "2026-05-17",
       "stability": "beta",
       "downloads": 30,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Developer Tools"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_content_classification",
@@ -2304,7 +3055,11 @@
       "release_date": "2025-10-09",
       "stability": "stable",
       "downloads": 24,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_chatbot_recipe",
@@ -2315,7 +3070,12 @@
       "release_date": "2025-09-26",
       "stability": "stable",
       "downloads": 20,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Cloud Providers",
+        "Chat",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/plus_suite_ai",
@@ -2326,7 +3086,12 @@
       "release_date": "2026-06-30",
       "stability": "stable",
       "downloads": 19,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Cloud Providers",
+        "Chat",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/drupal_module_chatbot_recipe",
@@ -2337,7 +3102,11 @@
       "release_date": "2025-06-24",
       "stability": "dev",
       "downloads": 15,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Search",
+        "Chat"
+      ]
     },
     {
       "machine_name": "drupal/quiz_questions_by_eca_and_ai",
@@ -2348,7 +3117,11 @@
       "release_date": "2025-10-26",
       "stability": "stable",
       "downloads": 7,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Automation"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_content_pre_moderation",
@@ -2359,7 +3132,12 @@
       "release_date": "2026-06-26",
       "stability": "alpha",
       "downloads": 6,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Automation",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_validations_image_safety",
@@ -2370,7 +3148,13 @@
       "release_date": "2026-06-12",
       "stability": "dev",
       "downloads": 6,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Chat",
+        "Media",
+        "Safety & Governance"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_audio_transcription",
@@ -2381,7 +3165,11 @@
       "release_date": "2026-06-11",
       "stability": "dev",
       "downloads": 2,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Media"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_content_suggestions",
@@ -2392,7 +3180,10 @@
       "release_date": "2026-06-11",
       "stability": "dev",
       "downloads": 2,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_content_search_vector",
@@ -2403,7 +3194,12 @@
       "release_date": "2026-06-11",
       "stability": "dev",
       "downloads": 2,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Search",
+        "Vector Database"
+      ]
     },
     {
       "machine_name": "drupal/ai_recipe_image_alt_text",
@@ -2414,7 +3210,11 @@
       "release_date": "2026-06-11",
       "stability": "dev",
       "downloads": 2,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Media",
+        "Accessibility"
+      ]
     },
     {
       "machine_name": "drupal/govnl_cms_ai",
@@ -2425,7 +3225,11 @@
       "release_date": "2026-05-27",
       "stability": "stable",
       "downloads": 0,
-      "stars": 0
+      "stars": 0,
+      "categories": [
+        "Chat",
+        "Accessibility"
+      ]
     }
   ]
 }

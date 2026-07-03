@@ -56,6 +56,27 @@ _SECURITY_META = {
     "not-covered": ("Not covered", SECURITY_NOT_COVERED_EMOJI),
 }
 
+# Category filter ordering. Mirrors CATEGORIES in drupal_ai_dependents.py; any
+# category not listed here (a future addition, or "Uncategorized") still
+# renders — it just sorts to the end. Kept local so this renderer runs on its
+# own, like STABILITY_ORDER / SECURITY_ORDER above.
+CATEGORY_ORDER = [
+    "Tool", "Cloud Providers", "Local Providers", "Editorial", "Content",
+    "Search", "Chat", "Automation", "Agents", "Analytics", "Media",
+    "Vector Database", "SEO & Metadata", "Translation", "Safety & Governance",
+    "Accessibility", "Developer Tools", "Evaluation & Testing",
+]
+
+
+def _ordered_categories(rows: list) -> list:
+    """Categories present across rows, in CATEGORY_ORDER then any extras alpha."""
+    present: set = set()
+    for r in rows:
+        present.update(r.get("categories", []))
+    return ([c for c in CATEGORY_ORDER if c in present]
+            + sorted(c for c in present if c not in CATEGORY_ORDER))
+
+
 # CSS stored as a plain string (not an f-string) to avoid escaping every { }.
 _CSS = """\
     body {
@@ -139,6 +160,17 @@ _CSS = """\
     th.col-downloads  { text-align: right; }
     .col-stars        { text-align: right; }
     th.col-stars      { text-align: right; }
+    .col-cat { white-space: normal; }
+    .cat-pill {
+      display: inline-block;
+      padding: 1px 7px;
+      margin: 1px 3px 1px 0;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      background: #e7eef5;
+      color: #245a8c;
+      white-space: nowrap;
+    }
     #no-results {
       display: none;
       padding: 1.5rem;
@@ -261,12 +293,18 @@ _JS = """\
           Array.from(document.querySelectorAll('.sec-cb:checked'))
                .map(function (cb) { return cb.value; })
         );
+        var catChecked = new Set(
+          Array.from(document.querySelectorAll('#panel-modules .cat-cb:checked'))
+               .map(function (cb) { return cb.value; })
+        );
         var visible = 0;
         Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var stabMatch = stabChecked.has(row.dataset.stability);
           var secMatch = secChecked.has(row.dataset.security);
-          var show = nameMatch && stabMatch && secMatch;
+          var cats = (row.dataset.categories || '').split('|').filter(Boolean);
+          var catMatch = cats.length === 0 || cats.some(function (c) { return catChecked.has(c); });
+          var show = nameMatch && stabMatch && secMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
@@ -274,7 +312,7 @@ _JS = """\
       }
 
       filterModules.addEventListener('input', applyModulesFilter);
-      Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
+      Array.from(document.querySelectorAll('.stab-cb, .sec-cb, #panel-modules .cat-cb')).forEach(function (cb) {
         cb.addEventListener('change', applyModulesFilter);
       });
 
@@ -291,9 +329,16 @@ _JS = """\
 
       function applyRecipesFilter() {
         var q = filterRecipes.value.toLowerCase();
+        var catChecked = new Set(
+          Array.from(document.querySelectorAll('#panel-recipes .cat-cb:checked'))
+               .map(function (cb) { return cb.value; })
+        );
         var visible = 0;
         Array.from(recipesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
-          var show = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
+          var nameMatch = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
+          var cats = (row.dataset.categories || '').split('|').filter(Boolean);
+          var catMatch = cats.length === 0 || cats.some(function (c) { return catChecked.has(c); });
+          var show = nameMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
@@ -301,6 +346,9 @@ _JS = """\
       }
 
       filterRecipes.addEventListener('input', applyRecipesFilter);
+      Array.from(document.querySelectorAll('#panel-recipes .cat-cb')).forEach(function (cb) {
+        cb.addEventListener('change', applyRecipesFilter);
+      });
 
       // ---- Tab switching ----
       Array.from(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
@@ -352,13 +400,18 @@ def render_html(payload: dict) -> str:
         badge = f'<span class="badge {css_class}">{stab_label}</span>'
         desc = r.get("description")
         desc_html = f'<div class="desc">{esc(desc)}</div>' if desc else ''
+        cats     = r.get("categories", [])
+        cat_val  = esc(" ".join(cats))                       # sort key
+        cat_data = esc("|".join(cats))                       # filter (data-categories)
+        cat_html = "".join(f'<span class="cat-pill">{esc(c)}</span>' for c in cats)
         row_lines.append(
-            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}">'
+            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}{badge}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
             f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
+            f'<td data-val="{cat_val}" class="col-cat">{cat_html}</td>'
             f'</tr>'
         )
 
@@ -385,13 +438,18 @@ def render_html(payload: dict) -> str:
         stars_disp  = f"{stars:,}" if stars is not None else "—"
         desc        = r.get("description")
         desc_html   = f'<div class="desc">{esc(desc)}</div>' if desc else ''
+        cats        = r.get("categories", [])
+        cat_val     = esc(" ".join(cats))
+        cat_data    = esc("|".join(cats))
+        cat_html    = "".join(f'<span class="cat-pill">{esc(c)}</span>' for c in cats)
         recipe_row_lines.append(
-            f'      <tr>'
+            f'      <tr data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{dl_raw}" class="col-downloads">{dl_disp}</td>'
             f'<td data-val="{stars_raw}" class="col-stars">{stars_disp}</td>'
+            f'<td data-val="{cat_val}" class="col-cat">{cat_html}</td>'
             f'</tr>'
         )
 
@@ -408,6 +466,17 @@ def render_html(payload: dict) -> str:
         f' {_SECURITY_META[status][0]}</label>'
         for status in SECURITY_ORDER
     )
+
+    # Category checkboxes, one set per tab (each tab only shows categories that
+    # actually appear in its rows). esc() guards names like "SEO & Metadata".
+    def _cat_checkboxes(cats: list) -> str:
+        return "\n      ".join(
+            f'<label><input type="checkbox" class="cat-cb" value="{esc(c)}" checked>'
+            f' {esc(c)}</label>'
+            for c in cats
+        )
+    module_cat_checkboxes = _cat_checkboxes(_ordered_categories(rows))
+    recipe_cat_checkboxes = _cat_checkboxes(_ordered_categories(recipe_rows))
 
     return (
         '<!DOCTYPE html>\n'
@@ -436,6 +505,9 @@ def render_html(payload: dict) -> str:
         '      <span class="stab-filters">Security:\n'
         f'        {security_checkboxes}\n'
         '      </span>\n'
+        '      <span class="stab-filters">Category:\n'
+        f'        {module_cat_checkboxes}\n'
+        '      </span>\n'
         '    </div>\n'
         '    <table id="tbl-modules">\n'
         '      <thead>\n'
@@ -445,6 +517,7 @@ def render_html(payload: dict) -> str:
         '          <th data-col="2" data-type="date">Released</th>\n'
         '          <th data-col="3" data-type="num" class="col-security">Security coverage</th>\n'
         '          <th data-col="4" data-type="num" class="col-usage">Drupal.org usage</th>\n'
+        '          <th data-col="5" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-modules">\n'
@@ -461,6 +534,9 @@ def render_html(payload: dict) -> str:
         '  <div class="tab-panel" id="panel-recipes">\n'
         '    <div class="controls">\n'
         '      <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">\n'
+        '      <span class="stab-filters">Category:\n'
+        f'        {recipe_cat_checkboxes}\n'
+        '      </span>\n'
         '    </div>\n'
         '    <table id="tbl-recipes">\n'
         '      <thead>\n'
@@ -470,6 +546,7 @@ def render_html(payload: dict) -> str:
         '          <th data-col="2" data-type="date">Released</th>\n'
         '          <th data-col="3" data-type="num" class="col-downloads">Packagist downloads</th>\n'
         '          <th data-col="4" data-type="num" class="col-stars">Packagist stars</th>\n'
+        '          <th data-col="5" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-recipes">\n'

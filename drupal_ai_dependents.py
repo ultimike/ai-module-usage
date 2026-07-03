@@ -34,6 +34,7 @@ Usage:
 # Python's standard library modules — no composer/npm needed.
 # Think of these like PHP's built-in extensions (json_decode, preg_match, etc.)
 import argparse           # parses command-line flags like --json
+import html               # html.unescape() — decodes entities like &#039; in text
 import json               # like PHP's json_decode() / json_encode()
 import re                 # like PHP's preg_match() / preg_replace()
 import sys                # access to stdin/stdout/stderr and script exit
@@ -951,6 +952,277 @@ def detect_stability(version: str) -> str:
 
 
 # ---------------------------------------------------------------------------
+# Categorization
+# ---------------------------------------------------------------------------
+#
+# A deterministic, rule-based classifier that tags each package with one or
+# more categories, derived from its label, description and machine name. No
+# network calls and no AI — same spirit as detect_stability() above, just with
+# keyword tables instead of one regex.
+#
+# It runs automatically as part of a normal collection run (apply_categories()
+# is called before the JSON is written), and can also be re-applied to an
+# existing results.json without re-crawling via `--categorize FILE` — handy for
+# iterating on the keyword rules below (the ~20-25 minute crawl is the slow
+# part; classification is instant).
+
+# The canonical category names, in display order. Single source of truth for
+# the taxonomy: detect_categories() returns matches in this order, and the
+# renderers order their category filter by it.
+CATEGORIES = [
+    "Tool",
+    "Cloud Providers",
+    "Local Providers",
+    "Editorial",
+    "Content",
+    "Search",
+    "Chat",
+    "Automation",
+    "Agents",
+    "Analytics",
+    "Media",
+    "Vector Database",
+    "SEO & Metadata",
+    "Translation",
+    "Safety & Governance",
+    "Accessibility",
+    "Developer Tools",
+    "Evaluation & Testing",
+]
+
+# Value used when no rule matches. Deliberately NOT one of CATEGORIES so it
+# stands out in the output and filter as "needs a rule or an override".
+UNCATEGORIZED = "Uncategorized"
+
+# Named LLM/inference vendors that don't follow the ai_provider_* naming
+# convention, so they must be recognised by brand name. Kept to distinctive
+# brand strings (not common English words) to avoid false positives.
+_CLOUD_VENDORS = [
+    "openai", "anthropic", "azure", "gemini", "vertex", "bedrock", "groq",
+    "mistral", "deepseek", "deepl", "huggingface", "openrouter", "cloudflare",
+    "workers ai", "elevenlabs", "deepgram", "fireworks", "dreamstudio",
+    "stable diffusion", "amazee", "yandex", "baidu", "moonshot", "zhipu",
+    "assemblyai", "langdock", "apertus", "litellm", "mittwald", "bytedance",
+    "siliconflow", "infomaniak", "quant cloud", "nanobanana", "dropsolid",
+    "dxpr", "writer ai", "acquia",
+]
+
+# Local model runtimes — used both as Local Providers signals and as
+# Cloud Providers excludes (a provider is local OR cloud, not both).
+_LOCAL_RUNTIMES = [
+    "ollama", "lmstudio", "lm studio", "vllm", "llama.cpp", "llama_cpp",
+    "anythingllm", "browser provider", "trigger from the browser",
+]
+
+# Keyword tables, all matched as plain lowercased substrings (like a series of
+# str_contains() checks in PHP — no regex).
+#   _KEYWORDS_NAME — matched only against the NAME (machine name + label). Used
+#                    by "noisy" categories (Agents, Providers) where a mention
+#                    in the description alone would over-match.
+#   _KEYWORDS_ANY  — matched against the FULL text (machine name + label +
+#                    description). Most categories use this.
+# A category matches when no _EXCLUDES term is present AND (a NAME term hits the
+# name OR an ANY term hits the full text).
+_KEYWORDS_NAME = {
+    "Tool": ["ai_tool_", "_tool", "tools"],
+    "Cloud Providers": ["ai_provider_", "_provider"],
+    "Agents": ["agent"],
+    "Vector Database": ["ai_vdb_provider_", "vdb"],
+    "SEO & Metadata": ["metatag", "schema_metatag", "ai_seo", "jsonld"],
+    "Translation": ["ai_translate", "tmgmt"],
+    "Editorial": ["ckeditor"],
+    "Evaluation & Testing": ["ai_eval", "_eval", "autoeval"],
+    "Developer Tools": ["twig_to_sdc", "api_normalization"],
+    "Accessibility": ["editoria11y", "alt_text"],
+    "Automation": ["eca", "automator"],
+}
+
+_KEYWORDS_ANY = {
+    "Tool": ["mcp", "as a tool", "chromium", "screenshot"],
+    "Cloud Providers": _CLOUD_VENDORS + ["enables the use of"],
+    "Local Providers": _LOCAL_RUNTIMES,
+    "Editorial": [
+        "ckeditor", "editor", "paraphras", "proofread", "gutenberg",
+        "edit mode", "wysiwyg", "tone",
+    ],
+    "Content": [
+        "content", "summar", "taxonomy tag", "single page importer",
+        "entity intake", "article field", "populate", "content generation",
+    ],
+    "Search": [
+        "search", "rag", "retrieval-augmented", "retrieval augmented",
+        "semantic", "embedding", "related content", "reciprocal rank", "rrf",
+        "searxng", "solr", "pageindex",
+    ],
+    "Chat": [
+        "chat", "chatbot", "chat bot", "conversational", "mention bot",
+    ],
+    "Automation": [
+        "automat", "workflow", "feeds", "tamper", "migrat", "batch",
+        "pipeline", "lifecycle", "404 redirect", "queue",
+    ],
+    "Agents": ["agentic", "ossa", "aiagent"],
+    "Analytics": [
+        "analy", "audit", "sentiment", "brand voice", "monitor", "observ",
+        "dashboard", "inspector", "metering", "token", "cost", "budget",
+        "quota", "usage limit", "report", "insight", "watchdog",
+    ],
+    "Media": [
+        "image", "audio", "video", "speech", "text-to-speech",
+        "text to speech", "speech-to-text", "vision", "ocr", "text-to-image",
+        "transcription", "pdf", "pexels", "pixabay", "nanobanana",
+        "talking-head", "mp3", "diffusion", "media",
+    ],
+    "Vector Database": [
+        "vector database", "vector db", "vector", "pgvector", "dense vector",
+        "dense_vector", "pinecone", "milvus", "qdrant", "zilliz", "weaviate",
+        "sqlite-vec", "hnsw",
+    ],
+    "SEO & Metadata": [
+        "seo", "geo", "meta tag", "meta description", "metatag", "schema.org",
+        "json-ld", "structured data", "llms.txt", "sitemap",
+    ],
+    "Translation": ["translat", "multilingual", "deepl", "tmgmt"],
+    "Safety & Governance": [
+        "guardrail", "prompt safety", "pii", "moderation", "spam",
+        "webform guard", "jailbreak", "prompt injection", "prompt manipulation",
+        "governance", "compliance", "gdpr", "safety", "content security",
+    ],
+    "Accessibility": [
+        "alt text", "alt-text", "wcag", "editoria11y", "accessibility", "a11y",
+        "508", "screen reader", "aria-",
+    ],
+    "Developer Tools": [
+        "upgrade assistant", "twig", "sdc", ".component.yml",
+        "api normalization", "openapi", "self-heal", "development",
+        "dev recipe", "drupaleasy", "debugger", "watchdog", "log analysis",
+        "ecosystem", "installs and configures",
+    ],
+    "Evaluation & Testing": [
+        "evaluat", "autoeval", "factuality", "grader", "prompt optimization",
+    ],
+}
+
+# If any exclude term is present in the full text, the category is vetoed.
+_EXCLUDES = {
+    # Vector-DB providers and local runtimes are providers too, but they are
+    # NOT cloud LLM/inference providers — keep them in their own buckets.
+    "Cloud Providers": ["vdb", "vector"] + _LOCAL_RUNTIMES,
+}
+
+# Explicit machine-name → categories overrides. Highest precedence: when a bare
+# machine name appears here, this list is used verbatim (no keyword matching).
+# Use it for packages with null/empty descriptions (nothing to match on) and
+# for any stubborn cases the keyword rules get wrong.
+_OVERRIDES = {
+    # Null-description packages (no text to classify from):
+    "drup_aid": ["Tool"],
+    "ai_audio_translate": ["Media", "Translation"],
+    "quiz_questions_by_eca_and_ai": ["Content", "Automation"],
+    # Packages the keyword rules miss (no distinctive keyword in their text):
+    "auphonic": ["Media", "Cloud Providers"],
+    "agui": ["Agents", "Tool"],
+    "ai_context": ["Agents", "Tool"],
+    "ai_validations": ["Content"],
+}
+
+
+def _category_matches(category: str, name_hay: str, full_hay: str) -> bool:
+    """Return True if `category`'s rules match the given haystacks.
+
+    name_hay = machine name + label (lowercased).
+    full_hay = machine name + label + description (lowercased).
+    """
+    for term in _EXCLUDES.get(category, ()):
+        if term in full_hay:
+            return False
+    for term in _KEYWORDS_NAME.get(category, ()):
+        if term in name_hay:
+            return True
+    for term in _KEYWORDS_ANY.get(category, ()):
+        if term in full_hay:
+            return True
+    return False
+
+
+def detect_categories(label: str, description: str | None,
+                      machine_name: str = "") -> list[str]:
+    """Return the list of categories for one package.
+
+    Multiple categories are allowed (e.g. a vector-DB provider is both
+    'Vector Database' and 'Search'). Results follow CATEGORIES order so the
+    list is stable and deduped. Returns [UNCATEGORIZED] when nothing matches.
+    Tolerates description=None.
+    """
+    # machine_name is like 'drupal/ai_provider_openai' — take the bare name.
+    bare = machine_name.rsplit("/", 1)[-1]
+
+    if bare in _OVERRIDES:
+        return list(_OVERRIDES[bare])
+
+    # html.unescape() decodes entities (e.g. ai_chatblock's '&#039;') so the
+    # keyword matching sees real characters. .lower() is PHP's strtolower().
+    name_hay = html.unescape(f"{bare} {label}").lower()
+    full_hay = html.unescape(f"{bare} {label} {description or ''}").lower()
+
+    found = [c for c in CATEGORIES if _category_matches(c, name_hay, full_hay)]
+    return found or [UNCATEGORIZED]
+
+
+def apply_categories(payload: dict) -> None:
+    """Add a 'categories' list to every module and recipe in a payload.
+
+    Mutates the payload in place. Reads each row's already-resolved label,
+    description and machine_name — so it works both on a freshly-built payload
+    and on one loaded back from an existing results.json.
+    """
+    for entry in payload.get("modules", []) + payload.get("recipes", []):
+        entry["categories"] = detect_categories(
+            entry.get("label", ""),
+            entry.get("description"),
+            entry.get("machine_name", ""),
+        )
+
+
+def print_category_summary(payload: dict) -> None:
+    """Print per-category counts and the Uncategorized list to stderr."""
+    entries = payload.get("modules", []) + payload.get("recipes", [])
+    counts: dict[str, int] = {}
+    uncategorized: list[str] = []
+    for entry in entries:
+        cats = entry.get("categories", [])
+        for cat in cats:
+            counts[cat] = counts.get(cat, 0) + 1
+        if cats == [UNCATEGORIZED]:
+            uncategorized.append(entry.get("machine_name", "?"))
+
+    print(f"\nCategorized {len(entries)} packages:", file=sys.stderr)
+    for cat in CATEGORIES + [UNCATEGORIZED]:
+        if cat in counts:
+            print(f"  {counts[cat]:4d}  {cat}", file=sys.stderr)
+    if uncategorized:
+        print(f"\n{len(uncategorized)} uncategorized "
+              f"(add a keyword or an override):", file=sys.stderr)
+        for name in uncategorized:
+            print(f"  - {name}", file=sys.stderr)
+
+
+def recategorize_file(path: str) -> None:
+    """Re-apply category rules to an existing results.json, in place.
+
+    The fast, network-free path behind `--categorize FILE`. Everything the
+    classifier needs is already in the file, so there's no crawl to do.
+    """
+    with open(path, encoding="utf-8") as fh:
+        payload = json.load(fh)
+    apply_categories(payload)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2, ensure_ascii=False)
+    print_category_summary(payload)
+    print(f"\nCategories written to {path}", file=sys.stderr)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -970,8 +1242,21 @@ def main() -> None:
         help="Write raw results to FILE as JSON. Omit to print JSON to stdout. "
              "Render with render_md.py / render_html.py — this script only collects data.",
     )
+    parser.add_argument(
+        "--categorize", metavar="FILE",
+        help="Skip the network crawl: re-apply the category rules to an "
+             "existing results.json (FILE) and write it back in place. Fast "
+             "(no network) — use this to iterate on the category keyword rules.",
+    )
     # args.json will be a filename string if provided, or None if omitted (print to stdout).
     args = parser.parse_args()
+
+    # --categorize is a fast, network-free path: re-derive categories on an
+    # existing JSON file and exit. Everything the classifier needs (label,
+    # description, machine name) is already in the file, so there's no crawl.
+    if args.categorize:
+        recategorize_file(args.categorize)
+        return
 
     # -------------------------------------------------------------------------
     # Step 1: Collect candidate module names from both sources
@@ -1285,6 +1570,10 @@ def main() -> None:
         "modules":         rows,
         "recipes":         recipe_rows,
     }
+
+    # Tag every module and recipe with its categories (derived from label,
+    # description and machine name). Pure text processing — no extra requests.
+    apply_categories(payload)
 
     if args.json:
         with open(args.json, "w", encoding="utf-8") as fh:
