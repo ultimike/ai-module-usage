@@ -66,7 +66,7 @@ def render_md(payload: dict) -> str:
         f"*Generated {today} · {count} modules · {recipe_count} recipes ·"
         f" Drupal {v_label} compatible · all stability levels*\n",
         "## Modules\n",
-        "| Label | URL | Latest Version | Release Date | Security coverage | Drupal.org usage | Categories |",
+        "| Label | URL | Latest Version | Release Date | Security | Usage | Categories |",
         "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|------------|",
     ]
     for r in rows:
