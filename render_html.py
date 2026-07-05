@@ -68,7 +68,19 @@ _CSS = """\
     }
     h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
     h1 a { color: inherit; }
-    .meta { color: #666; font-size: 0.875rem; margin-bottom: 1rem; }
+    .meta { color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .sponsor {
+      display: inline-block;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 1rem;
+      padding: 0.4rem 0.75rem;
+      background: #eef3ff;
+      border-left: 3px solid #4a6cf7;
+      border-radius: 0 4px 4px 0;
+    }
+    .sponsor a { color: #2a4aaa; text-decoration: none; }
+    .sponsor a:hover { text-decoration: underline; }
     .controls {
       display: flex;
       align-items: center;
@@ -139,7 +151,7 @@ _CSS = """\
     th.col-downloads  { text-align: right; }
     .col-stars        { text-align: right; }
     th.col-stars      { text-align: right; }
-    #no-results {
+    #no-results-modules, #no-results-recipes {
       display: none;
       padding: 1.5rem;
       text-align: center;
@@ -423,6 +435,8 @@ def render_html(payload: dict) -> str:
         '<a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>\n'
         f'  <p class="meta">Generated {today} &middot; {count} modules'
         f' &middot; {recipe_count} recipes &middot; Drupal {v_label} compatible</p>\n'
+        '  <p class="sponsor">Sponsored by DrupalEasy\'s'
+        ' <a href="https://drupaleasy.com/rdab"><em>Responsible Drupal AI Basics</em></a> course</p>\n'
         '  <div class="tabs">\n'
         f'    <button class="tab-btn active" data-tab="modules">Modules ({count})</button>\n'
         f'    <button class="tab-btn" data-tab="recipes">Recipes ({recipe_count})</button>\n'

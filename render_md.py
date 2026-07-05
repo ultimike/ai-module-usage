@@ -53,6 +53,7 @@ def render_md(payload: dict) -> str:
         f"# Drupal Modules and Recipes with a Hard Dependency on [AI](https://www.drupal.org/project/ai)\n",
         f"*Generated {today} · {count} modules · {recipe_count} recipes ·"
         f" Drupal {v_label} compatible · all stability levels*\n",
+        "Sponsored by DrupalEasy's [*Responsible Drupal AI Basics*](https://drupaleasy.com/rdab) course\n",
         "## Modules\n",
         "| Label | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |",
         "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|",

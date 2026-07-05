@@ -15,7 +15,19 @@
     }
     h1 { font-size: 1.4rem; margin-bottom: 0.25rem; }
     h1 a { color: inherit; }
-    .meta { color: #666; font-size: 0.875rem; margin-bottom: 1rem; }
+    .meta { color: #666; font-size: 0.875rem; margin-bottom: 0.5rem; }
+    .sponsor {
+      display: inline-block;
+      font-size: 0.85rem;
+      color: #444;
+      margin-bottom: 1rem;
+      padding: 0.4rem 0.75rem;
+      background: #eef3ff;
+      border-left: 3px solid #4a6cf7;
+      border-radius: 0 4px 4px 0;
+    }
+    .sponsor a { color: #2a4aaa; text-decoration: none; }
+    .sponsor a:hover { text-decoration: underline; }
     .controls {
       display: flex;
       align-items: center;
@@ -86,7 +98,7 @@
     th.col-downloads  { text-align: right; }
     .col-stars        { text-align: right; }
     th.col-stars      { text-align: right; }
-    #no-results {
+    #no-results-modules, #no-results-recipes {
       display: none;
       padding: 1.5rem;
       text-align: center;
@@ -144,6 +156,7 @@
 <body>
   <h1>Drupal Modules &amp; Recipes &mdash; <a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>
   <p class="meta">Generated 2026-07-02 &middot; 189 modules &middot; 31 recipes &middot; Drupal 10/11 compatible</p>
+  <p class="sponsor">Sponsored by DrupalEasy's <a href="https://drupaleasy.com/rdab"><em>Responsible Drupal AI Basics</em></a> course</p>
   <div class="tabs">
     <button class="tab-btn active" data-tab="modules">Modules (189)</button>
     <button class="tab-btn" data-tab="recipes">Recipes (31)</button>

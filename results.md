@@ -2,6 +2,8 @@
 
 *Generated 2026-07-02 · 189 modules · 31 recipes · Drupal 10/11 compatible · all stability levels*
 
+Sponsored by DrupalEasy's [*Responsible Drupal AI Basics*](https://drupaleasy.com/rdab) course
+
 ## Modules
 
 | Label | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |
