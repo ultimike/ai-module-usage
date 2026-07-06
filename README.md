@@ -6,11 +6,12 @@
 
 - Python 3.10 or later
 - No third-party packages — uses only Python standard library (`urllib`, `xml.etree.ElementTree`, `argparse`, etc.)
+- **Optional:** a `git.drupalcode.org` API token to enable the GitLab composer.json content search (candidate discovery Source 3). Provide it via the `DRUPALCODE_TOKEN` or `GITLAB_TOKEN` environment variable, or by logging in with the [glab CLI](https://gitlab.com/gitlab-org/cli) (`glab auth login --hostname git.drupalcode.org`) — the script reads the token from glab's config automatically. Without a token this one source is **skipped with a warning** and the run proceeds on the other two sources exactly as before (see [How it works](#how-it-works)).
 
 ## Usage
 
 ```bash
-# Run the network fetch (~20-25 min) and save to JSON
+# Run the network fetch (~25-30 min with a GitLab token, ~20-25 without) and save to JSON
 python3 drupal_ai_dependents.py --json results.json
 
 # Render from the saved JSON (fast — no network calls, re-run anytime)
@@ -109,13 +110,15 @@ Recipes also live on a different package registry entirely: they're not on packa
 
 ## How it works
 
-### Stage 1 — Candidate discovery (two sources, union-merged)
+### Stage 1 — Candidate discovery (three sources, union-merged)
 
 **Source 1:** Paginates through all pages of `drupal.org/project/ai/ecosystem` — the AI module's curated ecosystem listing — to collect project machine names.
 
 **Source 2:** Paginates through `packages.drupal.org/8/search.json?s=ai` — a full-text search of the Drupal Composer repository — to collect additional candidate package names. This catches modules that depend on drupal/ai but have not been added to the ecosystem listing.
 
-Both sources are merged and deduplicated (~730 unique candidates on a typical run).
+**Source 3 (requires a token):** Queries `git.drupalcode.org/api/v4/groups/2/search?scope=blobs&search=drupal/ai path:composer.json` — a GitLab search of the **content** of every project's `composer.json` on Drupal.org. Unlike Sources 1 and 2, which match on names and descriptions, this finds dependents whose name/description never mention "ai" at all (e.g. `deepgram`, `elevenlabs`, `bulk_content_generation`) — the primary way the coverage gap in [Limitations](#limitations) is closed. The search returns project IDs, which are resolved to machine names via `git.drupalcode.org/api/v4/projects/{id}`. This endpoint needs authentication (HTTP 401 without a token); when no token is found the whole source is skipped with a warning. It's a deliberately noisy keyword match — false positives are filtered out by the same Stage 2 verification as the other sources.
+
+All available sources are merged and deduplicated (~730+ unique candidates on a typical run). Resolved GitLab names that fail module verification are also fed into recipe discovery (Stage 1b).
 
 ### Stage 2 — Dependency verification (authoritative)
 
@@ -143,15 +146,17 @@ The p2 file also provides:
 - **Module label + description:** `git.drupalcode.org/project/{name}/-/raw/{version}/{name}.info.yml` is fetched and both its `name:` key (the module's actual display title, distinct from the machine name and composer package name) and its `description:` key (the maintainer-authored description) are read from that single request.
 - **Usage/install count and security coverage:** `www.drupal.org/api-d7/node.json` is queried once per module for both the `project_usage` field (summed across all tracked versions) and `field_security_advisory_coverage` (`"covered"` or `"not-covered"`).
 
-### Stage 1b — Recipe candidate discovery (three sources)
+### Stage 1b — Recipe candidate discovery (four sources)
 
 Recipes aren't on packages.drupal.org at all (confirmed: a 404 on the module p2 endpoint for any recipe), so they need their own discovery and verification path against a different registry.
 
 **Source 1:** Ecosystem-page names from Stage 1 that did **not** verify as a module — reused for free, no new request. A name can't be both a confirmed module and a recipe.
 
-**Source 2:** `packagist.org/search.json?type=drupal-recipe&q=ai` — the regular Packagist registry (a separate service from packages.drupal.org), filtered by recipe type and narrowed with the same `"ai"` keyword tradeoff already accepted for module search.
+**Source 2:** GitLab composer.json search names from Stage 1 (Source 3) that did **not** verify as a module — reused for free, same rationale as the ecosystem reuse. Catches recipes the GitLab content search surfaces (e.g. `drupal_cms_ai`, `dxpr_cms`).
 
-**Source 3:** A curated, hand-maintained list of AI recipes from the AI Dashboard module (`git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml`). Not authoritative — every name from it still goes through full verification — but it catches at least one real recipe (`drupal_cms_ai`) that the ecosystem page doesn't list at all.
+**Source 3:** `packagist.org/search.json?type=drupal-recipe&q=ai` — the regular Packagist registry (a separate service from packages.drupal.org), filtered by recipe type and narrowed with the same `"ai"` keyword tradeoff already accepted for module search.
+
+**Source 4:** A curated, hand-maintained list of AI recipes from the AI Dashboard module (`git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml`). Not authoritative — every name from it still goes through full verification — but it catches at least one real recipe (`drupal_cms_ai`) that the ecosystem page doesn't list at all.
 
 ### Stage 2b — Recipe verification (authoritative)
 
@@ -190,13 +195,13 @@ ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
 PACKAGES_DELAY       = 3.0   # packages.drupal.org (search pages + p2 files)
 RELEASE_DELAY        = 3.0   # updates.drupal.org (date fallback only)
 DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
-GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch)
+GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch + blob search + project-id resolution)
 PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2)
 ```
 
-The p2 verification, info.yml label, recipe p2 verification, recipe label, and recipe download phases each run 3 concurrent workers (one phase at a time, not overlapping), every worker sleeping its phase's delay before its own request. packages.drupal.org, git.drupalcode.org, and (assumed, not separately stress-tested) packagist.org/repo.packagist.org are all CDN-backed static file/JSON servers and handle this rate comfortably. The drupal.org JSON API (usage counts + security coverage) remains sequential at `DRUPAL_API_DELAY` — do not reduce that value, as it returned `503 Service Unavailable` during development when called faster than ~1 per second. It's only ever called for modules, never recipes.
+The GitLab project-id resolution, p2 verification, info.yml label, recipe p2 verification, recipe label, and recipe download phases each run 3 concurrent workers (one phase at a time, not overlapping), every worker sleeping its phase's delay before its own request. (The GitLab blob search itself is a short ~4-page sequential loop that runs first.) packages.drupal.org, git.drupalcode.org, and (assumed, not separately stress-tested) packagist.org/repo.packagist.org are all CDN-backed static file/JSON servers and handle this rate comfortably; git.drupalcode.org's GitLab REST API (blob search + project resolution) returned no throttling at this rate live. The drupal.org JSON API (usage counts + security coverage) remains sequential at `DRUPAL_API_DELAY` — do not reduce that value, as it returned `503 Service Unavailable` during development when called faster than ~1 per second. It's only ever called for modules, never recipes.
 
-A full run takes approximately **20–25 minutes** (recipe verification adds roughly 3-5 minutes on top of the module pipeline's ~17-20).
+A full run takes approximately **25–30 minutes** when the GitLab source runs (its ~366-project name-resolution phase adds ~6 minutes), or **20–25 minutes** without a token. Recipe verification adds roughly 3-5 minutes on top of the module pipeline.
 
 If a `503` is received, the script automatically retries up to 4 times, honouring the server's `Retry-After` response header if present, or falling back to exponential backoff starting at 2 seconds.
 
@@ -206,41 +211,46 @@ Progress is printed to `stderr` throughout the run:
 
 ```
 Collecting candidates …
-  [1/2] Scraping AI ecosystem pages …
+  [1/3] Scraping AI ecosystem pages …
     Page 0 …
     …
     Page 10 …
         268 names found
-  [2/2] Searching packages.drupal.org for 'ai' …
+  [2/3] Searching packages.drupal.org for 'ai' …
         649 names found
-  733 unique candidates after merge
+  [3/3] Searching git.drupalcode.org composer.json for 'drupal/ai' …
+        370 project IDs found — resolving names …
+        324 unique project names resolved
+  812 unique candidates after merge
 
 Verifying via packages.drupal.org p2 files …
-  [47/733] issues: skip
-  [51/733] ai_provider_openai: ok
-  [89/733] ai_agents: ok
+  [47/812] issues: skip
+  [51/812] ai_provider_openai: ok
+  [89/812] deepgram: ok
   …
 
 Fetching module labels + descriptions from info.yml files …
-  [1/182] ai_provider_openai: OpenAI Provider +desc
-  [2/182] ai_agents: AI Agents +desc
+  [1/205] ai_provider_openai: OpenAI Provider +desc
+  [2/205] ai_agents: AI Agents +desc
   …
 
 Fetching usage counts …
-  [1/182] ai_provider_openai: usage=13133 security_covered=True
-  [2/182] ai_agents: usage=10758 security_covered=True
+  [1/205] ai_provider_openai: usage=13133 security_covered=True
+  [2/205] ai_agents: usage=10758 security_covered=True
   …
 
-Results: 182 confirmed modules (551 skipped, 3 used date fallback)
+Results: 205 confirmed modules (607 skipped, 3 used date fallback)
 
 Collecting recipe candidates …
-  [1/3] Reusing AI ecosystem names not matched as modules …
+  [1/4] Reusing AI ecosystem names not matched as modules …
         86 names
-  [2/3] Searching Packagist for type=drupal-recipe, q=ai …
+  [2/4] Reusing GitLab search names not matched as modules …
+        119 names
+  [3/4] Searching Packagist for type=drupal-recipe, q=ai …
         46 names found
-  [3/3] Fetching curated AI recipe list …
+  [4/4] Fetching curated AI recipe list …
         10 names found
-  142 unique recipe candidates after merge
+  198 unique recipe candidates after merge
 
 Verifying recipes via repo.packagist.org p2 files …
   [1/142] ai_recipe_image_classification: ok
@@ -267,7 +277,7 @@ Because progress goes to `stderr` and the markdown table goes to `stdout`, they 
 
 ## Limitations
 
-**Coverage depends on candidate sources.** The script checks ~730 candidates drawn from the ecosystem page and a package name search for "ai". A module that hard-depends on drupal/ai but has no connection to "ai" in its name or description, and has not been added to the AI ecosystem listing, will be missed. There is no reverse-dependency index in the Composer protocol that would enable exhaustive enumeration of all 18,000+ packages on packages.drupal.org.
+**Coverage depends on candidate sources.** The script checks candidates drawn from the ecosystem page, a package name search for "ai", and — when a token is available — a GitLab search of every project's `composer.json` content. That third source largely closes the old "no 'ai' in the name" gap, since it matches the dependency itself rather than the name. Two residual gaps remain: without a token that source is skipped (reverting to name-based coverage only), and GitLab blob search indexes only each project's **default branch**, so a `drupal/ai` dependency present solely on a non-default branch is still missed. There is no reverse-dependency index in the Composer protocol that would enable exhaustive enumeration of all 18,000+ packages on packages.drupal.org.
 
 **The latest stable release is preferred.** The script picks the newest stable release that passes all checks. If no stable release exists it falls back to the newest pre-release (rc, beta, alpha, dev). If a module's latest stable release dropped the drupal/ai dependency, the module will not appear even if a dev release still has it.
 

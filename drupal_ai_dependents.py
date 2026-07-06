@@ -5,9 +5,13 @@ Find all Drupal modules and recipes with a hard dependency on drupal/ai
 script only collects and verifies data — render the output with
 render_md.py (markdown) or render_html.py (sortable/filterable HTML).
 
-Module candidate discovery (two sources, union-merged):
+Module candidate discovery (three sources, union-merged):
   1. drupal.org/project/ai/ecosystem  — curated AI ecosystem listing
   2. packages.drupal.org search "ai"  — package name/description search
+  3. git.drupalcode.org blob search   — composer.json *content* search for
+     "drupal/ai" (finds dependents whose name/description never mention "ai").
+     Requires a git.drupalcode.org token (DRUPALCODE_TOKEN / GITLAB_TOKEN env
+     var, or the glab CLI login); auto-skipped with a warning when absent.
 
 Module dependency verification (authoritative, reads composer.json directly):
   packages.drupal.org/files/packages/8/p2/drupal/{name}.json
@@ -35,6 +39,7 @@ Usage:
 # Think of these like PHP's built-in extensions (json_decode, preg_match, etc.)
 import argparse           # parses command-line flags like --json
 import json               # like PHP's json_decode() / json_encode()
+import os                 # environment variables + home directory — like PHP's getenv()
 import re                 # like PHP's preg_match() / preg_replace()
 import sys                # access to stdin/stdout/stderr and script exit
 import threading          # Lock for thread-safe rate limiting
@@ -72,6 +77,17 @@ RECIPE_YML_URL       = "https://git.drupalcode.org/project/{name}/-/raw/{ref}/re
 CURATED_RECIPES_URL  = "https://git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml?ref_type=heads"
 PACKAGIST_STATS_URL  = "https://packagist.org/packages/drupal/{name}.json"
 
+# git.drupalcode.org GitLab API — a THIRD candidate-discovery source that
+# searches composer.json *content* (not just names) across every Drupal
+# project. Group 2 is the "project" namespace (all drupal.org projects). Blob
+# search finds modules/recipes that hard-depend on drupal/ai even when neither
+# their name nor description mentions "ai" — closing the coverage gap the
+# ecosystem-page and packages.drupal.org name searches leave open.
+# REQUIRES authentication (HTTP 401 without a token — see _get_gitlab_token());
+# the project-id → machine-name lookup does not.
+GITLAB_SEARCH_URL    = "https://git.drupalcode.org/api/v4/groups/2/search"
+GITLAB_PROJECT_URL   = "https://git.drupalcode.org/api/v4/projects/{id}"
+
 # A Python `set` is like a PHP array used as a lookup table (array_flip'd),
 # where only unique values matter and order doesn't. Membership checks are O(1).
 TARGET_VERSIONS = {10, 11}
@@ -106,12 +122,18 @@ HEADERS = {
 # The return type after `->` shows what the function returns.
 # `tuple[int, bytes, dict]` means it returns three values at once —
 # like returning an array from a PHP function and list()ing it on the other end.
-def _http_get(url: str, params: dict | None = None) -> tuple[int, bytes, dict]:
+def _http_get(
+    url: str, params: dict | None = None, extra_headers: dict | None = None
+) -> tuple[int, bytes, dict]:
     """Make a GET request and return (status_code, body_bytes, headers_dict).
 
     The leading underscore in _http_get is a Python convention meaning
     "private/internal" — like protected in PHP. It signals this function
     is a helper not meant to be called from outside this file.
+
+    `extra_headers` are merged over the default HEADERS for this one request —
+    used to send a `PRIVATE-TOKEN` on the authenticated git.drupalcode.org
+    GitLab API calls. Existing callers pass nothing and are unaffected.
 
     Network-level errors (timeouts, SSL failures, connection resets) are
     retried up to MAX_RETRIES times with exponential backoff before raising.
@@ -122,7 +144,10 @@ def _http_get(url: str, params: dict | None = None) -> tuple[int, bytes, dict]:
     if params:
         url = url + "?" + urllib.parse.urlencode(params)
 
-    req = urllib.request.Request(url, headers=HEADERS)
+    # Merge any per-request headers over the defaults. {**a, **b} is dict
+    # merge (b wins on conflicts) — like PHP's array_merge($a, $b).
+    headers = {**HEADERS, **extra_headers} if extra_headers else HEADERS
+    req = urllib.request.Request(url, headers=headers)
 
     for attempt in range(MAX_RETRIES):
         try:
@@ -343,6 +368,172 @@ def get_search_candidates(query: str = "ai") -> list[str]:
         url = data.get("next") or None
 
     return all_names
+
+
+# ---------------------------------------------------------------------------
+# Candidate discovery — source 3: git.drupalcode.org composer.json blob search
+# ---------------------------------------------------------------------------
+
+def _get_gitlab_token() -> str | None:
+    """Find a git.drupalcode.org API token, or None if none is available.
+
+    Checked in order:
+      1. DRUPALCODE_TOKEN env var, then GITLAB_TOKEN env var (optional overrides)
+      2. the glab CLI config (~/.config/glab-cli/config.yml), under
+         hosts."git.drupalcode.org".token
+
+    The glab config is YAML but we don't pull in PyYAML (not a stdlib module,
+    same no-YAML-library stance as _parse_info_yml). The structure we need is
+    fixed and shallow:
+
+        hosts:
+            git.drupalcode.org:
+                token: <value>
+            gitlab.com:
+                token: <other value>
+
+    so we scan for the 4-space-indented `git.drupalcode.org:` host line, then
+    return the first more-indented `token:` value beneath it (stopping at the
+    next host, which is at the same or shallower indent). Any failure — file
+    missing, key absent, unreadable — returns None rather than raising, so a
+    missing token cleanly disables the source instead of crashing the run.
+    """
+    for var in ("DRUPALCODE_TOKEN", "GITLAB_TOKEN"):
+        token = os.environ.get(var)
+        if token:
+            return token.strip()
+
+    path = os.path.expanduser("~/.config/glab-cli/config.yml")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            text = fh.read()
+    except OSError:
+        return None
+
+    in_host = False
+    host_indent = None
+    for line in text.splitlines():
+        stripped = line.lstrip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        indent = len(line) - len(stripped)
+
+        if in_host and indent <= host_indent:
+            # Dedented back to (or past) the host key's level — we've left the
+            # git.drupalcode.org block without finding a token.
+            in_host = False
+
+        if not in_host and stripped.rstrip().startswith("git.drupalcode.org:"):
+            in_host, host_indent = True, indent
+            continue
+
+        if in_host and stripped.startswith("token:"):
+            # Split on the first ':' only, in case a token ever contains one.
+            value = stripped.split(":", 1)[1].strip()
+            return _strip_yaml_quotes(value) or None
+
+    return None
+
+
+def get_gitlab_search_candidates(token: str) -> list[int]:
+    """Paginate git.drupalcode.org's blob search for composer.json files that
+    reference drupal/ai, returning unique project IDs (newest-first order
+    preserved).
+
+    Unlike the ecosystem page and packages.drupal.org name searches, this
+    matches the *content* of composer.json, so it surfaces dependents whose
+    name/description never mention "ai" (e.g. deepgram, elevenlabs). It's a
+    noisy keyword match — it also hits package names containing "drupal/ai",
+    composer-plugin packages, and nested sub-package composer.json files — but
+    every project it turns up still goes through the same authoritative p2
+    verification as the other sources, so false positives are filtered out.
+
+    GitLab paginates via response headers: X-Next-Page holds the next page
+    number (empty on the last page). Requires a PRIVATE-TOKEN header — the
+    endpoint returns HTTP 401 unauthenticated.
+
+    Returns whatever IDs were collected before any failure (graceful, like
+    get_search_candidates); an empty list if the very first page fails.
+    """
+    seen, ids = set(), []
+    auth = {"PRIVATE-TOKEN": token}
+    page = 1
+
+    while page:
+        time.sleep(GITLAB_DELAY)
+        params = {
+            "scope": "blobs",
+            "search": "drupal/ai path:composer.json",
+            "per_page": 100,
+            "page": page,
+        }
+        try:
+            status, body, hdrs = _http_get(GITLAB_SEARCH_URL, params, auth)
+        except RuntimeError as exc:
+            print(f"  Warning: GitLab blob search failed: {exc}", file=sys.stderr)
+            break
+
+        if status == 401:
+            print("  Warning: GitLab blob search rejected the token (401) — "
+                  "skipping this source.", file=sys.stderr)
+            break
+        if status != 200 or not body:
+            print(f"  Warning: GitLab blob search returned HTTP {status} — "
+                  "stopping pagination.", file=sys.stderr)
+            break
+
+        try:
+            results = json.loads(body)
+        except json.JSONDecodeError:
+            break
+
+        for hit in results:
+            pid = hit.get("project_id")
+            if pid is not None and pid not in seen:
+                seen.add(pid)
+                ids.append(pid)
+
+        # X-Next-Page is "" on the final page; int() it to advance, else stop.
+        next_page = (hdrs.get("X-Next-Page") or hdrs.get("x-next-page") or "").strip()
+        page = int(next_page) if next_page else None
+
+    return ids
+
+
+def resolve_gitlab_project_name(project_id: int, token: str | None) -> str | None:
+    """Resolve a GitLab project ID to its Drupal machine name.
+
+    Reads the `path` field from /api/v4/projects/{id} (e.g. project id 208894 →
+    "ai_agents_canvas_direct_edit"). Only projects in the top-level "project"
+    namespace are accepted — group 2's search shouldn't return anything else,
+    but the namespace guard keeps any fork/subgroup path from leaking in as a
+    bogus candidate. Works unauthenticated; the token is sent anyway (harmless)
+    for consistency.
+
+    Returns the machine name, or None on any error / non-"project" namespace.
+    """
+    url = GITLAB_PROJECT_URL.format(id=project_id)
+    auth = {"PRIVATE-TOKEN": token} if token else None
+    try:
+        status, body, _ = _http_get(url, extra_headers=auth)
+    except RuntimeError:
+        return None
+    if status != 200 or not body:
+        return None
+    try:
+        data = json.loads(body)
+    except json.JSONDecodeError:
+        return None
+
+    if (data.get("namespace") or {}).get("full_path") != "project":
+        return None
+    return data.get("path") or None
+
+
+def _fetch_gitlab_name_with_delay(project_id: int, token: str | None):
+    """Sleep then resolve a project ID to a name — runs in a worker thread."""
+    time.sleep(GITLAB_DELAY)
+    return project_id, resolve_gitlab_project_name(project_id, token)
 
 
 # ---------------------------------------------------------------------------
@@ -981,22 +1172,62 @@ def main() -> None:
     # `file=sys.stderr` sends output to STDERR instead of STDOUT.
     # This keeps progress messages separate from the markdown output,
     # so piping or redirecting stdout only captures the final table.
-    print("  [1/2] Scraping AI ecosystem pages …", file=sys.stderr)
+    print("  [1/3] Scraping AI ecosystem pages …", file=sys.stderr)
     eco_names = get_ecosystem_candidates()
     print(f"        {len(eco_names)} names found", file=sys.stderr)
     # len() is like PHP's count().
 
-    print("  [2/2] Searching packages.drupal.org for 'ai' …", file=sys.stderr)
+    print("  [2/3] Searching packages.drupal.org for 'ai' …", file=sys.stderr)
     search_names = get_search_candidates("ai")
     print(f"        {len(search_names)} names found", file=sys.stderr)
 
-    # Union-merge: start with ecosystem names (preserving their order),
-    # then append any search names not already in the set.
+    # Source 3: git.drupalcode.org composer.json content search. Requires a
+    # token — auto-skipped (with a warning) when none is available, leaving the
+    # other two sources exactly as before.
+    print("  [3/3] Searching git.drupalcode.org composer.json for 'drupal/ai' …",
+          file=sys.stderr)
+    gitlab_names: list[str] = []
+    token = _get_gitlab_token()
+    if not token:
+        print("        No git.drupalcode.org token (set DRUPALCODE_TOKEN, "
+              "GITLAB_TOKEN, or log in with glab) — skipping this source.",
+              file=sys.stderr)
+    else:
+        project_ids = get_gitlab_search_candidates(token)
+        print(f"        {len(project_ids)} project IDs found — resolving names …",
+              file=sys.stderr)
+        gseen: set[str] = set()
+        with ThreadPoolExecutor(max_workers=3) as pool:
+            future_to_id = {
+                pool.submit(_fetch_gitlab_name_with_delay, pid, token): pid
+                for pid in project_ids
+            }
+            gdone = 0
+            for fut in as_completed(future_to_id):
+                gdone += 1
+                pid = future_to_id[fut]
+                try:
+                    _, name = fut.result()
+                except Exception as exc:
+                    print(f"        [{gdone}/{len(project_ids)}] {pid}: resolve error — {exc}",
+                          file=sys.stderr)
+                    name = None
+                if name and name not in gseen:
+                    gseen.add(name)
+                    gitlab_names.append(name)
+                # One line per project — this phase resolves ~366 IDs at 3s each
+                # and would otherwise sit silent for ~6 min, looking hung.
+                print(f"        [{gdone}/{len(project_ids)}] {pid}: {name or '(unresolved)'}",
+                      file=sys.stderr)
+        print(f"        {len(gitlab_names)} unique project names resolved", file=sys.stderr)
+
+    # Union-merge: start with ecosystem names (preserving their order), then
+    # append any search names, then any GitLab names, not already in the set.
     # set(eco_names) builds a set from a list in one step — like array_flip()
     # in PHP to create an O(1) lookup table.
     seen: set[str] = set(eco_names)
     all_candidates = list(eco_names)  # list() copies the list
-    for n in search_names:
+    for n in search_names + gitlab_names:
         if n not in seen:
             seen.add(n)
             all_candidates.append(n)
@@ -1107,21 +1338,25 @@ def main() -> None:
     # usage/security data), so they get their own candidate-discovery step.
     print("\nCollecting recipe candidates …", file=sys.stderr)
 
-    print("  [1/3] Reusing AI ecosystem names not matched as modules …", file=sys.stderr)
+    print("  [1/4] Reusing AI ecosystem names not matched as modules …", file=sys.stderr)
     eco_unmatched = [n for n in eco_names if n not in p2_map]
     print(f"        {len(eco_unmatched)} names", file=sys.stderr)
 
-    print("  [2/3] Searching Packagist for type=drupal-recipe, q=ai …", file=sys.stderr)
+    print("  [2/4] Reusing GitLab search names not matched as modules …", file=sys.stderr)
+    gitlab_unmatched = [n for n in gitlab_names if n not in p2_map]
+    print(f"        {len(gitlab_unmatched)} names", file=sys.stderr)
+
+    print("  [3/4] Searching Packagist for type=drupal-recipe, q=ai …", file=sys.stderr)
     recipe_search_names = get_recipe_search_candidates()
     print(f"        {len(recipe_search_names)} names found", file=sys.stderr)
 
-    print("  [3/3] Fetching curated AI recipe list …", file=sys.stderr)
+    print("  [4/4] Fetching curated AI recipe list …", file=sys.stderr)
     curated_recipe_names = get_curated_recipe_candidates()
     print(f"        {len(curated_recipe_names)} names found", file=sys.stderr)
 
     seen_recipes: set[str] = set()
     all_recipe_candidates = []
-    for n in eco_unmatched + recipe_search_names + curated_recipe_names:
+    for n in eco_unmatched + gitlab_unmatched + recipe_search_names + curated_recipe_names:
         if n not in seen_recipes:
             seen_recipes.add(n)
             all_recipe_candidates.append(n)
@@ -1235,26 +1470,35 @@ def main() -> None:
     # -------------------------------------------------------------------------
     eco_set    = set(eco_names)
     search_set = set(search_names)
+    gitlab_set = set(gitlab_names)
     mod_eco    = sum(1 for n in p2_map if n in eco_set)
     mod_search = sum(1 for n in p2_map if n in search_set)
-    mod_both   = sum(1 for n in p2_map if n in eco_set and n in search_set)
+    mod_gitlab = sum(1 for n in p2_map if n in gitlab_set)
+    # Modules only the GitLab content search found (not on the ecosystem page,
+    # not matched by the packages.drupal.org name search) — the coverage the
+    # new source adds over the other two.
+    mod_gitlab_only = sum(
+        1 for n in p2_map if n in gitlab_set and n not in eco_set and n not in search_set
+    )
 
-    eco_unmatched_set = set(eco_unmatched)
-    rec_search_set    = set(recipe_search_names)
-    curated_set       = set(curated_recipe_names)
+    eco_unmatched_set    = set(eco_unmatched)
+    gitlab_unmatched_set = set(gitlab_unmatched)
+    rec_search_set       = set(recipe_search_names)
+    curated_set          = set(curated_recipe_names)
     rec_eco     = sum(1 for n in recipe_p2_map if n in eco_unmatched_set)
+    rec_gitlab  = sum(1 for n in recipe_p2_map if n in gitlab_unmatched_set)
     rec_search  = sum(1 for n in recipe_p2_map if n in rec_search_set)
     rec_curated = sum(1 for n in recipe_p2_map if n in curated_set)
-    rec_overlap = rec_eco + rec_search + rec_curated - len(recipe_p2_map)
+    rec_overlap = rec_eco + rec_gitlab + rec_search + rec_curated - len(recipe_p2_map)
 
     print("\nConfirmed by source:", file=sys.stderr)
     print(f"  Modules ({len(rows)}):", file=sys.stderr)
-    print(f"    ecosystem page:              {mod_eco:3}  ({mod_eco - mod_both} unique to this source)", file=sys.stderr)
-    print(f"    packages.drupal.org search:  {mod_search:3}  ({mod_search - mod_both} unique to this source)", file=sys.stderr)
-    if mod_both:
-        print(f"    in both sources:             {mod_both:3}", file=sys.stderr)
+    print(f"    ecosystem page:              {mod_eco:3}", file=sys.stderr)
+    print(f"    packages.drupal.org search:  {mod_search:3}", file=sys.stderr)
+    print(f"    GitLab composer.json search: {mod_gitlab:3}  ({mod_gitlab_only} unique to this source)", file=sys.stderr)
     print(f"  Recipes ({len(recipe_rows)}):", file=sys.stderr)
     print(f"    ecosystem (unmatched modules): {rec_eco:3}", file=sys.stderr)
+    print(f"    GitLab (unmatched modules):    {rec_gitlab:3}", file=sys.stderr)
     print(f"    Packagist type+keyword search: {rec_search:3}", file=sys.stderr)
     print(f"    curated AI recipe list:        {rec_curated:3}", file=sys.stderr)
     if rec_overlap > 0:

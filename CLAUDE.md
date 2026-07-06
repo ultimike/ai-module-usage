@@ -42,9 +42,11 @@ than inventing an "N/A" state. Packagist total-download counts (see §10 below)
 are a meaningful substitute popularity signal and are shown in the downloads
 column instead.
 
-Run time: **~20-25 minutes**. The p2 verification and info.yml/recipe.yml
-label phases each use 3 concurrent workers (ThreadPoolExecutor), every
-worker respecting its phase's 3s per-worker delay. The drupal.org
+Run time: **~25-30 minutes** when the GitLab blob-search source runs (~20-25
+without it — e.g. no token). The GitLab source adds a short ~4-page search plus
+a ~366-lookup `project_id`→name resolution phase (~6 min at 3 workers). The p2
+verification and info.yml/recipe.yml label phases each use 3 concurrent workers
+(ThreadPoolExecutor), every worker respecting its phase's 3s per-worker delay. The drupal.org
 usage/security API remains sequential at 3s (most sensitive, and only
 queried for modules — recipes never touch it). Descriptions add **no**
 network requests: they're read from the info.yml/recipe.yml already fetched
@@ -76,7 +78,7 @@ format, and this script's only job is producing correct, complete JSON.
 
 ## Data sources and why each was chosen
 
-### 1. Candidate discovery — two sources, union-merged
+### 1. Candidate discovery — three sources, union-merged
 
 **Source A: `drupal.org/project/ai/ecosystem` (HTML scraping)**
 - Scraped with a regex matching `href="/project/([a-z0-9_]+)"`
@@ -91,8 +93,39 @@ format, and this script's only job is producing correct, complete JSON.
 - Limitation: matches on name/description, not on dependency — produces false
   positives that are filtered out in stage 2
 
-Total after dedup: ~733 candidates. Ecosystem names come first; search names
-are appended only if not already seen.
+**Source C: `git.drupalcode.org/api/v4/groups/2/search` blob search (GitLab API)**
+- `scope=blobs&search=drupal/ai path:composer.json` — searches the *content*
+  of composer.json files, not names, so it finds dependents whose name and
+  description never mention "ai" (measured live: **71/324 resolved names, 22%,
+  had no "ai" in them** — e.g. `deepgram`, `deepseek`, `elevenlabs`,
+  `auphonic`, `bulk_content_generation`, `document_loader`). This is the source
+  that directly attacks Known Limitation #1.
+- Group 2 is the top-level `project` namespace (every drupal.org project);
+  issue-forks live under a different group, so results are clean.
+- Paginated via the `X-Next-Page` response header. `per_page=100` **is** honored
+  (unlike packages.drupal.org's search) → ~4 pages, ~390 hits, ~366-370 unique
+  `project_id`s live.
+- Search returns a `project_id` but **not** the machine name — each unique id is
+  resolved to its `path` (the machine name) via the separate
+  `/api/v4/projects/{id}` endpoint (`resolve_gitlab_project_name()`, guarded to
+  the `project` namespace). This resolution is the bulk of the source's cost:
+  ~366 lookups at 3 workers × `GITLAB_DELAY` ≈ **6 min added** to the run.
+- **REQUIRES authentication** — the blob-search endpoint returns HTTP 401
+  without a token (the project-lookup endpoint does not). Token is found by
+  `_get_gitlab_token()`: `DRUPALCODE_TOKEN`/`GITLAB_TOKEN` env vars first, then
+  the glab CLI config (`~/.config/glab-cli/config.yml`,
+  `hosts."git.drupalcode.org".token`, parsed with an indentation scan — no
+  PyYAML, same stance as `_parse_info_yml`). **No token → the source is skipped
+  with a stderr warning** and the run proceeds on Sources A+B exactly as before.
+- Noisy keyword match (also hits package *names* containing "drupal/ai",
+  `composer-plugin` packages, and nested sub-package composer.json) — harmless,
+  since every resolved name goes through the same p2 verification as A and B.
+- Resolved names also feed the recipe pipeline: GitLab names that fail module
+  verification are added to the recipe candidate pool (like the ecosystem-page
+  reuse — see §6), so GitLab-found recipes are verified too.
+
+Total after dedup: ~733+ candidates. Ecosystem names come first; search names,
+then GitLab names, are appended only if not already seen.
 
 ### 2. Dependency verification — `packages.drupal.org/files/packages/8/p2/drupal/{name}.json`
 
@@ -267,6 +300,8 @@ release), but retrofitting it is out of scope for this change.
 | `git.drupalcode.org` recipe.yml | Fixed filename (`recipe.yml`, not `{name}.info.yml`). Composer `"x.y-dev"` version strings are NOT real git refs — GitLab serves the underlying branch (e.g. `"1.x"`) with the `-dev` suffix stripped. Both the `name:` (label) and `description:` keys are read from this one file — recipe.yml is the **only** source for the recipe description. |
 | curated YAML (`ai_dashboard_recommended_recipes.yml`) | Hand-maintained, not authoritative — every name still goes through full p2 verification. Catches at least one recipe (`drupal_cms_ai`) absent from the ecosystem page. |
 | `packagist.org` stats API | `packagist.org/packages/drupal/{name}.json` → `package.downloads.total` (downloads) and `package.favers` (stars). Both values come from the same response; no second request is made. Only called for recipes (not modules). Returns HTTP 404 for packages not on main Packagist — but only verified recipes are queried here, so 404s shouldn't occur in practice. |
+| `git.drupalcode.org` blob search (`/api/v4/groups/2/search`) | **Requires a `PRIVATE-TOKEN` header — HTTP 401 without it** (the only authenticated call in the whole script). `per_page=100` IS honored (unlike packages.drupal.org search). Paginate via the `X-Next-Page` response header (empty string on the last page), not a `next` URL. Indexes **only each project's default branch** (GitLab advanced/Elasticsearch search) — a dependent whose `drupal/ai` require exists solely on a non-default branch is missed. Keyword match is noisy (hits package names, `composer-plugin` types, nested composer.json) — filtered by p2. |
+| `git.drupalcode.org` projects API (`/api/v4/projects/{id}`) | Works **unauthenticated** (token sent anyway for consistency). Resolves a search-result `project_id` → machine name via the `path` field; `namespace.full_path` is `"project"` for group-2 projects (guarded). Some ids (~42/366 live) fail to resolve — deleted/access-restricted — and are silently skipped. |
 
 ---
 
@@ -332,9 +367,14 @@ ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
 PACKAGES_DELAY       = 3.0   # packages.drupal.org (search + p2)
 RELEASE_DELAY        = 3.0   # updates.drupal.org (fallback only)
 DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
-GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch)
+GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch + blob search + project-id resolution)
 PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2)
 ```
+
+`GITLAB_DELAY` is reused for the GitLab blob-search pagination and the
+`project_id`→name resolution phase as well as the existing raw-file label
+fetches — all git.drupalcode.org, and no two of those phases run at the same
+time (see the concurrency note below), so there's no combined burst.
 
 The Drupal.org JSON API is the most sensitive — it returned 503s during
 development when called faster than ~1 per second. 3 seconds is conservative.
@@ -349,15 +389,19 @@ overall conservative posture toward rate limiting.
 The 503 retry logic in `_drupal_api_get()` reads the `Retry-After` response
 header if present, falling back to exponential backoff starting at 2 seconds.
 
-**Concurrency note:** The p2 verification phase, the info.yml label phase,
-the recipe p2 verification phase, and the recipe label phase **each** run 3
-concurrent workers via `ThreadPoolExecutor(max_workers=3)` — but
-sequentially, one phase at a time, not overlapping. Every worker sleeps its
-phase's delay constant before its own request — there is no shared rate
-limiter, so each upstream sees up to 3 simultaneous requests at burst
-starts, then ~1 req/s at steady state. This is safe for CDN-backed static
-file servers (packages.drupal.org, git.drupalcode.org, and — assumed,
-unverified — repo.packagist.org). The drupal.org JSON API (usage counts +
+**Concurrency note:** The GitLab project-id resolution phase, the p2
+verification phase, the info.yml label phase, the recipe p2 verification
+phase, and the recipe label phase **each** run 3 concurrent workers via
+`ThreadPoolExecutor(max_workers=3)` — but sequentially, one phase at a time,
+not overlapping. (The GitLab *blob search* itself is a short sequential
+pagination loop of ~4 pages that runs first, during candidate collection.)
+Every worker sleeps its phase's delay constant before its own request —
+there is no shared rate limiter, so each upstream sees up to 3 simultaneous
+requests at burst starts, then ~1 req/s at steady state. This is safe for
+CDN-backed static file servers (packages.drupal.org, git.drupalcode.org, and
+— assumed, unverified — repo.packagist.org); the git.drupalcode.org GitLab
+REST API (blob search + project resolution) is hit at the same ≤3-worker rate
+and returned no throttling live. The drupal.org JSON API (usage counts +
 security coverage) remains strictly sequential — one request every 3s, and
 is only ever called for modules, never recipes.
 
@@ -375,10 +419,15 @@ dominate run time).
 
 ## Known limitations
 
-1. **Coverage gap:** Modules that depend on `drupal/ai` but have no "ai"
-   connection in their name/description AND aren't on the ecosystem page
-   will be missed. There is no reverse-dependency index in the Composer
-   protocol to close this gap without enumerating all 18,825 packages.
+1. **Coverage gap (largely closed by the GitLab blob search, §1 Source C):**
+   Historically, modules depending on `drupal/ai` with no "ai" in their
+   name/description AND absent from the ecosystem page were missed — there's no
+   reverse-dependency index in the Composer protocol. The GitLab composer.json
+   *content* search now catches these regardless of name (whenever a token is
+   available). Residual gaps: (a) the source is **skipped entirely when no
+   token is present**, reverting to the old name-based coverage; and (b) blob
+   search indexes **only each project's default branch**, so a dependency that
+   exists solely on a non-default branch is still missed.
 
 2. **Stable version preferred:** The script collects all versions that pass the
    three checks, then picks the newest stable release. If no stable release
