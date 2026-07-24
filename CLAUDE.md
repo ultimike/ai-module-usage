@@ -42,23 +42,26 @@ than inventing an "N/A" state. Packagist total-download counts (see §10 below)
 are a meaningful substitute popularity signal and are shown in the downloads
 column instead.
 
-Run time: **~20-25 minutes**. The p2 verification and info.yml/recipe.yml
-label phases each use 3 concurrent workers (ThreadPoolExecutor), every
-worker respecting its phase's 3s per-worker delay. The drupal.org
-usage/security API remains sequential at 3s (most sensitive, and only
-queried for modules — recipes never touch it). Descriptions add **no**
-network requests: they're read from the info.yml/recipe.yml already fetched
-for the label, in the same parse. JSON goes to stdout (or a file with
-`--json`); progress goes to stderr.
+Run time: **varies, roughly 15-30+ minutes** depending on candidate count and
+upstream response times. Every phase — candidate discovery, p2 verification,
+info.yml/recipe.yml label fetches, usage/security lookups, recipe stats —
+makes requests **sequentially from a single thread, one at a time**, with no
+fixed client-side delay between them. This is a deliberate choice: direct
+feedback from the drupal.org sysadmins was that concurrency, not request
+rate, is what risks looking like a DoS server-side, and that self-throttling
+delays aren't necessary as long as HTTP 429 responses are respected. See
+"Rate limiting configuration" below. Descriptions add **no** network
+requests: they're read from the info.yml/recipe.yml already fetched for the
+label, in the same parse. JSON goes to stdout (or a file with `--json`);
+progress goes to stderr.
 
 **Every phase prints one line per module** (`[i/N] {name}: ...`). This
-matters most for the usage-count phase, which is fully sequential at
-3s/module and can run for many minutes — without per-module output it used
-to only print when a release-date fallback was needed (rare), making the
-whole run look hung.
+matters most for the usage-count phase, which is fully sequential and can
+run for many minutes — without per-module output it used to only print when
+a release-date fallback was needed (rare), making the whole run look hung.
 
 ```bash
-python3 drupal_ai_dependents.py --json results.json  # slow (~20-25 min), once
+python3 drupal_ai_dependents.py --json results.json  # slow, once
 
 # Fast re-render from saved JSON (no network calls):
 python3 render_md.py results.json -o results.md
@@ -224,8 +227,8 @@ so there is no extra network overhead for stars vs. downloads.
   a package's Packagist page). Packagist's internal name for this field is
   `favers`; the UI and our output label both call it "stars".
 
-Fetched in a dedicated parallel phase (`get_recipe_stats()`, 3 workers,
-`PACKAGIST_DELAY`) after recipe label fetching and before assembling
+Fetched in a dedicated sequential phase (`get_recipe_stats()`, single thread,
+no client-side delay) after recipe label fetching and before assembling
 `recipe_rows`. Both values are `None` on any error (non-200, missing key, JSON
 decode failure). A value of `0` is a real zero (package exists but has no
 downloads/stars yet). Both keys are **absent from module rows** — module
@@ -296,9 +299,23 @@ type before fetching release info. Once p2 verification was added, the API
 type check became redundant — p2's `type` field is more reliable and we get
 it for free in the same request.
 
-**Delays are placed BEFORE requests, not after.** An earlier version put
-`time.sleep()` after each call, meaning the first request in any sequence
-had zero lead-in gap. The current version sleeps before every call.
+**Delays are placed BEFORE requests, not after.** (Historical — superseded
+2026-07-24, see "Rate limiting configuration": there are no client-side
+delays left at all.) An earlier version put `time.sleep()` after each call,
+meaning the first request in any sequence had zero lead-in gap; a later
+version moved every sleep to before its call. Left here for context in case
+delays are ever reintroduced.
+
+**Self-throttling delays and concurrent worker pools were removed
+entirely (2026-07-24).** The script previously used per-host `*_DELAY`
+sleep constants plus `ThreadPoolExecutor(max_workers=3)` in the p2/label/
+stats phases. Direct feedback from the drupal.org sysadmins was that
+concurrency — not request rate — is what risks looking like a DoS
+server-side, and that client-side throttling is unnecessary as long as
+HTTP 429 (with its `Retry-After` header) is respected. All request-issuing
+code now runs sequentially in the main thread with no artificial delay; see
+"Rate limiting configuration" below for the current `_http_get()` 429
+handling.
 
 **A second registry (Packagist proper) had to be introduced for recipes.**
 The single-registry design that works for modules doesn't extend to
@@ -325,51 +342,48 @@ fallback without a strong reason.
 
 ## Rate limiting configuration
 
-All delay constants are at the top of the script (~line 43):
+**As of 2026-07-24, the script has no client-side throttling delays and
+makes no concurrent requests.** This replaced an earlier design (fixed
+per-host `*_DELAY` sleep constants plus `ThreadPoolExecutor(max_workers=3)`
+pools in the p2/label/stats phases) after direct feedback from the
+drupal.org sysadmins:
 
-```python
-ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
-PACKAGES_DELAY       = 3.0   # packages.drupal.org (search + p2)
-RELEASE_DELAY        = 3.0   # updates.drupal.org (fallback only)
-DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
-GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch)
-PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2)
-```
+> Make requests from a single thread. Throttling is not necessary, its
+> concurrency we're concerned with. If something starts saturating
+> processes server-side with concurrent requests, that's when it gets to
+> DoS territory. There are general rate limits in place, so respect the
+> retry-after header if you get an HTTP 429 response. Self-throttling is
+> not necessary as I said. Handling 429 responses is.
 
-The Drupal.org JSON API is the most sensitive — it returned 503s during
-development when called faster than ~1 per second. 3 seconds is conservative.
-`updates.drupal.org` is more tolerant (it handles all Drupal site cron checks
-globally) but we use 3s there too for consistency. `PACKAGIST_DELAY` reuses
-the same conservative 3s value on the assumption that packagist.org/
-repo.packagist.org (both high-traffic, CDN-backed endpoints for the global
-PHP ecosystem) are comparably tolerant to packages.drupal.org — not
-separately stress-tested, but a reasonable default given the project's
-overall conservative posture toward rate limiting.
+So the current design is:
 
-The 503 retry logic in `_drupal_api_get()` reads the `Retry-After` response
-header if present, falling back to exponential backoff starting at 2 seconds.
+- **Every phase runs sequentially in the main thread** — candidate
+  discovery, p2/recipe verification, info.yml/recipe.yml label fetches,
+  usage/security lookups, and recipe stats all issue one request, wait for
+  the response, then issue the next. No `ThreadPoolExecutor`, no `threading`
+  module, no worker pools anywhere in the script.
+- **No fixed pre-request sleep.** The old `*_DELAY` constants
+  (`ECOSYSTEM_PAGE_DELAY`, `PACKAGES_DELAY`, `RELEASE_DELAY`,
+  `DRUPAL_API_DELAY`, `GITLAB_DELAY`, `PACKAGIST_DELAY`) were removed
+  entirely rather than set to `0` — the sysadmin feedback was explicit that
+  guessing a delay in advance is unnecessary work, not just unnecessary at
+  a particular value.
+- **HTTP 429 is retried and honors `Retry-After`.** `_http_get()` — the
+  single shared HTTP function every request in the script goes through —
+  catches 429 responses specifically, reads the `Retry-After` header (or
+  falls back to `RETRY_BACKOFF * 2**attempt` if the header is absent), sleeps
+  that long, and retries, up to `MAX_RETRIES` attempts. Any other status
+  (including a 429 with no retries left) is returned to the caller as-is.
+  This generalizes the retry behavior to every host the script talks to, not
+  just the Drupal.org JSON API.
+- **`_drupal_api_get()` still separately retries on HTTP 503** (a status
+  specific to the Drupal.org JSON API, seen during development when it was
+  called faster than ~1/sec) — that logic is unchanged and layers on top of
+  `_http_get()`'s 429 handling underneath it.
 
-**Concurrency note:** The p2 verification phase, the info.yml label phase,
-the recipe p2 verification phase, and the recipe label phase **each** run 3
-concurrent workers via `ThreadPoolExecutor(max_workers=3)` — but
-sequentially, one phase at a time, not overlapping. Every worker sleeps its
-phase's delay constant before its own request — there is no shared rate
-limiter, so each upstream sees up to 3 simultaneous requests at burst
-starts, then ~1 req/s at steady state. This is safe for CDN-backed static
-file servers (packages.drupal.org, git.drupalcode.org, and — assumed,
-unverified — repo.packagist.org). The drupal.org JSON API (usage counts +
-security coverage) remains strictly sequential — one request every 3s, and
-is only ever called for modules, never recipes.
-
-**Recipe phases deliberately run sequentially after, not concurrently
-with, the module phases.** Recipes only touch hosts (`packagist.org`,
-`repo.packagist.org`, `git.drupalcode.org`) that are either unused by or
-already shared with the module phases — `git.drupalcode.org` specifically
-is shared with the module-label phase. Running both pools at once would
-double the burst load there, working against the "max 3 workers"
-assumption the rate-limiting is calibrated for, for a time saving bounded
-by the slower of the two pipelines anyway (the module phases, which
-dominate run time).
+Run time is no longer a fixed ~20-25 minutes — without artificial delays
+between requests it's dominated by upstream response latency and however
+often 429/503 retries actually trigger, which will vary run to run.
 
 ---
 

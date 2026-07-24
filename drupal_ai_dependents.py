@@ -22,6 +22,12 @@ Recipes are verified separately, against the regular Packagist registry
 (packages.drupal.org doesn't carry them at all) — see get_recipe_info() and
 CLAUDE.md's "Data sources" section for details.
 
+Requests are made sequentially from a single thread, with no client-side
+throttling delay — per direct feedback from the drupal.org sysadmins,
+concurrency (not request rate) is what risks looking like a DoS, and their
+general rate limits are already enforced server-side via HTTP 429 with a
+Retry-After header, which _http_get() honors.
+
 Usage:
   python3 drupal_ai_dependents.py [--json FILE]
 
@@ -37,13 +43,11 @@ import argparse           # parses command-line flags like --json
 import json               # like PHP's json_decode() / json_encode()
 import re                 # like PHP's preg_match() / preg_replace()
 import sys                # access to stdin/stdout/stderr and script exit
-import threading          # Lock for thread-safe rate limiting
 import time               # like PHP's sleep() and microtime()
 import urllib.error       # HTTP error types thrown by urllib (like curl errors)
 import urllib.parse       # URL building — like PHP's http_build_query()
 import urllib.request     # makes HTTP requests — like PHP's curl or file_get_contents()
 import xml.etree.ElementTree as ET  # XML parser — like PHP's SimpleXMLElement
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone  # date handling — like PHP's DateTime
 
 
@@ -76,18 +80,15 @@ PACKAGIST_STATS_URL  = "https://packagist.org/packages/drupal/{name}.json"
 # where only unique values matter and order doesn't. Membership checks are O(1).
 TARGET_VERSIONS = {10, 11}
 
-# Polite delays — applied BEFORE each request.
-# time.sleep(3.0) pauses execution for 3 seconds, like PHP's sleep(3),
-# except it accepts fractions of a second.
-ECOSYSTEM_PAGE_DELAY = 3.0   # www.drupal.org ecosystem pages
-PACKAGES_DELAY       = 3.0   # packages.drupal.org (search pages + p2 files)
-RELEASE_DELAY        = 3.0   # updates.drupal.org (date fallback only)
-DRUPAL_API_DELAY     = 3.0   # www.drupal.org JSON API
-GITLAB_DELAY         = 3.0   # git.drupalcode.org (info.yml / recipe.yml label fetch)
-PACKAGIST_DELAY      = 3.0   # packagist.org (recipe search) + repo.packagist.org (recipe p2 files)
-
-MAX_RETRIES   = 4    # how many times to retry a failed API call before giving up
-RETRY_BACKOFF = 2.0  # starting wait in seconds; doubles after each retry
+# No self-throttling delays and no concurrency. Per direct feedback from
+# drupal.org sysadmins: concurrent requests are what risks tipping into DoS
+# territory server-side, not request rate — so this script makes requests
+# from a single thread, one at a time, back-to-back. The only backoff that
+# matters is honoring HTTP 429's Retry-After header (see _http_get), which
+# is how the upstream general rate limits communicate "slow down" — a fixed
+# client-side delay guessed in advance is unnecessary on top of that.
+MAX_RETRIES   = 4    # how many times to retry a failed/rate-limited API call before giving up
+RETRY_BACKOFF = 2.0  # fallback wait in seconds when no Retry-After header is given; doubles after each retry
 
 # Request headers sent with every HTTP call. The dict literal here is like
 # PHP's associative array: ["User-Agent" => "..."]
@@ -115,6 +116,11 @@ def _http_get(url: str, params: dict | None = None) -> tuple[int, bytes, dict]:
 
     Network-level errors (timeouts, SSL failures, connection resets) are
     retried up to MAX_RETRIES times with exponential backoff before raising.
+
+    HTTP 429 (rate limited) is also retried, honoring the server's
+    Retry-After header when present — this is the one form of backoff the
+    drupal.org sysadmins asked us to keep. Every other 4xx/5xx status is
+    returned as-is (not retried) so callers can handle e.g. 404 without a crash.
     """
     # If query parameters were provided, append them to the URL.
     # urllib.parse.urlencode({"s": "ai", "page": 2}) → "s=ai&page=2"
@@ -134,8 +140,25 @@ def _http_get(url: str, params: dict | None = None) -> tuple[int, bytes, dict]:
             # which just sets an error code). We catch it and return the status
             # code normally so callers can handle e.g. 404 without a crash.
             # `b""` is an empty byte string (the body was not retrieved).
-            # HTTPError is not retryable — a 404 won't become a 200 on retry.
-            return exc.code, b"", dict(exc.headers) if exc.headers else {}
+            hdrs = dict(exc.headers) if exc.headers else {}
+
+            if exc.code == 429 and attempt + 1 < MAX_RETRIES:
+                # Respect the general rate limit: wait however long the
+                # server tells us to via Retry-After, falling back to
+                # exponential backoff only if that header is absent.
+                raw = hdrs.get("Retry-After") or hdrs.get("retry-after")
+                wait = float(raw) if raw else RETRY_BACKOFF * (2 ** attempt)
+                print(
+                    f"  [retry {attempt + 1}/{MAX_RETRIES}] 429 — waiting {wait:.0f}s"
+                    f" ({url})",
+                    file=sys.stderr,
+                )
+                time.sleep(wait)
+                continue
+
+            # Any other status (including a 429 with no retries left) is
+            # not retried — a 404 won't become a 200 on retry.
+            return exc.code, b"", hdrs
 
         except urllib.error.URLError as exc:
             # URLError covers network-level failures: timeouts, SSL errors,
@@ -262,7 +285,6 @@ def get_ecosystem_candidates() -> list[str]:
     # Python's `while True` with a `break` is a common pattern for loops
     # where the exit condition is checked mid-loop, like PHP's do/while.
     while True:
-        time.sleep(ECOSYSTEM_PAGE_DELAY)
         print(f"    Page {page} …", file=sys.stderr)
 
         # Unpack the tuple returned by _scrape_ecosystem_page into two variables.
@@ -301,8 +323,6 @@ def get_search_candidates(query: str = "ai") -> list[str]:
     params: dict | None = {"s": query, "per_page": 100}
 
     while url:
-        time.sleep(PACKAGES_DELAY)
-
         # Pass params on the first request; subsequent requests use the
         # complete `next` URL which already has parameters embedded.
         try:
@@ -367,8 +387,6 @@ def get_recipe_search_candidates() -> list[str]:
     params: dict | None = {"q": "ai", "type": "drupal-recipe", "per_page": 100}
 
     while url:
-        time.sleep(PACKAGIST_DELAY)
-
         try:
             status, body, _ = _http_get(url, params)
         except RuntimeError as exc:
@@ -562,12 +580,6 @@ def get_p2_info(machine_name: str) -> dict | None:
     }
 
 
-def _fetch_p2_with_delay(machine_name: str):
-    """Sleep then fetch p2 info — designed to run in a worker thread."""
-    time.sleep(PACKAGES_DELAY)
-    return machine_name, get_p2_info(machine_name)
-
-
 # ---------------------------------------------------------------------------
 # Dependency verification — recipes: repo.packagist.org p2
 # ---------------------------------------------------------------------------
@@ -630,12 +642,6 @@ def get_recipe_info(machine_name: str) -> dict | None:
         "core_constraint": core_constraint,
         "composer_name":   best.get("name", ""),
     }
-
-
-def _fetch_recipe_info_with_delay(machine_name: str):
-    """Sleep then fetch recipe p2 info — designed to run in a worker thread."""
-    time.sleep(PACKAGIST_DELAY)
-    return machine_name, get_recipe_info(machine_name)
 
 
 # ---------------------------------------------------------------------------
@@ -709,12 +715,6 @@ def get_module_label_and_description(
     return _parse_info_yml(body.decode("utf-8", errors="replace"))
 
 
-def _fetch_label_with_delay(machine_name: str, version: str):
-    """Sleep then fetch the info.yml label+description, runs in a worker thread."""
-    time.sleep(GITLAB_DELAY)
-    return machine_name, get_module_label_and_description(machine_name, version)
-
-
 # ---------------------------------------------------------------------------
 # Recipe label and description — git.drupalcode.org (recipe.yml `name`/`description`)
 # ---------------------------------------------------------------------------
@@ -764,12 +764,6 @@ def get_recipe_label_and_description(
     return _parse_info_yml(body.decode("utf-8", errors="replace"))
 
 
-def _fetch_recipe_label_with_delay(machine_name: str, version: str):
-    """Sleep then fetch the recipe.yml label+description — runs in a worker thread."""
-    time.sleep(GITLAB_DELAY)
-    return machine_name, get_recipe_label_and_description(machine_name, version)
-
-
 # ---------------------------------------------------------------------------
 # Recipe stats (downloads + stars) — packagist.org statistics API
 # ---------------------------------------------------------------------------
@@ -803,12 +797,6 @@ def get_recipe_stats(machine_name: str) -> tuple[int | None, int | None]:
     except (KeyError, TypeError, ValueError):
         stars = None
     return downloads, stars
-
-
-def _fetch_recipe_stats_with_delay(machine_name: str):
-    """Sleep then fetch recipe stats — designed to run in a worker thread."""
-    time.sleep(PACKAGIST_DELAY)
-    return machine_name, get_recipe_stats(machine_name)
 
 
 # ---------------------------------------------------------------------------
@@ -1005,9 +993,7 @@ def main() -> None:
     # -------------------------------------------------------------------------
     # Step 2: Verify each candidate against packages.drupal.org
     # -------------------------------------------------------------------------
-    # Phase 2a: concurrent p2 fetches (3 workers, each sleeping PACKAGES_DELAY
-    # before its own request). packages.drupal.org serves static CDN files and
-    # tolerates this rate; drupal.org's sensitive API is handled separately below.
+    # Phase 2a: sequential p2 fetches — one request at a time, single thread.
     print("Verifying via packages.drupal.org p2 files …", file=sys.stderr)
 
     rows          = []   # will hold one dict per confirmed module
@@ -1016,69 +1002,50 @@ def main() -> None:
     total         = len(all_candidates)
     p2_map        = {}   # machine_name → p2 result dict (only passing modules)
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        future_to_name = {pool.submit(_fetch_p2_with_delay, n): n for n in all_candidates}
-        done = 0
-        for fut in as_completed(future_to_name):
-            done += 1
-            name = future_to_name[fut]
-            try:
-                _, result = fut.result()
-            except Exception as exc:
-                print(f"  [{done}/{total}] {name}: error — {exc}", file=sys.stderr)
-                result = None
-            if result is not None:
-                p2_map[name] = result
-                print(f"  [{done}/{total}] {name}: ok", file=sys.stderr)
-            else:
-                skipped += 1
-                print(f"  [{done}/{total}] {name}: skip", file=sys.stderr)
+    for done, name in enumerate(all_candidates, 1):
+        try:
+            result = get_p2_info(name)
+        except Exception as exc:
+            print(f"  [{done}/{total}] {name}: error — {exc}", file=sys.stderr)
+            result = None
+        if result is not None:
+            p2_map[name] = result
+            print(f"  [{done}/{total}] {name}: ok", file=sys.stderr)
+        else:
+            skipped += 1
+            print(f"  [{done}/{total}] {name}: skip", file=sys.stderr)
 
-    # Phase 2b: concurrent info.yml label fetches for verified modules only
-    # (3 workers, same pattern as phase 2a). git.drupalcode.org is a static
-    # GitLab raw-file endpoint, so it tolerates the same burst rate as
-    # packages.drupal.org.
+    # Phase 2b: sequential info.yml label fetches for verified modules only.
     print("\nFetching module labels + descriptions from info.yml files …", file=sys.stderr)
     verified = [(n, p2_map[n]) for n in all_candidates if n in p2_map]
     label_map = {}  # machine_name → label (only when found)
     desc_map  = {}  # machine_name → description from info.yml (only when found)
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        future_to_name = {
-            pool.submit(_fetch_label_with_delay, n, p2["version"]): n
-            for n, p2 in verified
-        }
-        done = 0
-        for fut in as_completed(future_to_name):
-            done += 1
-            name = future_to_name[fut]
-            try:
-                _, (label, description) = fut.result()
-            except Exception as exc:
-                print(f"  [{done}/{len(verified)}] {name}: error — {exc}", file=sys.stderr)
-                label = description = None
-            if label:
-                label_map[name] = label
-            if description:
-                desc_map[name] = description
-            print(f"  [{done}/{len(verified)}] {name}: {label or '(using fallback name)'}"
-                  f"{' +desc' if description else ''}", file=sys.stderr)
+    for done, (name, p2) in enumerate(verified, 1):
+        try:
+            label, description = get_module_label_and_description(name, p2["version"])
+        except Exception as exc:
+            print(f"  [{done}/{len(verified)}] {name}: error — {exc}", file=sys.stderr)
+            label = description = None
+        if label:
+            label_map[name] = label
+        if description:
+            desc_map[name] = description
+        print(f"  [{done}/{len(verified)}] {name}: {label or '(using fallback name)'}"
+              f"{' +desc' if description else ''}", file=sys.stderr)
 
     # Phase 2c: sequential usage + security coverage fetches for verified
     # modules only. Preserves all_candidates order (ecosystem-first) for
-    # deterministic output. drupal.org's JSON API stays strictly sequential
-    # at DRUPAL_API_DELAY.
+    # deterministic output.
     print("\nFetching usage counts …", file=sys.stderr)
     for i, (machine_name, p2) in enumerate(verified, 1):
         date = p2["date"]
         if not date:
-            time.sleep(RELEASE_DELAY)
             date = get_release_date_fallback(machine_name, p2["version"])
             date_fallbacks += 1
             if date:
                 print(f"  [{i}/{len(verified)}] {machine_name}: date from updates.drupal.org", file=sys.stderr)
 
-        time.sleep(DRUPAL_API_DELAY)
         usage, security_covered = get_usage_and_security(machine_name)
         print(f"  [{i}/{len(verified)}] {machine_name}: usage={usage} security_covered={security_covered}", file=sys.stderr)
 
@@ -1137,76 +1104,53 @@ def main() -> None:
     recipe_total   = len(all_recipe_candidates)
     recipe_p2_map  = {}
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        future_to_name = {
-            pool.submit(_fetch_recipe_info_with_delay, n): n for n in all_recipe_candidates
-        }
-        done = 0
-        for fut in as_completed(future_to_name):
-            done += 1
-            name = future_to_name[fut]
-            try:
-                _, result = fut.result()
-            except Exception as exc:
-                print(f"  [{done}/{recipe_total}] {name}: error — {exc}", file=sys.stderr)
-                result = None
-            if result is not None:
-                recipe_p2_map[name] = result
-                print(f"  [{done}/{recipe_total}] {name}: ok", file=sys.stderr)
-            else:
-                recipe_skipped += 1
-                print(f"  [{done}/{recipe_total}] {name}: skip", file=sys.stderr)
+    for done, name in enumerate(all_recipe_candidates, 1):
+        try:
+            result = get_recipe_info(name)
+        except Exception as exc:
+            print(f"  [{done}/{recipe_total}] {name}: error — {exc}", file=sys.stderr)
+            result = None
+        if result is not None:
+            recipe_p2_map[name] = result
+            print(f"  [{done}/{recipe_total}] {name}: ok", file=sys.stderr)
+        else:
+            recipe_skipped += 1
+            print(f"  [{done}/{recipe_total}] {name}: skip", file=sys.stderr)
 
-    # Phase 2e: concurrent recipe.yml label + description fetches for verified
+    # Phase 2e: sequential recipe.yml label + description fetches for verified
     # recipes only.
     print("\nFetching recipe labels + descriptions from recipe.yml files …", file=sys.stderr)
     verified_recipes = [(n, recipe_p2_map[n]) for n in all_recipe_candidates if n in recipe_p2_map]
     recipe_label_map = {}
     recipe_desc_map  = {}  # machine_name → description from recipe.yml (only when found)
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        future_to_name = {
-            pool.submit(_fetch_recipe_label_with_delay, n, info["version"]): n
-            for n, info in verified_recipes
-        }
-        done = 0
-        for fut in as_completed(future_to_name):
-            done += 1
-            name = future_to_name[fut]
-            try:
-                _, (label, description) = fut.result()
-            except Exception as exc:
-                print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
-                label = description = None
-            if label:
-                recipe_label_map[name] = label
-            if description:
-                recipe_desc_map[name] = description
-            print(f"  [{done}/{len(verified_recipes)}] {name}: {label or '(using fallback name)'}"
-                  f"{' +desc' if description else ''}", file=sys.stderr)
+    for done, (name, info) in enumerate(verified_recipes, 1):
+        try:
+            label, description = get_recipe_label_and_description(name, info["version"])
+        except Exception as exc:
+            print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
+            label = description = None
+        if label:
+            recipe_label_map[name] = label
+        if description:
+            recipe_desc_map[name] = description
+        print(f"  [{done}/{len(verified_recipes)}] {name}: {label or '(using fallback name)'}"
+              f"{' +desc' if description else ''}", file=sys.stderr)
 
-    # Phase 2f: concurrent recipe stats fetches from packagist.org.
+    # Phase 2f: sequential recipe stats fetches from packagist.org.
     # Downloads and stars (favers) come from the same API response, so one
-    # request per recipe covers both. Same PACKAGIST_DELAY and 3-worker limit.
+    # request per recipe covers both.
     print("\nFetching recipe stats (downloads + stars) from Packagist …", file=sys.stderr)
     recipe_stats_map = {}  # machine_name → (downloads, stars)
 
-    with ThreadPoolExecutor(max_workers=3) as pool:
-        future_to_name = {
-            pool.submit(_fetch_recipe_stats_with_delay, n): n
-            for n, _ in verified_recipes
-        }
-        done = 0
-        for fut in as_completed(future_to_name):
-            done += 1
-            name = future_to_name[fut]
-            try:
-                _, (dl, stars) = fut.result()
-            except Exception as exc:
-                print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
-                dl = stars = None
-            recipe_stats_map[name] = (dl, stars)
-            print(f"  [{done}/{len(verified_recipes)}] {name}: downloads={dl} stars={stars}", file=sys.stderr)
+    for done, (name, _) in enumerate(verified_recipes, 1):
+        try:
+            dl, stars = get_recipe_stats(name)
+        except Exception as exc:
+            print(f"  [{done}/{len(verified_recipes)}] {name}: error — {exc}", file=sys.stderr)
+            dl = stars = None
+        recipe_stats_map[name] = (dl, stars)
+        print(f"  [{done}/{len(verified_recipes)}] {name}: downloads={dl} stars={stars}", file=sys.stderr)
 
     for machine_name, info in verified_recipes:
         dl, stars = recipe_stats_map.get(machine_name, (None, None))
