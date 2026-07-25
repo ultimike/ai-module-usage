@@ -223,6 +223,13 @@ _CSS = """\
       display: flex;
       align-items: center;
       gap: 0.35rem;
+    }
+    .chosen-container { font-size: 0.9rem; }
+    .chosen-container-multi .chosen-choices {
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      background: #fff;
+      min-width: 280px;
     }"""
 
 # JS stored as a plain string (not an f-string) to avoid escaping every { }.
@@ -283,6 +290,8 @@ _JS = """\
       var filterModules = document.getElementById('filter-modules');
       var noResModules   = document.getElementById('no-results-modules');
 
+      var catModules = document.getElementById('cat-modules');
+
       function applyModulesFilter() {
         var q = filterModules.value.toLowerCase();
         var stabChecked = new Set(
@@ -293,17 +302,14 @@ _JS = """\
           Array.from(document.querySelectorAll('.sec-cb:checked'))
                .map(function (cb) { return cb.value; })
         );
-        var catChecked = new Set(
-          Array.from(document.querySelectorAll('#panel-modules .cat-cb:checked'))
-               .map(function (cb) { return cb.value; })
-        );
+        var catSelected = catModules ? Array.from(catModules.selectedOptions).map(function (o) { return o.value; }) : [];
         var visible = 0;
         Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var stabMatch = stabChecked.has(row.dataset.stability);
           var secMatch = secChecked.has(row.dataset.security);
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
-          var catMatch = cats.length === 0 || cats.some(function (c) { return catChecked.has(c); });
+          var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
           var show = nameMatch && stabMatch && secMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
@@ -312,9 +318,10 @@ _JS = """\
       }
 
       filterModules.addEventListener('input', applyModulesFilter);
-      Array.from(document.querySelectorAll('.stab-cb, .sec-cb, #panel-modules .cat-cb')).forEach(function (cb) {
+      Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
         cb.addEventListener('change', applyModulesFilter);
       });
+      if (catModules) catModules.addEventListener('change', applyModulesFilter);
 
       // ---- Recipes tab: sorting + name-only filter ----
       // No stability or security data exists for recipes, so there's
@@ -327,17 +334,16 @@ _JS = """\
       var filterRecipes = document.getElementById('filter-recipes');
       var noResRecipes   = document.getElementById('no-results-recipes');
 
+      var catRecipes = document.getElementById('cat-recipes');
+
       function applyRecipesFilter() {
         var q = filterRecipes.value.toLowerCase();
-        var catChecked = new Set(
-          Array.from(document.querySelectorAll('#panel-recipes .cat-cb:checked'))
-               .map(function (cb) { return cb.value; })
-        );
+        var catSelected = catRecipes ? Array.from(catRecipes.selectedOptions).map(function (o) { return o.value; }) : [];
         var visible = 0;
         Array.from(recipesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
-          var catMatch = cats.length === 0 || cats.some(function (c) { return catChecked.has(c); });
+          var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
           var show = nameMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
@@ -346,9 +352,7 @@ _JS = """\
       }
 
       filterRecipes.addEventListener('input', applyRecipesFilter);
-      Array.from(document.querySelectorAll('#panel-recipes .cat-cb')).forEach(function (cb) {
-        cb.addEventListener('change', applyRecipesFilter);
-      });
+      if (catRecipes) catRecipes.addEventListener('change', applyRecipesFilter);
 
       // ---- Tab switching ----
       Array.from(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
@@ -359,6 +363,15 @@ _JS = """\
           document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
         });
       });
+
+      // ---- Chosen.js init ----
+      if (typeof jQuery !== 'undefined') {
+        jQuery('.chosen-select').chosen({ width: '100%', search_contains: true });
+        jQuery('.chosen-select').on('change', function () {
+          if (this.id === 'cat-modules') applyModulesFilter();
+          else if (this.id === 'cat-recipes') applyRecipesFilter();
+        });
+      }
     })();"""
 
 
@@ -467,16 +480,18 @@ def render_html(payload: dict) -> str:
         for status in SECURITY_ORDER
     )
 
-    # Category checkboxes, one set per tab (each tab only shows categories that
-    # actually appear in its rows). esc() guards names like "SEO & Metadata".
-    def _cat_checkboxes(cats: list) -> str:
-        return "\n      ".join(
-            f'<label><input type="checkbox" class="cat-cb" value="{esc(c)}" checked>'
-            f' {esc(c)}</label>'
+    # Category multi-select dropdowns (enhanced by Chosen.js), one per tab.
+    def _cat_select(cats: list, select_id: str) -> str:
+        options = "\n        ".join(
+            f'<option value="{esc(c)}">{esc(c)}</option>'
             for c in cats
         )
-    module_cat_checkboxes = _cat_checkboxes(_ordered_categories(rows))
-    recipe_cat_checkboxes = _cat_checkboxes(_ordered_categories(recipe_rows))
+        return (f'<select id="{select_id}" multiple class="chosen-select"'
+                f' data-placeholder="Filter by category…">\n'
+                f'        {options}\n'
+                f'      </select>')
+    module_cat_select = _cat_select(_ordered_categories(rows), "cat-modules")
+    recipe_cat_select = _cat_select(_ordered_categories(recipe_rows), "cat-recipes")
 
     return (
         '<!DOCTYPE html>\n'
@@ -485,6 +500,7 @@ def render_html(payload: dict) -> str:
         '  <meta charset="UTF-8">\n'
         '  <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
         '  <title>Drupal AI Dependents</title>\n'
+        '  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">\n'
         f'  <style>\n{_CSS}\n  </style>\n'
         '</head>\n'
         '<body>\n'
@@ -505,9 +521,7 @@ def render_html(payload: dict) -> str:
         '      <span class="stab-filters">Security:\n'
         f'        {security_checkboxes}\n'
         '      </span>\n'
-        '      <span class="stab-filters">Category:\n'
-        f'        {module_cat_checkboxes}\n'
-        '      </span>\n'
+        f'      {module_cat_select}\n'
         '    </div>\n'
         '    <table id="tbl-modules">\n'
         '      <thead>\n'
@@ -534,9 +548,7 @@ def render_html(payload: dict) -> str:
         '  <div class="tab-panel" id="panel-recipes">\n'
         '    <div class="controls">\n'
         '      <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">\n'
-        '      <span class="stab-filters">Category:\n'
-        f'        {recipe_cat_checkboxes}\n'
-        '      </span>\n'
+        f'      {recipe_cat_select}\n'
         '    </div>\n'
         '    <table id="tbl-recipes">\n'
         '      <thead>\n'
@@ -555,6 +567,8 @@ def render_html(payload: dict) -> str:
         '    </table>\n'
         '    <p id="no-results-recipes">No recipes match your filter.</p>\n'
         '  </div>\n'
+        '  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>\n'
+        '  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>\n'
         f'  <script>\n{_JS}\n  </script>\n'
         '</body>\n'
         '</html>\n'

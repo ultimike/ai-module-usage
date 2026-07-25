@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Drupal AI Dependents</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.min.css">
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -150,6 +151,13 @@
       align-items: center;
       gap: 0.35rem;
     }
+    .chosen-container { font-size: 0.9rem; }
+    .chosen-container-multi .chosen-choices {
+      border: 1px solid #bbb;
+      border-radius: 4px;
+      background: #fff;
+      min-width: 280px;
+    }
   </style>
 </head>
 <body>
@@ -173,26 +181,26 @@
         <label><input type="checkbox" class="sec-cb" value="covered" checked> Covered</label>
       <label><input type="checkbox" class="sec-cb" value="not-covered" checked> Not covered</label>
       </span>
-      <span class="stab-filters">Category:
-        <label><input type="checkbox" class="cat-cb" value="Tool" checked> Tool</label>
-      <label><input type="checkbox" class="cat-cb" value="Cloud Providers" checked> Cloud Providers</label>
-      <label><input type="checkbox" class="cat-cb" value="Local Providers" checked> Local Providers</label>
-      <label><input type="checkbox" class="cat-cb" value="Editorial" checked> Editorial</label>
-      <label><input type="checkbox" class="cat-cb" value="Content" checked> Content</label>
-      <label><input type="checkbox" class="cat-cb" value="Search" checked> Search</label>
-      <label><input type="checkbox" class="cat-cb" value="Chat" checked> Chat</label>
-      <label><input type="checkbox" class="cat-cb" value="Automation" checked> Automation</label>
-      <label><input type="checkbox" class="cat-cb" value="Agents" checked> Agents</label>
-      <label><input type="checkbox" class="cat-cb" value="Analytics" checked> Analytics</label>
-      <label><input type="checkbox" class="cat-cb" value="Media" checked> Media</label>
-      <label><input type="checkbox" class="cat-cb" value="Vector Database" checked> Vector Database</label>
-      <label><input type="checkbox" class="cat-cb" value="SEO &amp; Metadata" checked> SEO &amp; Metadata</label>
-      <label><input type="checkbox" class="cat-cb" value="Translation" checked> Translation</label>
-      <label><input type="checkbox" class="cat-cb" value="Safety &amp; Governance" checked> Safety &amp; Governance</label>
-      <label><input type="checkbox" class="cat-cb" value="Accessibility" checked> Accessibility</label>
-      <label><input type="checkbox" class="cat-cb" value="Developer Tools" checked> Developer Tools</label>
-      <label><input type="checkbox" class="cat-cb" value="Evaluation &amp; Testing" checked> Evaluation &amp; Testing</label>
-      </span>
+      <select id="cat-modules" multiple class="chosen-select" data-placeholder="Filter by category…">
+        <option value="Tool">Tool</option>
+        <option value="Cloud Providers">Cloud Providers</option>
+        <option value="Local Providers">Local Providers</option>
+        <option value="Editorial">Editorial</option>
+        <option value="Content">Content</option>
+        <option value="Search">Search</option>
+        <option value="Chat">Chat</option>
+        <option value="Automation">Automation</option>
+        <option value="Agents">Agents</option>
+        <option value="Analytics">Analytics</option>
+        <option value="Media">Media</option>
+        <option value="Vector Database">Vector Database</option>
+        <option value="SEO &amp; Metadata">SEO &amp; Metadata</option>
+        <option value="Translation">Translation</option>
+        <option value="Safety &amp; Governance">Safety &amp; Governance</option>
+        <option value="Accessibility">Accessibility</option>
+        <option value="Developer Tools">Developer Tools</option>
+        <option value="Evaluation &amp; Testing">Evaluation &amp; Testing</option>
+      </select>
     </div>
     <table id="tbl-modules">
       <thead>
@@ -200,8 +208,8 @@
           <th data-col="0" data-type="text">Label</th>
           <th data-col="1" data-type="text">Version</th>
           <th data-col="2" data-type="date">Released</th>
-          <th data-col="3" data-type="num" class="col-security">Security coverage</th>
-          <th data-col="4" data-type="num" class="col-usage">Drupal.org usage</th>
+          <th data-col="3" data-type="num" class="col-security" title="Security Coverage">Security</th>
+          <th data-col="4" data-type="num" class="col-usage" title="Drupal.org Usage">Usage</th>
           <th data-col="5" data-type="text" class="col-cat">Categories</th>
         </tr>
       </thead>
@@ -407,24 +415,24 @@
   <div class="tab-panel" id="panel-recipes">
     <div class="controls">
       <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">
-      <span class="stab-filters">Category:
-        <label><input type="checkbox" class="cat-cb" value="Tool" checked> Tool</label>
-      <label><input type="checkbox" class="cat-cb" value="Cloud Providers" checked> Cloud Providers</label>
-      <label><input type="checkbox" class="cat-cb" value="Editorial" checked> Editorial</label>
-      <label><input type="checkbox" class="cat-cb" value="Content" checked> Content</label>
-      <label><input type="checkbox" class="cat-cb" value="Search" checked> Search</label>
-      <label><input type="checkbox" class="cat-cb" value="Chat" checked> Chat</label>
-      <label><input type="checkbox" class="cat-cb" value="Automation" checked> Automation</label>
-      <label><input type="checkbox" class="cat-cb" value="Agents" checked> Agents</label>
-      <label><input type="checkbox" class="cat-cb" value="Analytics" checked> Analytics</label>
-      <label><input type="checkbox" class="cat-cb" value="Media" checked> Media</label>
-      <label><input type="checkbox" class="cat-cb" value="Vector Database" checked> Vector Database</label>
-      <label><input type="checkbox" class="cat-cb" value="SEO &amp; Metadata" checked> SEO &amp; Metadata</label>
-      <label><input type="checkbox" class="cat-cb" value="Translation" checked> Translation</label>
-      <label><input type="checkbox" class="cat-cb" value="Safety &amp; Governance" checked> Safety &amp; Governance</label>
-      <label><input type="checkbox" class="cat-cb" value="Accessibility" checked> Accessibility</label>
-      <label><input type="checkbox" class="cat-cb" value="Developer Tools" checked> Developer Tools</label>
-      </span>
+      <select id="cat-recipes" multiple class="chosen-select" data-placeholder="Filter by category…">
+        <option value="Tool">Tool</option>
+        <option value="Cloud Providers">Cloud Providers</option>
+        <option value="Editorial">Editorial</option>
+        <option value="Content">Content</option>
+        <option value="Search">Search</option>
+        <option value="Chat">Chat</option>
+        <option value="Automation">Automation</option>
+        <option value="Agents">Agents</option>
+        <option value="Analytics">Analytics</option>
+        <option value="Media">Media</option>
+        <option value="Vector Database">Vector Database</option>
+        <option value="SEO &amp; Metadata">SEO &amp; Metadata</option>
+        <option value="Translation">Translation</option>
+        <option value="Safety &amp; Governance">Safety &amp; Governance</option>
+        <option value="Accessibility">Accessibility</option>
+        <option value="Developer Tools">Developer Tools</option>
+      </select>
     </div>
     <table id="tbl-recipes">
       <thead>
@@ -473,6 +481,8 @@
     </table>
     <p id="no-results-recipes">No recipes match your filter.</p>
   </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"></script>
   <script>
     (function () {
       // Column-sort mechanics are identical for both tables, so this factory
@@ -530,6 +540,8 @@
       var filterModules = document.getElementById('filter-modules');
       var noResModules   = document.getElementById('no-results-modules');
 
+      var catModules = document.getElementById('cat-modules');
+
       function applyModulesFilter() {
         var q = filterModules.value.toLowerCase();
         var stabChecked = new Set(
@@ -540,17 +552,14 @@
           Array.from(document.querySelectorAll('.sec-cb:checked'))
                .map(function (cb) { return cb.value; })
         );
-        var catChecked = new Set(
-          Array.from(document.querySelectorAll('#panel-modules .cat-cb:checked'))
-               .map(function (cb) { return cb.value; })
-        );
+        var catSelected = catModules ? Array.from(catModules.selectedOptions).map(function (o) { return o.value; }) : [];
         var visible = 0;
         Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var stabMatch = stabChecked.has(row.dataset.stability);
           var secMatch = secChecked.has(row.dataset.security);
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
-          var catMatch = cats.length === 0 || cats.some(function (c) { return catChecked.has(c); });
+          var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
           var show = nameMatch && stabMatch && secMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
@@ -559,9 +568,10 @@
       }
 
       filterModules.addEventListener('input', applyModulesFilter);
-      Array.from(document.querySelectorAll('.stab-cb, .sec-cb, #panel-modules .cat-cb')).forEach(function (cb) {
+      Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
         cb.addEventListener('change', applyModulesFilter);
       });
+      if (catModules) catModules.addEventListener('change', applyModulesFilter);
 
       // ---- Recipes tab: sorting + name-only filter ----
       // No stability or security data exists for recipes, so there's
@@ -574,17 +584,16 @@
       var filterRecipes = document.getElementById('filter-recipes');
       var noResRecipes   = document.getElementById('no-results-recipes');
 
+      var catRecipes = document.getElementById('cat-recipes');
+
       function applyRecipesFilter() {
         var q = filterRecipes.value.toLowerCase();
-        var catChecked = new Set(
-          Array.from(document.querySelectorAll('#panel-recipes .cat-cb:checked'))
-               .map(function (cb) { return cb.value; })
-        );
+        var catSelected = catRecipes ? Array.from(catRecipes.selectedOptions).map(function (o) { return o.value; }) : [];
         var visible = 0;
         Array.from(recipesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
-          var catMatch = cats.length === 0 || cats.some(function (c) { return catChecked.has(c); });
+          var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
           var show = nameMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
@@ -593,9 +602,7 @@
       }
 
       filterRecipes.addEventListener('input', applyRecipesFilter);
-      Array.from(document.querySelectorAll('#panel-recipes .cat-cb')).forEach(function (cb) {
-        cb.addEventListener('change', applyRecipesFilter);
-      });
+      if (catRecipes) catRecipes.addEventListener('change', applyRecipesFilter);
 
       // ---- Tab switching ----
       Array.from(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
@@ -606,6 +613,15 @@
           document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
         });
       });
+
+      // ---- Chosen.js init ----
+      if (typeof jQuery !== 'undefined') {
+        jQuery('.chosen-select').chosen({ width: '100%', search_contains: true });
+        jQuery('.chosen-select').on('change', function () {
+          if (this.id === 'cat-modules') applyModulesFilter();
+          else if (this.id === 'cat-recipes') applyRecipesFilter();
+        });
+      }
     })();
   </script>
 </body>
