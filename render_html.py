@@ -103,16 +103,31 @@ _CSS = """\
     .sponsor a { color: #2a4aaa; text-decoration: none; }
     .sponsor a:hover { text-decoration: underline; }
     .controls {
+      margin-bottom: 1rem;
+    }
+    .controls-row {
       display: flex;
       align-items: center;
       gap: 1.5rem;
-      margin-bottom: 1rem;
       flex-wrap: wrap;
     }
-    #filter {
-      padding: 0.45rem 0.75rem;
-      font-size: 1rem;
-      width: 300px;
+    .controls-row + .controls-row {
+      margin-top: 0.75rem;
+    }
+    .controls-row.controls-inputs {
+      flex-wrap: nowrap;
+    }
+    .controls-row.controls-inputs > * {
+      flex: 1 1 50%;
+      min-width: 0;
+    }
+    .controls input[type="search"] {
+      height: 2.5rem;
+      padding: 0 0.75rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      width: 100%;
+      box-sizing: border-box;
       border: 1px solid #bbb;
       border-radius: 4px;
       outline-color: #2d6a9f;
@@ -182,6 +197,11 @@ _CSS = """\
       background: #e7eef5;
       color: #245a8c;
       white-space: nowrap;
+      cursor: pointer;
+    }
+    .cat-pill:hover {
+      background: #245a8c;
+      color: #fff;
     }
     #no-results-modules, #no-results-recipes {
       display: none;
@@ -236,12 +256,18 @@ _CSS = """\
       align-items: center;
       gap: 0.35rem;
     }
-    .chosen-container { font-size: 0.9rem; }
+    .chosen-container { font-family: inherit; font-size: 0.9rem; }
     .chosen-container-multi .chosen-choices {
       border: 1px solid #bbb;
       border-radius: 4px;
       background: #fff;
       min-width: 280px;
+      min-height: 2.5rem;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 0 0.75rem;
     }"""
 
 # JS stored as a plain string (not an f-string) to avoid escaping every { }.
@@ -366,6 +392,37 @@ _JS = """\
       filterRecipes.addEventListener('input', applyRecipesFilter);
       if (catRecipes) catRecipes.addEventListener('change', applyRecipesFilter);
 
+      // ---- Category pill click-to-filter ----
+      // Clicking a pill in a row narrows that tab's category select down to
+      // just that one category (replacing whatever was selected), then
+      // re-applies the filter. Works whether or not Chosen.js/jQuery ended
+      // up loaded: the underlying <select> is what applyModulesFilter /
+      // applyRecipesFilter actually read, and dispatching a native
+      // 'change' event on it is what those filters are wired to. Chosen's
+      // own display is separately resynced below when present.
+      function selectSingleCategory(select, category) {
+        if (!select) return;
+        Array.from(select.options).forEach(function (o) {
+          o.selected = (o.value === category);
+        });
+        if (typeof jQuery !== 'undefined') {
+          jQuery(select).trigger('chosen:updated');
+        }
+        select.dispatchEvent(new Event('change'));
+      }
+
+      document.getElementById('tbody-modules').addEventListener('click', function (ev) {
+        var pill = ev.target.closest('.cat-pill');
+        if (!pill) return;
+        selectSingleCategory(catModules, pill.dataset.cat);
+      });
+
+      document.getElementById('tbody-recipes').addEventListener('click', function (ev) {
+        var pill = ev.target.closest('.cat-pill');
+        if (!pill) return;
+        selectSingleCategory(catRecipes, pill.dataset.cat);
+      });
+
       // ---- Tab switching ----
       Array.from(document.querySelectorAll('.tab-btn')).forEach(function (btn) {
         btn.addEventListener('click', function () {
@@ -428,7 +485,7 @@ def render_html(payload: dict) -> str:
         cats     = r.get("categories", [])
         cat_val  = esc(" ".join(cats))                       # sort key
         cat_data = esc("|".join(cats))                       # filter (data-categories)
-        cat_html = "".join(f'<span class="cat-pill">{esc(c)}</span>' for c in cats)
+        cat_html = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
         row_lines.append(
             f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
@@ -466,7 +523,7 @@ def render_html(payload: dict) -> str:
         cats        = r.get("categories", [])
         cat_val     = esc(" ".join(cats))
         cat_data    = esc("|".join(cats))
-        cat_html    = "".join(f'<span class="cat-pill">{esc(c)}</span>' for c in cats)
+        cat_html    = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
         recipe_row_lines.append(
             f'      <tr data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
@@ -528,14 +585,18 @@ def render_html(payload: dict) -> str:
         '  </div>\n'
         '  <div class="tab-panel active" id="panel-modules">\n'
         '    <div class="controls">\n'
-        '      <input id="filter-modules" type="search" placeholder="Filter by module name&hellip;">\n'
-        '      <span class="stab-filters">Show:\n'
-        f'        {checkboxes}\n'
-        '      </span>\n'
-        '      <span class="stab-filters">Security:\n'
-        f'        {security_checkboxes}\n'
-        '      </span>\n'
-        f'      {module_cat_select}\n'
+        '      <div class="controls-row controls-checks">\n'
+        '        <span class="stab-filters">Show:\n'
+        f'          {checkboxes}\n'
+        '        </span>\n'
+        '        <span class="stab-filters">Security:\n'
+        f'          {security_checkboxes}\n'
+        '        </span>\n'
+        '      </div>\n'
+        '      <div class="controls-row controls-inputs">\n'
+        '        <input id="filter-modules" type="search" placeholder="Filter by module name&hellip;">\n'
+        f'        {module_cat_select}\n'
+        '      </div>\n'
         '    </div>\n'
         '    <table id="tbl-modules">\n'
         '      <thead>\n'
@@ -561,8 +622,10 @@ def render_html(payload: dict) -> str:
         '  </div>\n'
         '  <div class="tab-panel" id="panel-recipes">\n'
         '    <div class="controls">\n'
-        '      <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">\n'
-        f'      {recipe_cat_select}\n'
+        '      <div class="controls-row controls-inputs">\n'
+        '        <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">\n'
+        f'        {recipe_cat_select}\n'
+        '      </div>\n'
         '    </div>\n'
         '    <table id="tbl-recipes">\n'
         '      <thead>\n'
