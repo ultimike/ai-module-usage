@@ -28,11 +28,14 @@ markdown, separate tabs in HTML).
   - Outline shield (inline SVG, stroke only, 50% opacity) — covered + pre-release (rc/beta/alpha/dev)
   - 🚫 — not covered by the security advisory policy
 - Active install count ("Drupal.org usage")
+- Categories — one or more categories derived from the label + description +
+  machine name (see the Categorization section below); shown as pills in HTML,
+  comma-separated in markdown
 
 **Recipes table:** Label, Description (same source/treatment as modules, but
 from `recipe.yml`'s `description:` key), machine name, URL, version, release
-date, Packagist downloads, Packagist stars — no Drupal.org security coverage
-or usage columns.
+date, Packagist downloads, Packagist stars, Categories — no Drupal.org security
+coverage or usage columns.
 Recipes (Drupal projects of type `drupal-recipe`, applied via `drush recipe`
 rather than installed as code) genuinely have neither of those: `project_usage`
 is absent from Drupal.org's API response for a recipe (not zero — absent),
@@ -482,7 +485,9 @@ replacement; use `render_html.py` directly.)
 
 **`render_html.py`** features:
 - Each module `<tr>` has `data-stability="stable|rc|beta|alpha|dev"` and
-  `data-security="covered|not-covered"`.
+  `data-security="covered|not-covered"`. **Both** module and recipe `<tr>`s also
+  carry `data-categories="Cat A|Cat B"` (pipe-delimited) for the category filter
+  — this is the recipe rows' only data attribute.
 - Each row's Label cell renders the project's `description` (when present) as a
   muted second line (`<div class="desc">`) beneath the linked label, on **both**
   the Modules and Recipes tabs. It's **display-only**: the Label column's
@@ -492,30 +497,37 @@ replacement; use `render_html.py` directly.)
   HTML-escapes `<`/`>`/`&` and backslash-escapes any `|` (which would otherwise
   break the markdown table row).
 - Version cell shows a small colored badge (green=stable, blue=rc, yellow=beta, orange=alpha, grey=dev).
-- Controls bar has stability checkboxes (`.stab-cb`) and security coverage
-  checkboxes (`.sec-cb`), all checked by default; unchecking a value hides
-  matching rows.
-- Combined filter: row visible when `nameMatches(row) AND stabChecked.has(row.dataset.stability) AND secChecked.has(row.dataset.security)`.
+- Categories cell (last column) renders each category as a `.cat-pill` span;
+  `data-val` is the categories joined into one string so the column still sorts.
+- Controls bar (modules) has stability checkboxes (`.stab-cb`), security
+  checkboxes (`.sec-cb`), and category checkboxes (`.cat-cb`), all checked by
+  default; unchecking a value hides matching rows. The recipes controls have a
+  name filter plus their own `.cat-cb` category checkboxes (no stability/security).
+  Category checkboxes are scoped per tab (`#panel-modules .cat-cb` /
+  `#panel-recipes .cat-cb`), so the tabs filter independently; only categories
+  actually present in a tab get a checkbox.
+- Combined modules filter: row visible when `nameMatches(row) AND
+  stabChecked.has(stability) AND secChecked.has(security) AND catMatch`, where
+  `catMatch` is **match-any** — true when at least one of the row's categories
+  is checked (or the row has none). Recipes filter = `nameMatches AND catMatch`.
 - **Tabbed Modules/Recipes interface:** two `.tab-btn` buttons toggle two
   `.tab-panel` divs (`#panel-modules`, `#panel-recipes`), each with its own
   `<table>`/`<tbody>` (`#tbl-modules`/`#tbody-modules`,
   `#tbl-recipes`/`#tbody-recipes`) and its own "no results" message. Only
-  the modules panel has the stability/security checkboxes — the recipes
-  panel has just a name-filter input, since neither concept applies to
-  recipes.
+  the modules panel has the stability/security checkboxes (neither concept
+  applies to recipes); **both** panels have a name filter and a category filter.
 - The column-sort mechanics (`sortTable`/`cellVal`/header-click-wiring) are
   factored into a `makeSorter(theadSel, tbodySel)` factory shared by both
   tables — that logic is genuinely identical. The **filter** logic is
-  deliberately *not* shared: `applyModulesFilter()` keeps the existing
-  name+stability+security logic untouched, `applyRecipesFilter()` is a new,
-  simpler name-only function — forcing the simpler recipes filter through
-  the modules' shape would add a pointless conditional to already-tested
-  code.
-- The modules table defaults to sorting by usage (col 5) descending on
-  load, matching the row order the Python side already produced. The
-  recipes table defaults to sorting by Packagist downloads (col 3)
-  descending on load (`recipesSorter.sortTable(3, 'num')`), matching the
-  Python-side sort order.
+  deliberately *not* shared: `applyModulesFilter()` does
+  name+stability+security+category, `applyRecipesFilter()` does name+category —
+  forcing the simpler recipes filter through the modules' shape would add
+  pointless conditionals to already-tested code.
+- The modules table defaults to sorting by usage (col 4) descending on load
+  (`modulesSorter.sortTable(4, 'num')`), matching the row order the Python side
+  already produced. The recipes table defaults to Packagist downloads (col 3)
+  descending (`recipesSorter.sortTable(3, 'num')`). The Categories column is
+  col 5 in both tables — appended last, so these indices are unchanged.
 
 Design notes for `render_html.py`:
 - CSS and JS are stored as regular Python string variables (not f-strings) to
@@ -525,22 +537,24 @@ Design notes for `render_html.py`:
   `<td>`. Sorting never reads rendered text — it reads the raw value:
   - Label (col 0): plain text (for both sorting and the name filter) — the
     `description` sub-line is rendered inside the same `<td>` but is **not**
-    part of `data-val`, so it never affects sorting or filtering
-  - Machine name (col 1): plain text, not linked
-  - Version (col 2): raw semver string; `""` for missing (sorts to bottom)
-  - Released (col 3): `YYYY-MM-DD` string; `""` for `"—"` (sorts to bottom)
-  - Security coverage (col 4): `"1"`/`"0"`, sorted numerically
-  - Drupal.org usage (col 5): integer as string; `""` for unknown (treated as -Infinity)
+    part of `data-val`, so it never affects sorting or filtering (the machine
+    name is not its own column — it's the link's `title` attribute)
+  - Version (col 1): raw semver string; `""` for missing (sorts to bottom)
+  - Released (col 2): `YYYY-MM-DD` string; `""` for `"—"` (sorts to bottom)
+  - Security coverage (col 3): `"1"`/`"0"`, sorted numerically
+  - Drupal.org usage (col 4): integer as string; `""` for unknown (treated as -Infinity)
+  - Categories (col 5): the categories joined into one string; sorts as text
 - Recipe table `data-val` attributes:
   - Label (col 0): plain text (description sub-line excluded, same as modules)
   - Version (col 1): raw semver string; `""` for missing
   - Released (col 2): `YYYY-MM-DD` string; `""` for `"—"`
   - Packagist downloads (col 3): integer as string; `""` for unknown (treated as -Infinity)
   - Packagist stars (col 4): integer as string; `""` for unknown (treated as -Infinity)
+  - Categories (col 5): the categories joined into one string; sorts as text
 - Sort state is tracked with `sortCol` (column index, -1 = none) and
   `sortDir` (1 = asc, -1 = desc). First click on a text column → ascending;
   first click on a numeric column → descending. Re-click reverses. Default
-  sort on load is column 5 (usage) for modules, column 3 (downloads) for
+  sort on load is column 4 (usage) for modules, column 3 (downloads) for
   recipes — both descending.
 - `html.escape()` is used on all row values to prevent XSS from any
   unexpected characters in API responses.
@@ -558,6 +572,64 @@ Design notes for `render_html.py`:
   belong to the same filter state.
 
 ---
+
+## Categorization
+
+Every module and recipe carries a `categories` list (multiple allowed) — see
+the JSON schema below. Classification is a deterministic, rule-based keyword
+matcher living entirely in `drupal_ai_dependents.py` (the *Categorization*
+section, right after `detect_stability`). No network, no AI, no new file: an
+earlier draft put this in a standalone `categorize.py`, but it was folded into
+the main script so there's a single place that owns the taxonomy.
+
+**Taxonomy — 18 categories** (`CATEGORIES` constant, canonical display order):
+Tool, Cloud Providers, Local Providers, Editorial, Content, Search, Chat,
+Automation, Agents, Analytics, Media, Vector Database, SEO & Metadata,
+Translation, Safety & Governance, Accessibility, Developer Tools,
+Evaluation & Testing. `render_html.py` keeps a local `CATEGORY_ORDER` mirroring
+this (like `STABILITY_ORDER`/`SECURITY_ORDER`) so the renderer stays
+import-free; anything not in that list still renders, it just sorts last.
+
+**`detect_categories(label, description, machine_name)`:**
+- Builds `name_hay` (bare machine name + label) and `full_hay` (+ description),
+  both `html.unescape()`d and lowercased.
+- `_OVERRIDES[bare_machine_name]` short-circuits everything (used verbatim) —
+  for the null-description packages (`drup_aid`, `ai_audio_translate`,
+  `quiz_questions_by_eca_and_ai`) and stubborn cases (`agui`, `ai_context`, …).
+- Otherwise, for each category in `CATEGORIES` order, it matches when no
+  `_EXCLUDES` term appears in `full_hay` **and** (a `_KEYWORDS_NAME` term hits
+  `name_hay` **or** a `_KEYWORDS_ANY` term hits `full_hay`). Iterating in
+  canonical order keeps the returned list stable and deduped.
+- Returns `["Uncategorized"]` (`UNCATEGORIZED`) when nothing matches.
+
+**Why two keyword tables:** `_KEYWORDS_ANY` matches anywhere; `_KEYWORDS_NAME`
+matches only in the name. Noisy categories (Agents, Providers) use NAME-scoping
+so a Tool whose description merely says "for use with AI agents" isn't tagged
+Agents — this is exactly why `"ai agent"` is **not** an ANY keyword for Agents
+(it re-introduced that over-tagging during development and was removed; rely on
+the name-scoped `"agent"`). `_EXCLUDES` keeps vector-DB providers and local
+runtimes (Ollama/vLLM/llama.cpp/LM Studio/AnythingLLM/browser) out of
+`Cloud Providers` — a provider is cloud **or** local **or** a VDB, not several.
+
+**Running it:** `apply_categories(payload)` is called automatically right before
+the JSON is written on a normal `--json` run, so fresh output is always
+categorized. `--categorize FILE` is a network-free fast path
+(`recategorize_file()`) that re-derives categories on an existing `results.json`
+**in place** (no `-o`) and prints a per-category summary + the `Uncategorized`
+list to stderr — the loop for tuning the keyword tables without repeating the
+~20-25 min crawl. After tuning, re-render with `render_md.py` / `render_html.py`.
+
+**Renderers:** both show a Categories column (appended as the **last** column so
+the existing `data-col` indices and initial-sort calls are untouched).
+`render_md.py` joins the list comma-separated (`_categories_cell`, escaped like
+`_label_cell`). `render_html.py` renders `.cat-pill` spans, puts a
+pipe-delimited `data-categories` on each `<tr>` (the recipe rows' first data
+attribute), and adds a per-tab category checkbox filter (`.cat-cb`, scoped by
+`#panel-modules` / `#panel-recipes`) that is **match-any**: a row stays visible
+while at least one of its categories is still checked. Because a package can
+have several categories (unlike single-valued stability/security), this filter
+deliberately differs from — and is not shared with — the stability/security
+filter logic.
 
 ## JSON output and rendering pipeline
 
@@ -586,7 +658,8 @@ The payload is written after the sort step:
       "release_date":     "2026-02-25",
       "usage":            13133,
       "security_covered": true,
-      "stability":        "stable"
+      "stability":        "stable",
+      "categories":       ["Cloud Providers"]
     }
   ],
   "recipes": [
@@ -599,7 +672,8 @@ The payload is written after the sort step:
       "release_date": "2026-02-12",
       "stability":    "stable",
       "downloads":    1234,
-      "stars":        56
+      "stars":        56,
+      "categories":   ["Media", "Search"]
     }
   ]
 }
@@ -635,11 +709,17 @@ last), then alphabetically by `label` as a tiebreaker:
 - `stability` is computed by `detect_stability(version)` in the main script using
   `_STABILITY_RE = re.compile(r'-(?P<level>alpha|beta|rc|dev)', re.IGNORECASE)`.
   Empty/missing version strings default to `"stable"`.
+- `categories` is a **list** (multiple allowed) computed by
+  `detect_categories(label, description, machine_name)` and applied to the whole
+  payload by `apply_categories(payload)` just before the JSON is written.
+  Present on **both** module and recipe rows; `["Uncategorized"]` when no rule
+  matches. See the Categorization section below.
 
 Old `results.json` files without the `stability` field are handled gracefully
-in `render_html.py` via `r.get("stability", "stable")`, and files predating
-the `description` field via `r.get("description")` in both renderers (a missing
-description simply renders no sub-line). Older files predating the
+in `render_html.py` via `r.get("stability", "stable")`, files predating the
+`description` field via `r.get("description")`, and files predating the
+`categories` field via `r.get("categories", [])` (renders no category cell) —
+all in both renderers. Older files predating the
 `label`/`machine_name`(composer-name)/`security_covered` fields are
 **not** compatible with the current renderers — re-run the main script to
 regenerate `results.json` before re-rendering.
@@ -651,9 +731,10 @@ than crashing.
 
 Recommended workflow:
 ```bash
-python3 drupal_ai_dependents.py --json results.json   # slow, once
-python3 render_md.py results.json -o results.md       # fast, re-run anytime
-python3 render_html.py results.json -o results.html   # fast, re-run anytime
+python3 drupal_ai_dependents.py --json results.json       # slow, once (output already categorized)
+python3 drupal_ai_dependents.py --categorize results.json # fast — only when tuning category rules
+python3 render_md.py results.json -o results.md           # fast, re-run anytime
+python3 render_html.py results.json -o results.html       # fast, re-run anytime
 ```
 
 ---
@@ -662,11 +743,14 @@ python3 render_html.py results.json -o results.html   # fast, re-run anytime
 
 | File | Purpose |
 |------|---------|
-| `drupal_ai_dependents.py` | Main script — data collection and candidate verification |
-| `render_md.py` | Markdown renderer — reads `results.json`, outputs markdown table |
-| `render_html.py` | HTML renderer — reads `results.json`, outputs HTML with stability filter |
+| `drupal_ai_dependents.py` | Main script — data collection, candidate verification, and categorization (`detect_categories` / `apply_categories` / `--categorize`) |
+| `render_md.py` | Markdown renderer — reads `results.json`, outputs markdown table (incl. Categories column) |
+| `render_html.py` | HTML renderer — reads `results.json`, outputs HTML with stability/security/category filters |
 | `README.md` | User-facing documentation (usage, limitations, how it works) |
 | `CLAUDE.md` | This file — context for future Claude Code sessions |
 
 Recipe support (modules-and-recipes) was added entirely within these four
-files — no new files were introduced.
+files — no new files were introduced. The categorization system was likewise
+added within `drupal_ai_dependents.py` and the two renderers (an early
+standalone `categorize.py` draft was folded into the main script) — still no
+new files.

@@ -1,6 +1,6 @@
 # Drupal AI Dependents
 
-`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables.
+`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables. Every module and recipe is also tagged with one or more **categories** (Tool, Cloud Providers, Search, Chat, Agents, Media, …) derived from its name and description — both renderers show these in a Categories column, and the HTML page lets you filter by them.
 
 ## Requirements
 
@@ -16,7 +16,13 @@ python3 drupal_ai_dependents.py --json results.json
 # Render from the saved JSON (fast — no network calls, re-run anytime)
 python3 render_md.py results.json -o results.md
 python3 render_html.py results.json -o index.html
+
+# Re-apply the category rules to an existing results.json without re-crawling
+# (fast, no network) — use this to iterate on the keyword rules
+python3 drupal_ai_dependents.py --categorize results.json
 ```
+
+A normal `--json` run already tags every module and recipe with its categories, so you only need `--categorize` when tuning the rules — see [Categorization](#categorization) below.
 
 `drupal_ai_dependents.py` only ever writes JSON (to a file with `--json FILE`, or to stdout if `--json` is omitted) — it has no markdown or HTML rendering of its own. An earlier version did, via `-o`/`--output` and `--html` flags, but that inline rendering fell out of sync with `render_html.py` every time the real renderer gained a feature (recipes, stability badges, filter checkboxes never made it into the inline version). Those flags are gone; `render_md.py` and `render_html.py` are now the only renderers.
 
@@ -40,7 +46,8 @@ python3 render_html.py results.json -o index.html
       "release_date": "2026-02-25",
       "usage": 13133,
       "security_covered": true,
-      "stability": "stable"
+      "stability": "stable",
+      "categories": ["Cloud Providers"]
     }
   ],
   "recipes": [
@@ -53,7 +60,8 @@ python3 render_html.py results.json -o index.html
       "release_date": "2026-02-12",
       "stability": "stable",
       "downloads": 1234,
-      "stars": 56
+      "stars": 56,
+      "categories": ["Media", "Search"]
     }
   ]
 }
@@ -66,26 +74,27 @@ python3 render_html.py results.json -o index.html
 - `usage` is the summed `project_usage` install count. **Recipe rows have no `usage` key at all**, since Drupal.org's API has no usage-tracking data for recipes whatsoever (confirmed: the field is entirely absent from the API response, not zero).
 - `downloads` and `stars` come from the same request to `packagist.org/packages/drupal/{name}.json` — `package.downloads.total` and `package.favers` respectively. (`favers` is Packagist's internal field name for its star count.) **Module rows have neither key** — modules live only on `packages.drupal.org`, not the main Packagist registry. Both are `null` if the stats call failed; `0` is a real zero (package exists but has no downloads/stars yet).
 - `stability` is derived from the version string: `stable`, `rc`, `beta`, `alpha`, or `dev`.
+- `categories` is a list of one or more categories derived from the label, description and machine name (see [Categorization](#categorization)). Present on both module and recipe rows. Packages that match no rule get `["Uncategorized"]`.
 - Recipe rows are sorted by `downloads` descending (`null`/0 last), then alphabetically by `label` for ties.
 
-Older `results.json` files from before recipe support was added (no `"recipes"` key at all) are still readable — both renderers fall back to an empty list via `payload.get("recipes", [])`.
+Older `results.json` files from before recipe support was added (no `"recipes"` key at all) are still readable — both renderers fall back to an empty list via `payload.get("recipes", [])`. Files predating the `"categories"` key are also fine — the renderers read it via `.get("categories", [])`, rendering no category cell; run `--categorize` to add it.
 
 ### Markdown
 
 Two sections, each with their own table. Modules is sorted by active installs (descending):
 
-| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |
-|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|
-| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 |
-| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 |
+| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage | Categories |
+|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|------------|
+| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 | Cloud Providers |
+| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 | Media, Accessibility |
 
-The Label column links to the module's project page, with the project's description (when present) shown as a small second line beneath the link (`<br><sub>…</sub>`). Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
+The Label column links to the module's project page, with the project's description (when present) shown as a small second line beneath the link (`<br><sub>…</sub>`). The Categories column lists the project's categories, comma-separated. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
 
 Recipes is sorted by Packagist downloads descending, with no Security coverage or Drupal.org usage columns:
 
-| Label | machine name | URL | Latest Version | Release Date | Packagist downloads | Packagist stars |
-|-------|--------------|-----|:--------------:|:------------:|--------------------:|----------------:|
-| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 | 1,234 | 56 |
+| Label | machine name | URL | Latest Version | Release Date | Packagist downloads | Packagist stars | Categories |
+|-------|--------------|-----|:--------------:|:------------:|--------------------:|----------------:|------------|
+| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 | 1,234 | 56 | Media |
 
 ### HTML
 
@@ -93,6 +102,7 @@ Recipes is sorted by Packagist downloads descending, with no Security coverage o
 
 - **Sort by any column** — click a column header to sort ascending; click again to sort descending. Sort direction is indicated by ▲/▼ in the header.
 - **Filter by name** — type in the search box to instantly hide non-matching rows.
+- **Filter by category** — a checkbox per category present in that tab (all checked by default); unchecking one hides rows tagged with it. Because a project can have several categories, a row stays visible as long as **at least one** of its categories is still checked. A Categories column shows each project's categories as pills.
 
 The Modules tab additionally supports:
 
@@ -106,6 +116,50 @@ The Recipes tab has no stability or security checkboxes — neither concept appl
 Drupal **recipes** (project type `drupal-recipe`, applied via `drush recipe` rather than installed as a module) are tracked separately from modules because they genuinely have neither install-tracking nor a meaningful security-advisory status — not because the data is missing, but because it doesn't exist for that project type. Confirmed live: Drupal.org's API returns no `project_usage` field at all for a recipe (absent, not zero).
 
 Recipes also live on a different package registry entirely: they're not on packages.drupal.org (the source for everything else in this script), only on the main Packagist registry (`packagist.org`/`repo.packagist.org`). Because they're on Packagist, their total download counts and star counts **are** available via `packagist.org/packages/drupal/{name}.json` and are shown in the Recipes table as substitute popularity signals. Both values come from the same API request. Note that downloads count Composer install events (cumulative total), not active sites like the module usage figures; stars count Packagist ★ events. See [How it works](#how-it-works) below for the discovery/verification details.
+
+## Categorization
+
+Every module and recipe is tagged with one or more **categories**, derived from
+its label, description and machine name by a deterministic, rule-based
+classifier in `drupal_ai_dependents.py` (no network calls, no AI — the same
+spirit as the stability detection). A package can belong to several categories
+at once (for example a vector-DB provider is both `Vector Database` and
+`Search`), so `categories` is always a list. Anything that matches no rule is
+tagged `["Uncategorized"]` — kept visible on purpose so coverage gaps are easy
+to spot.
+
+The taxonomy (18 categories):
+
+> Tool · Cloud Providers · Local Providers · Editorial · Content · Search ·
+> Chat · Automation · Agents · Analytics · Media · Vector Database ·
+> SEO & Metadata · Translation · Safety & Governance · Accessibility ·
+> Developer Tools · Evaluation & Testing
+
+**How the rules work.** Each category has keyword lists matched as plain
+lowercased substrings (defined in the *Categorization* section of
+`drupal_ai_dependents.py`):
+
+- Most keywords are matched against the **full text** (machine name + label +
+  description).
+- "Noisy" categories (Agents, Providers) also have **name-only** keywords,
+  matched against just the machine name and label — so a Tool whose description
+  merely mentions "for use with AI agents" isn't miscategorised as an Agent.
+- An **excludes** list vetoes a match (e.g. vector-DB providers and local
+  runtimes like Ollama are kept out of `Cloud Providers`).
+- An **overrides** map assigns categories by machine name verbatim, for the few
+  packages with no description to match on, or any stubborn edge cases.
+
+**Tuning the rules.** Because classification is pure text processing over data
+that's already in `results.json`, you don't need to re-crawl to change it. Edit
+the keyword tables / overrides, then re-apply them in under a second:
+
+```bash
+python3 drupal_ai_dependents.py --categorize results.json
+```
+
+This prints a per-category count summary and a list of any `Uncategorized`
+packages to `stderr`, then rewrites the file in place. Re-render afterwards with
+`render_md.py` / `render_html.py`.
 
 ## How it works
 

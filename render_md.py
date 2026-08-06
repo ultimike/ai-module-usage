@@ -40,6 +40,18 @@ def _label_cell(r: dict) -> str:
     return cell
 
 
+def _categories_cell(r: dict) -> str:
+    """Build the categories table cell: comma-separated category names.
+
+    Escaped and pipe-guarded like _label_cell so it can't break the table row.
+    Reads categories via .get() so pre-category JSON renders a plain dash.
+    """
+    cats = r.get("categories", [])
+    if not cats:
+        return "—"
+    return html.escape(", ".join(cats), quote=False).replace("|", "\\|")
+
+
 def render_md(payload: dict) -> str:
     """Return a Markdown string from a results.json payload."""
     rows         = payload["modules"]
@@ -55,8 +67,8 @@ def render_md(payload: dict) -> str:
         f" Drupal {v_label} compatible · all stability levels*\n",
         "Sponsored by DrupalEasy's [*Responsible Drupal AI Basics*](https://drupaleasy.com/rdab) course\n",
         "## Modules\n",
-        "| Label | URL | Latest Version | Release Date | Security coverage | Drupal.org usage |",
-        "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|",
+        "| Label | URL | Latest Version | Release Date | Security | Usage | Categories |",
+        "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|------------|",
     ]
     for r in rows:
         usage_str = f"{r['usage']:,}" if r["usage"] else "—"
@@ -70,6 +82,7 @@ def render_md(payload: dict) -> str:
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {security_str} | {usage_str} |"
+            f" {_categories_cell(r)} |"
         )
 
     lines.append(
@@ -83,8 +96,8 @@ def render_md(payload: dict) -> str:
     # status, so those two columns are omitted. Packagist total downloads are
     # available and provide a comparable popularity signal.
     lines.append("\n## Recipes\n")
-    lines.append("| Label | URL | Latest Version | Release Date | Packagist downloads | Packagist stars |")
-    lines.append("|-------|-----|:--------------:|:------------:|--------------------:|----------------:|")
+    lines.append("| Label | URL | Latest Version | Release Date | Packagist downloads | Packagist stars | Categories |")
+    lines.append("|-------|-----|:--------------:|:------------:|--------------------:|----------------:|------------|")
     for r in recipe_rows:
         downloads = r.get("downloads")
         downloads_str = f"{downloads:,}" if downloads is not None else "—"
@@ -93,6 +106,7 @@ def render_md(payload: dict) -> str:
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {downloads_str} | {stars_str} |"
+            f" {_categories_cell(r)} |"
         )
 
     return "\n".join(lines) + "\n"
