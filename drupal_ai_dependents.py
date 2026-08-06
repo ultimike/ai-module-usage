@@ -663,6 +663,18 @@ _INFO_DESCRIPTION_RE = re.compile(r'^description:\s*(.+?)\s*$', re.MULTILINE)
 # single-line regex above can't capture — treat that as "no description".
 _YAML_BLOCK_INDICATOR_RE = re.compile(r'^[|>][+-]?\d*$')
 
+# Descriptions come straight from info.yml/recipe.yml and can run long, so
+# set a maximum length.
+DESCRIPTION_MAX_LEN = 200
+
+
+def _truncate_description(text: str, limit: int = DESCRIPTION_MAX_LEN) -> str:
+    """Collapse whitespace and truncate long text descriptions with a ..."""
+    text = " ".join(text.split())
+    if len(text) <= limit:
+        return text
+    return text[:limit - 3].rstrip() + "..."
+
 
 def _strip_yaml_quotes(value: str) -> str:
     """Strip a single layer of matching quotes from a YAML scalar."""
@@ -677,7 +689,8 @@ def _parse_info_yml(text: str) -> tuple[str | None, str | None]:
 
     Both are optional top-level keys. Returns (label_or_None,
     description_or_None) with one layer of YAML quotes stripped from each and
-    block-scalar placeholders discarded.
+    block-scalar placeholders discarded. The description is truncated to
+    DESCRIPTION_MAX_LEN here so renderers never have to.
     """
     name_match = _INFO_NAME_RE.search(text)
     desc_match = _INFO_DESCRIPTION_RE.search(text)
@@ -689,6 +702,8 @@ def _parse_info_yml(text: str) -> tuple[str | None, str | None]:
         description = _strip_yaml_quotes(desc_match.group(1).strip())
         if _YAML_BLOCK_INDICATOR_RE.match(description):
             description = None
+        else:
+            description = _truncate_description(description)
 
     return (label or None, description or None)
 
