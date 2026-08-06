@@ -1,5 +1,5 @@
 {
-  "generated": "2026-08-05",
+  "generated": "2026-08-06",
   "drupal_versions": [
     10,
     11
@@ -67,8 +67,8 @@
       "label": "amazee.ai AI Provider",
       "description": "This enables the use of amazee.ai AI for the AI module.",
       "url": "https://www.drupal.org/project/ai_provider_amazeeio",
-      "version": "1.3.5",
-      "release_date": "2026-08-04",
+      "version": "1.4.0",
+      "release_date": "2026-08-05",
       "usage": 4943,
       "security_covered": true,
       "stability": "stable",
@@ -939,21 +939,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_rag_search_chat",
-      "label": "AI RAG Search Chat",
-      "description": "AI-powered search and chat interface with RAG (Retrieval-Augmented Generation)",
-      "url": "https://www.drupal.org/project/ai_rag_search_chat",
-      "version": "1.0.7",
-      "release_date": "2026-07-14",
-      "usage": 25,
-      "security_covered": false,
-      "stability": "stable",
-      "categories": [
-        "Search",
-        "Chat"
-      ]
-    },
-    {
       "machine_name": "drupal/ai_figma",
       "label": "AI Figma",
       "description": "Reads live Figma design context via the Figma REST API and exposes it to Drupal AI Agent tools, so the Drupal Canvas AI assistant can build from a real design. Config-driven, theme- and framework-agnostic.",
@@ -1015,8 +1000,8 @@
       "label": "AI Agent Modes",
       "description": "Adds a \"Mode\" selector that steers an AI agent toward a curated subset of its sub-agents by prepending a scoped instruction, so the orchestrator routes work to the right sub-agent.",
       "url": "https://www.drupal.org/project/ai_agent_modes",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-07-28",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-08-05",
       "usage": 20,
       "security_covered": false,
       "stability": "alpha",
@@ -1146,8 +1131,8 @@
       "label": "AI Image Studio",
       "description": "Conversational image and video generation using Drupal AI providers.",
       "url": "https://www.drupal.org/project/ai_image_studio",
-      "version": "1.0.0-beta3",
-      "release_date": "2026-08-04",
+      "version": "1.0.0-beta4",
+      "release_date": "2026-08-05",
       "usage": 13,
       "security_covered": false,
       "stability": "beta",
@@ -1931,23 +1916,6 @@
       "stability": "stable",
       "categories": [
         "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/smartlinker_ai",
-      "label": "SmartLinker AI",
-      "description": "Provides an additional feature in the AI CKEditor plugin, allowing editors to prompt AI to analyze content and automatically identify and attach internal links.",
-      "url": "https://www.drupal.org/project/smartlinker_ai",
-      "version": "1.0.0",
-      "release_date": "2026-03-23",
-      "usage": 2,
-      "security_covered": true,
-      "stability": "stable",
-      "categories": [
-        "Editorial",
-        "Content",
-        "Automation",
-        "Analytics"
       ]
     },
     {
@@ -2772,38 +2740,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_revision_assistant",
-      "label": "AI Revision Assistant",
-      "description": "AI-driven content revision history analysis with semantic diffs, regression detection, and editorial suggestions.",
-      "url": "https://www.drupal.org/project/ai_revision_assistant",
-      "version": "1.0.1-alpha1",
-      "release_date": "2026-01-29",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "categories": [
-        "Editorial",
-        "Content",
-        "Search",
-        "Analytics",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/flowspeech",
-      "label": "FlowSpeech",
-      "description": "Provides a FlowSpeech text-to-speech provider for the AI module.",
-      "url": "https://www.drupal.org/project/flowspeech",
-      "version": "1.0.0",
-      "release_date": "2026-07-30",
-      "usage": null,
-      "security_covered": false,
-      "stability": "stable",
-      "categories": [
-        "Media"
-      ]
-    },
-    {
       "machine_name": "drupal/ai_grounding",
       "label": "AI Grounding",
       "description": "Runtime, output-side faithfulness verifier for RAG and AI chat answers. Scores how well each claim is supported by retrieved sources and can force abstain or hold-for-review when grounding is weak.",
@@ -2816,6 +2752,23 @@
       "categories": [
         "Search",
         "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/smartlinker_ai",
+      "label": "SmartLinker AI",
+      "description": "Provides an additional feature in the AI CKEditor plugin, allowing editors to prompt AI to analyze content and automatically identify and attach internal links.",
+      "url": "https://www.drupal.org/project/smartlinker_ai",
+      "version": "1.0.0",
+      "release_date": "2026-03-23",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "categories": [
+        "Editorial",
+        "Content",
+        "Automation",
+        "Analytics"
       ]
     },
     {
@@ -3164,7 +3117,7 @@
       "version": "2.1.3",
       "release_date": "2026-06-01",
       "stability": "stable",
-      "downloads": 178585,
+      "downloads": 179224,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3180,7 +3133,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 23061,
+      "downloads": 23325,
       "stars": 1,
       "categories": [
         "Editorial"
@@ -3194,7 +3147,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 22655,
+      "downloads": 22918,
       "stars": 1,
       "categories": [
         "Content",
@@ -3209,7 +3162,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 22649,
+      "downloads": 22912,
       "stars": 1,
       "categories": [
         "Automation",
@@ -3225,7 +3178,7 @@
       "version": "1.0.4",
       "release_date": "2025-11-17",
       "stability": "stable",
-      "downloads": 18853,
+      "downloads": 18927,
       "stars": 1,
       "categories": [
         "Chat",
@@ -3240,7 +3193,7 @@
       "version": "1.0.2",
       "release_date": "2025-07-22",
       "stability": "stable",
-      "downloads": 18708,
+      "downloads": 18782,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3256,7 +3209,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 3749,
+      "downloads": 3955,
       "stars": 0,
       "categories": [
         "Search",
@@ -3271,7 +3224,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 3714,
+      "downloads": 3918,
       "stars": 0,
       "categories": [
         "Safety & Governance"
@@ -3285,7 +3238,7 @@
       "version": "1.0.0-beta1",
       "release_date": "2026-07-09",
       "stability": "beta",
-      "downloads": 3549,
+      "downloads": 3753,
       "stars": 1,
       "categories": [
         "Analytics",
@@ -3300,7 +3253,7 @@
       "version": "1.3.0",
       "release_date": "2026-03-26",
       "stability": "stable",
-      "downloads": 1897,
+      "downloads": 1974,
       "stars": 0,
       "categories": [
         "Cloud Providers",
@@ -3315,7 +3268,7 @@
       "version": "1.0.0-alpha2",
       "release_date": "2026-07-26",
       "stability": "alpha",
-      "downloads": 323,
+      "downloads": 513,
       "stars": 0,
       "categories": [
         "Content",
@@ -3415,7 +3368,7 @@
       "version": "1.0.0-beta1",
       "release_date": "2026-05-17",
       "stability": "beta",
-      "downloads": 61,
+      "downloads": 62,
       "stars": 0,
       "categories": [
         "Developer Tools"
