@@ -24,5 +24,9 @@
       "Bash(npm ls *)",
       "Bash(find / -maxdepth 4 -iname \"jsdom\" -type d)"
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/statusline.sh\""
   }
 }
