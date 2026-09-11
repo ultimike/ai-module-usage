@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-10",
+  "generated": "2026-09-11",
   "drupal_versions": [
     10,
     11
@@ -263,8 +263,8 @@
     },
     {
       "machine_name": "drupal/varbase_ai_figma",
-      "label": "Varbase Ai Figma",
-      "description": null,
+      "label": "Varbase AI Figma",
+      "description": "Varbase customization of AI Figma: tunes the general Figma-to-Canvas engine for the Bootstrap 5.3 vartheme_bs5 theme and wires Context Control Center (ai_context). Configures layouts, component cho...",
       "url": "https://www.drupal.org/project/varbase_ai_figma",
       "version": "1.0.3",
       "release_date": "2026-09-08",
@@ -306,20 +306,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_vdb_provider_pinecone",
-      "label": "Pinecone Serverless VDB Provider",
-      "description": "This enables the use of Pinecone Serverless VDB in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_pinecone",
-      "version": "1.1.0-beta5",
-      "release_date": "2026-07-12",
-      "usage": 363,
-      "security_covered": true,
-      "stability": "beta",
-      "categories": [
-        "Vector Database"
-      ]
-    },
-    {
       "machine_name": "drupal/ai_content_suggestions",
       "label": "AI Content Suggestions",
       "description": "Allows a configured AI to be passed content to suggest alterations",
@@ -345,20 +331,6 @@
       "stability": "stable",
       "categories": [
         "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_vdb_provider_postgres",
-      "label": "Postgres VDB Provider",
-      "description": "This enables the use of a Postgres (pgvector) VDB in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_postgres",
-      "version": "1.0.0-alpha4",
-      "release_date": "2026-09-10",
-      "usage": 276,
-      "security_covered": false,
-      "stability": "alpha",
-      "categories": [
-        "Vector Database"
       ]
     },
     {
@@ -691,20 +663,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_translate_textfield",
-      "label": "AI Textfield Translation",
-      "description": "Provides AI textfield translation functionality.",
-      "url": "https://www.drupal.org/project/ai_translate_textfield",
-      "version": "2.0.0-alpha2",
-      "release_date": "2025-10-17",
-      "usage": 57,
-      "security_covered": false,
-      "stability": "alpha",
-      "categories": [
-        "Translation"
-      ]
-    },
-    {
       "machine_name": "drupal/analyze_ai_brand_voice",
       "label": "Analyze AI Brand Voice",
       "description": "Analyzes content for ai brand voice consistency using AI.",
@@ -851,8 +809,8 @@
     },
     {
       "machine_name": "drupal/varbase_ai",
-      "label": "Varbase Ai",
-      "description": null,
+      "label": "Varbase AI",
+      "description": "Provides a collection of recipes for AI tools, empowering editorial teams with a wide range of advanced Artificial Intelligence (AI) capabilities. Enables seamless management of custom AI integrati...",
       "url": "https://www.drupal.org/project/varbase_ai",
       "version": "2.0.10",
       "release_date": "2026-09-08",
@@ -860,7 +818,7 @@
       "security_covered": true,
       "stability": "stable",
       "categories": [
-        "Uncategorized"
+        "Editorial"
       ]
     },
     {
@@ -1659,8 +1617,8 @@
       "label": "AI Audio Field",
       "description": "Adds a more complex audio field that can be created from text-to-speech models.",
       "url": "https://www.drupal.org/project/ai_audio_field",
-      "version": "1.0.0-rc1",
-      "release_date": "2025-03-19",
+      "version": "1.0.0-rc2",
+      "release_date": "2026-09-11",
       "usage": 4,
       "security_covered": false,
       "stability": "rc",
@@ -1756,22 +1714,6 @@
       "categories": [
         "Automation",
         "SEO & Metadata"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_rag_api",
-      "label": "AI RAG API",
-      "description": "Exposes an OpenAI-compatible chat completions API with Retrieval Augmented Generation (RAG) for headless Drupal.",
-      "url": "https://www.drupal.org/project/ai_rag_api",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-07-06",
-      "usage": 4,
-      "security_covered": false,
-      "stability": "alpha",
-      "categories": [
-        "Cloud Providers",
-        "Search",
-        "Chat"
       ]
     },
     {
@@ -2230,7 +2172,7 @@
       "version": "1.0.0",
       "release_date": "2026-08-24",
       "usage": 1,
-      "security_covered": false,
+      "security_covered": true,
       "stability": "stable",
       "categories": [
         "Uncategorized"
@@ -2735,6 +2677,34 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_vdb_provider_pinecone",
+      "label": "Pinecone Serverless VDB Provider",
+      "description": "This enables the use of Pinecone Serverless VDB in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_pinecone",
+      "version": "1.1.0-beta5",
+      "release_date": "2026-07-12",
+      "usage": null,
+      "security_covered": false,
+      "stability": "beta",
+      "categories": [
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_vdb_provider_postgres",
+      "label": "Postgres VDB Provider",
+      "description": "This enables the use of a Postgres (pgvector) VDB in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_postgres",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-09-10",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "categories": [
+        "Vector Database"
+      ]
+    },
+    {
       "machine_name": "drupal/smart_paste",
       "label": "Smart Paste",
       "description": "AI-powered form filling: automatically extracts and populates form fields from unstructured clipboard data.",
@@ -3118,20 +3088,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_chatbot_assistant_ui",
-      "label": "AI Chatbot Assistant UI",
-      "description": "assistant-ui (React) chat frontend for the AI Assistant API.",
-      "url": "https://www.drupal.org/project/ai_chatbot_assistant_ui",
-      "version": "1.0.0-beta4",
-      "release_date": "2026-09-08",
-      "usage": null,
-      "security_covered": false,
-      "stability": "beta",
-      "categories": [
-        "Chat"
-      ]
-    },
-    {
       "machine_name": "drupal/did_ai_provider",
       "label": "D‑ID AI Provider",
       "description": "Provides a D‑ID provider for the AI module and AI Automator (text/audio to talking‑head video).",
@@ -3160,6 +3116,20 @@
       "categories": [
         "Media",
         "Accessibility"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_chatbot_assistant_ui",
+      "label": "AI Chatbot Assistant UI",
+      "description": "assistant-ui (React) chat frontend for the AI Assistant API.",
+      "url": "https://www.drupal.org/project/ai_chatbot_assistant_ui",
+      "version": "1.0.0-beta5",
+      "release_date": "2026-09-11",
+      "usage": null,
+      "security_covered": false,
+      "stability": "beta",
+      "categories": [
+        "Chat"
       ]
     },
     {
@@ -3421,7 +3391,7 @@
       "version": "2.1.3",
       "release_date": "2026-06-01",
       "stability": "stable",
-      "downloads": 196140,
+      "downloads": 197116,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3437,7 +3407,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 28574,
+      "downloads": 28609,
       "stars": 1,
       "categories": [
         "Editorial"
@@ -3451,7 +3421,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 28167,
+      "downloads": 28200,
       "stars": 1,
       "categories": [
         "Content",
@@ -3466,7 +3436,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 28161,
+      "downloads": 28194,
       "stars": 1,
       "categories": [
         "Automation",
@@ -3482,7 +3452,7 @@
       "version": "1.0.4",
       "release_date": "2025-11-17",
       "stability": "stable",
-      "downloads": 20206,
+      "downloads": 20215,
       "stars": 1,
       "categories": [
         "Chat",
@@ -3497,7 +3467,7 @@
       "version": "1.0.2",
       "release_date": "2025-07-22",
       "stability": "stable",
-      "downloads": 20060,
+      "downloads": 20069,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3513,7 +3483,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 8421,
+      "downloads": 8472,
       "stars": 0,
       "categories": [
         "Search",
@@ -3528,7 +3498,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 8346,
+      "downloads": 8421,
       "stars": 0,
       "categories": [
         "Safety & Governance"
@@ -3542,7 +3512,7 @@
       "version": "1.0.0",
       "release_date": "2026-09-05",
       "stability": "stable",
-      "downloads": 7853,
+      "downloads": 7877,
       "stars": 1,
       "categories": [
         "Safety & Governance"
@@ -3556,7 +3526,7 @@
       "version": "1.0.1",
       "release_date": "2026-09-08",
       "stability": "stable",
-      "downloads": 3660,
+      "downloads": 3681,
       "stars": 0,
       "categories": [
         "Uncategorized"
@@ -3570,7 +3540,7 @@
       "version": "1.3.0",
       "release_date": "2026-03-26",
       "stability": "stable",
-      "downloads": 2679,
+      "downloads": 2712,
       "stars": 0,
       "categories": [
         "Cloud Providers",
@@ -3585,7 +3555,7 @@
       "version": "0.1.1",
       "release_date": "2025-12-03",
       "stability": "stable",
-      "downloads": 801,
+      "downloads": 845,
       "stars": 0,
       "categories": [
         "SEO & Metadata"
@@ -3599,7 +3569,7 @@
       "version": "1.0.1",
       "release_date": "2026-02-22",
       "stability": "stable",
-      "downloads": 650,
+      "downloads": 674,
       "stars": 0,
       "categories": [
         "Editorial"
@@ -3613,7 +3583,7 @@
       "version": "1.1.0",
       "release_date": "2026-02-12",
       "stability": "stable",
-      "downloads": 573,
+      "downloads": 597,
       "stars": 0,
       "categories": [
         "Media"
@@ -3627,7 +3597,7 @@
       "version": "1.0.0",
       "release_date": "2025-10-09",
       "stability": "stable",
-      "downloads": 400,
+      "downloads": 424,
       "stars": 0,
       "categories": [
         "Content",
@@ -3642,7 +3612,7 @@
       "version": "1.0.1",
       "release_date": "2026-07-08",
       "stability": "stable",
-      "downloads": 382,
+      "downloads": 406,
       "stars": 0,
       "categories": [
         "Content",
@@ -3658,7 +3628,7 @@
       "version": "2.0.0-alpha2",
       "release_date": "2026-06-26",
       "stability": "alpha",
-      "downloads": 378,
+      "downloads": 403,
       "stars": 0,
       "categories": [
         "Content",
@@ -3674,7 +3644,7 @@
       "version": "1.x-dev",
       "release_date": "2026-09-10",
       "stability": "dev",
-      "downloads": 375,
+      "downloads": 401,
       "stars": 0,
       "categories": [
         "Content",
@@ -3690,7 +3660,7 @@
       "version": "1.x-dev",
       "release_date": "2026-07-30",
       "stability": "dev",
-      "downloads": 374,
+      "downloads": 398,
       "stars": 0,
       "categories": [
         "Media",
@@ -3705,7 +3675,7 @@
       "version": "1.x-dev",
       "release_date": "2026-06-11",
       "stability": "dev",
-      "downloads": 371,
+      "downloads": 395,
       "stars": 0,
       "categories": [
         "Content",
@@ -3720,7 +3690,7 @@
       "version": "1.x-dev",
       "release_date": "2026-06-11",
       "stability": "dev",
-      "downloads": 371,
+      "downloads": 395,
       "stars": 0,
       "categories": [
         "Content"
@@ -3748,7 +3718,7 @@
       "version": "1.0.0-beta1",
       "release_date": "2026-05-17",
       "stability": "beta",
-      "downloads": 105,
+      "downloads": 106,
       "stars": 0,
       "categories": [
         "Developer Tools"
@@ -3846,6 +3816,20 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_recipe_answers",
+      "label": "AI Answers",
+      "description": null,
+      "url": "https://www.drupal.org/project/ai_recipe_answers",
+      "version": "1.0.x-dev",
+      "release_date": "2026-09-07",
+      "stability": "dev",
+      "downloads": 19,
+      "stars": 0,
+      "categories": [
+        "Uncategorized"
+      ]
+    },
+    {
       "machine_name": "drupal/drupal_module_chatbot_recipe",
       "label": "Drupal Module Chatbot Recipe",
       "description": "Adds the setup of a module searcher index",
@@ -3887,20 +3871,6 @@
       "categories": [
         "Content",
         "Automation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_recipe_answers",
-      "label": "AI Answers",
-      "description": null,
-      "url": "https://www.drupal.org/project/ai_recipe_answers",
-      "version": "1.0.x-dev",
-      "release_date": "2026-09-07",
-      "stability": "dev",
-      "downloads": 2,
-      "stars": 0,
-      "categories": [
-        "Uncategorized"
       ]
     },
     {

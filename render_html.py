@@ -9,13 +9,14 @@ usage tracking nor meaningful security-advisory data, so the Recipes tab
 only offers sorting and a name filter.
 
 Usage:
-  python3 render_html.py results.json -o output.html
+  python3 render_html.py results.json -o output.html [--history history.json]
 """
 
 import argparse
 import html
 import json
 import sys
+from datetime import datetime
 
 
 STABILITY_ORDER = ["stable", "rc", "beta", "alpha", "dev"]
@@ -75,6 +76,67 @@ def _ordered_categories(rows: list) -> list:
         present.update(r.get("categories", []))
     return ([c for c in CATEGORY_ORDER if c in present]
             + sorted(c for c in present if c not in CATEGORY_ORDER))
+
+
+def _trend(history: dict, machine_name: str, metric: str):
+    """Compare the latest two history.json points for one package.
+
+    Returns (percent_change, direction, raw_delta, prev_date) — direction is
+    "up"/"down"/"flat", raw_delta is the plain signed difference (e.g. +34),
+    and prev_date is the earlier point's "date" string (for the tooltip) —
+    or None if there's no history, fewer than two points, or the baseline
+    point is missing/null/zero (can't compute a % change from that). Kept as
+    a local copy, not shared with render_md.py — same "runs on its own"
+    convention as CATEGORY_ORDER above.
+    """
+    points = history.get(machine_name)
+    if not points or len(points) < 2:
+        return None
+    prev_point, latest_point = points[-2], points[-1]
+    prev_val = prev_point.get(metric)
+    latest_val = latest_point.get(metric)
+    if not prev_val or latest_val is None:
+        return None
+    raw_delta = latest_val - prev_val
+    pct = raw_delta / prev_val * 100
+    direction = "up" if pct > 0 else "down" if pct < 0 else "flat"
+    return pct, direction, raw_delta, prev_point.get("date")
+
+
+_TREND_ARROW = {"up": "▲", "down": "▼", "flat": "●"}
+
+
+def _format_trend_date(date_str: str | None) -> str:
+    """'2026-09-01' -> 'Sep 1 2026', for the trend tooltip."""
+    if not date_str:
+        return "—"
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").strftime("%b %-d %Y")
+    except ValueError:
+        return date_str
+
+
+def _trend_title(raw_delta: int, prev_date: str | None) -> str:
+    """'+34 since Sep 1 2026' / '-543 since Aug 15 2026' — the trend tooltip text."""
+    return f"{raw_delta:+,} since {_format_trend_date(prev_date)}"
+
+
+def _trend_val_disp(history: dict, machine_name: str, metric: str) -> tuple[str, str]:
+    """Return (data-val, display-html) for a Trend cell.
+
+    data-val is the signed percent as a string for numeric sort ("" for
+    missing, which the shared sorter already treats as -Infinity — same as
+    usage_raw/dl_raw). The display span's title attribute is the raw value
+    change + the previous run's date, e.g. "+34 since Sep 1 2026".
+    """
+    result = _trend(history, machine_name, metric)
+    if result is None:
+        return "", "—"
+    pct, direction, raw_delta, prev_date = result
+    title = html.escape(_trend_title(raw_delta, prev_date), quote=True)
+    disp = (f'<span class="trend-{direction}" title="{title}">'
+            f'{_TREND_ARROW[direction]} {pct:+.1f}%</span>')
+    return f"{pct:+.1f}", disp
 
 
 # CSS stored as a plain string (not an f-string) to avoid escaping every { }.
@@ -187,6 +249,11 @@ _CSS = """\
     th.col-downloads  { text-align: right; }
     .col-stars        { text-align: right; }
     th.col-stars      { text-align: right; }
+    .col-trend        { text-align: right; }
+    th.col-trend      { text-align: right; }
+    .trend-up   { color: #1a7f37; }
+    .trend-down { color: #c0392b; }
+    .trend-flat { color: #888; }
     .col-cat { white-space: normal; }
     .cat-pill {
       display: inline-block;
@@ -444,8 +511,14 @@ _JS = """\
     })();"""
 
 
-def render_html(payload: dict) -> str:
-    """Return a self-contained HTML string with a tabbed Modules/Recipes view."""
+def render_html(payload: dict, history: dict | None = None) -> str:
+    """Return a self-contained HTML string with a tabbed Modules/Recipes view.
+
+    `history` is the parsed history.json dict (see drupal_ai_dependents.py's
+    History section) used to compute each row's Trend cell. Defaults to {}
+    (blank Trend column) so this still works if a caller omits it.
+    """
+    history      = history or {}
     rows         = payload["modules"]
     recipe_rows  = payload.get("recipes", [])  # back-compat: older files have no "recipes" key
     today        = payload["generated"]
@@ -486,6 +559,7 @@ def render_html(payload: dict) -> str:
         cat_val  = esc(" ".join(cats))                       # sort key
         cat_data = esc("|".join(cats))                       # filter (data-categories)
         cat_html = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
+        trend_val, trend_disp = _trend_val_disp(history, r["machine_name"], "usage")
         row_lines.append(
             f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
@@ -493,6 +567,7 @@ def render_html(payload: dict) -> str:
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
             f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
+            f'<td data-val="{trend_val}" class="col-trend">{trend_disp}</td>'
             f'<td data-val="{cat_val}" class="col-cat">{cat_html}</td>'
             f'</tr>'
         )
@@ -524,12 +599,14 @@ def render_html(payload: dict) -> str:
         cat_val     = esc(" ".join(cats))
         cat_data    = esc("|".join(cats))
         cat_html    = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
+        trend_val, trend_disp = _trend_val_disp(history, r["machine_name"], "downloads")
         recipe_row_lines.append(
             f'      <tr data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{dl_raw}" class="col-downloads">{dl_disp}</td>'
+            f'<td data-val="{trend_val}" class="col-trend">{trend_disp}</td>'
             f'<td data-val="{stars_raw}" class="col-stars">{stars_disp}</td>'
             f'<td data-val="{cat_val}" class="col-cat">{cat_html}</td>'
             f'</tr>'
@@ -606,7 +683,8 @@ def render_html(payload: dict) -> str:
         '          <th data-col="2" data-type="date">Released</th>\n'
         '          <th data-col="3" data-type="num" class="col-security" title="Security Coverage">Security</th>\n'
         '          <th data-col="4" data-type="num" class="col-usage" title="Drupal.org Usage">Usage</th>\n'
-        '          <th data-col="5" data-type="text" class="col-cat">Categories</th>\n'
+        '          <th data-col="5" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
+        '          <th data-col="6" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-modules">\n'
@@ -634,8 +712,9 @@ def render_html(payload: dict) -> str:
         '          <th data-col="1" data-type="text">Version</th>\n'
         '          <th data-col="2" data-type="date">Released</th>\n'
         '          <th data-col="3" data-type="num" class="col-downloads">Packagist downloads</th>\n'
-        '          <th data-col="4" data-type="num" class="col-stars">Packagist stars</th>\n'
-        '          <th data-col="5" data-type="text" class="col-cat">Categories</th>\n'
+        '          <th data-col="4" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
+        '          <th data-col="5" data-type="num" class="col-stars">Packagist stars</th>\n'
+        '          <th data-col="6" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-recipes">\n'
@@ -661,12 +740,25 @@ def main() -> None:
                         help="Path to results.json from drupal_ai_dependents.py")
     parser.add_argument("--output", "-o", metavar="OUT", required=True,
                         help="Write HTML to this file")
+    parser.add_argument(
+        "--history", metavar="FILE", default="history.json",
+        help="Path to history.json (written by drupal_ai_dependents.py) used "
+             "to compute the Trend column. Defaults to history.json alongside "
+             "the results file. Missing file is fine — the Trend column is "
+             "just blank ('—') for every row.",
+    )
     args = parser.parse_args()
 
     with open(args.json_file, encoding="utf-8") as fh:
         payload = json.load(fh)
 
-    html_out = render_html(payload)
+    try:
+        with open(args.history, encoding="utf-8") as fh:
+            history = json.load(fh)
+    except FileNotFoundError:
+        history = {}
+
+    html_out = render_html(payload, history)
     with open(args.output, "w", encoding="utf-8") as fh:
         fh.write(html_out)
     module_count = len(payload['modules'])

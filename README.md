@@ -1,6 +1,6 @@
 # Drupal AI Dependents
 
-`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables. Every module and recipe is also tagged with one or more **categories** (Tool, Cloud Providers, Search, Chat, Agents, Media, …) derived from its name and description — both renderers show these in a Categories column, and the HTML page lets you filter by them.
+`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count, usage trend) and Recipes (same first four columns plus Packagist download count, a downloads trend, and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables. Every module and recipe is also tagged with one or more **categories** (Tool, Cloud Providers, Search, Chat, Agents, Media, …) derived from its name and description — both renderers show these in a Categories column, and the HTML page lets you filter by them. Every run of `drupal_ai_dependents.py` also appends a usage/downloads data point to a separate `history.json`, which both renderers read to show a **Trend** column (arrow + percent change since the previous run) — see [History and the Trend column](#history-and-the-trend-column) below.
 
 ## Requirements
 
@@ -10,21 +10,26 @@
 ## Usage
 
 ```bash
-# Run the network fetch (~20-25 min) and save to JSON
+# Run the network fetch (~20-25 min), save to JSON, and update history.json
 python3 drupal_ai_dependents.py --json results.json
 
-# Render from the saved JSON (fast — no network calls, re-run anytime)
+# Render from the saved JSON (fast — no network calls, re-run anytime).
+# Both also read history.json (default path, alongside results.json) to
+# populate the Trend column.
 python3 render_md.py results.json -o results.md
 python3 render_html.py results.json -o index.html
 
 # Re-apply the category rules to an existing results.json without re-crawling
-# (fast, no network) — use this to iterate on the keyword rules
+# (fast, no network) — use this to iterate on the keyword rules. Does NOT
+# touch history.json, since no fresh usage/downloads data was fetched.
 python3 drupal_ai_dependents.py --categorize results.json
 ```
 
 A normal `--json` run already tags every module and recipe with its categories, so you only need `--categorize` when tuning the rules — see [Categorization](#categorization) below.
 
 `drupal_ai_dependents.py` only ever writes JSON (to a file with `--json FILE`, or to stdout if `--json` is omitted) — it has no markdown or HTML rendering of its own. An earlier version did, via `-o`/`--output` and `--html` flags, but that inline rendering fell out of sync with `render_html.py` every time the real renderer gained a feature (recipes, stability badges, filter checkboxes never made it into the inline version). Those flags are gone; `render_md.py` and `render_html.py` are now the only renderers.
+
+Every normal run also appends to a separate `history.json` (path configurable with `--history FILE`, default `history.json`) — see [History and the Trend column](#history-and-the-trend-column) below.
 
 ## Output
 
@@ -77,24 +82,24 @@ A normal `--json` run already tags every module and recipe with its categories, 
 - `categories` is a list of one or more categories derived from the label, description and machine name (see [Categorization](#categorization)). Present on both module and recipe rows. Packages that match no rule get `["Uncategorized"]`.
 - Recipe rows are sorted by `downloads` descending (`null`/0 last), then alphabetically by `label` for ties.
 
-Older `results.json` files from before recipe support was added (no `"recipes"` key at all) are still readable — both renderers fall back to an empty list via `payload.get("recipes", [])`. Files predating the `"categories"` key are also fine — the renderers read it via `.get("categories", [])`, rendering no category cell; run `--categorize` to add it.
+Older `results.json` files from before recipe support was added (no `"recipes"` key at all) are still readable — both renderers fall back to an empty list via `payload.get("recipes", [])`. Files predating the `"categories"` key are also fine — the renderers read it via `.get("categories", [])`, rendering no category cell; run `--categorize` to add it. `results.json` itself has no Trend data — that comes from the separate `history.json` file; see [History and the Trend column](#history-and-the-trend-column) below.
 
 ### Markdown
 
 Two sections, each with their own table. Modules is sorted by active installs (descending):
 
-| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage | Categories |
-|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|------------|
-| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 | Cloud Providers |
-| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 | Media, Accessibility |
+| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage | Trend | Categories |
+|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|:-----:|------------|
+| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 | ▲ +4.2% | Cloud Providers |
+| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 | — | Media, Accessibility |
 
-The Label column links to the module's project page, with the project's description (when present) shown as a small second line beneath the link (`<br><sub>…</sub>`). The Categories column lists the project's categories, comma-separated. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
+The Label column links to the module's project page, with the project's description (when present) shown as a small second line beneath the link (`<br><sub>…</sub>`). The Trend column shows the usage change vs. the previous run (from `history.json`) as an arrow + percent, with a tooltip (hover, or tap on mobile) showing the raw value change and the date it's compared against, e.g. "+34 since Sep 1 2026" or "-543 since Aug 15 2026" — and shows `—` when there isn't enough history yet. The Categories column lists the project's categories, comma-separated. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
 
 Recipes is sorted by Packagist downloads descending, with no Security coverage or Drupal.org usage columns:
 
-| Label | machine name | URL | Latest Version | Release Date | Packagist downloads | Packagist stars | Categories |
-|-------|--------------|-----|:--------------:|:------------:|--------------------:|----------------:|------------|
-| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 | 1,234 | 56 | Media |
+| Label | machine name | URL | Latest Version | Release Date | Packagist downloads | Trend | Packagist stars | Categories |
+|-------|--------------|-----|:--------------:|:------------:|--------------------:|:-----:|----------------:|------------|
+| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 | 1,234 | ▼ -2.1% | 56 | Media |
 
 ### HTML
 
@@ -103,6 +108,7 @@ Recipes is sorted by Packagist downloads descending, with no Security coverage o
 - **Sort by any column** — click a column header to sort ascending; click again to sort descending. Sort direction is indicated by ▲/▼ in the header.
 - **Filter by name** — type in the search box to instantly hide non-matching rows.
 - **Filter by category** — a checkbox per category present in that tab (all checked by default); unchecking one hides rows tagged with it. Because a project can have several categories, a row stays visible as long as **at least one** of its categories is still checked. A Categories column shows each project's categories as pills.
+- **Trend column** — an arrow + percent change (colored green/red/gray for up/down/flat) comparing the current run's usage (Modules) or Packagist downloads (Recipes) to the previous run, read from `history.json`. Hovering shows a tooltip with the raw value change and the previous run's date, e.g. "+34 since Sep 1 2026". Sortable like any other column; `—` when there isn't at least two runs of history yet for that row. No dedicated filter — see [History and the Trend column](#history-and-the-trend-column) below.
 
 The Modules tab additionally supports:
 
@@ -116,6 +122,40 @@ The Recipes tab has no stability or security checkboxes — neither concept appl
 Drupal **recipes** (project type `drupal-recipe`, applied via `drush recipe` rather than installed as a module) are tracked separately from modules because they genuinely have neither install-tracking nor a meaningful security-advisory status — not because the data is missing, but because it doesn't exist for that project type. Confirmed live: Drupal.org's API returns no `project_usage` field at all for a recipe (absent, not zero).
 
 Recipes also live on a different package registry entirely: they're not on packages.drupal.org (the source for everything else in this script), only on the main Packagist registry (`packagist.org`/`repo.packagist.org`). Because they're on Packagist, their total download counts and star counts **are** available via `packagist.org/packages/drupal/{name}.json` and are shown in the Recipes table as substitute popularity signals. Both values come from the same API request. Note that downloads count Composer install events (cumulative total), not active sites like the module usage figures; stars count Packagist ★ events. See [How it works](#how-it-works) below for the discovery/verification details.
+
+## History and the Trend column
+
+Every normal run of `drupal_ai_dependents.py` also appends to a separate `history.json` file (`--history FILE`, default `history.json`) — a growing record of each module's usage and each recipe's downloads over time, so the renderers can show whether a project is trending up or down since the last run.
+
+```bash
+python3 drupal_ai_dependents.py --json results.json   # writes/updates history.json too
+python3 render_md.py results.json -o results.md       # reads history.json for the Trend column
+python3 render_html.py results.json -o results.html   # reads history.json for the Trend column
+```
+
+Both renderers accept their own `--history FILE` flag (same default, `history.json`) if you keep it somewhere other than alongside `results.json`. A missing `history.json` isn't an error — the Trend column just renders `—` for every row.
+
+`history.json` is keyed by `machine_name`, with one `{date, usage}` (modules) or `{date, downloads}` (recipes) entry appended per run:
+
+```json
+{
+  "drupal/ai_provider_openai": [
+    {"date": "2026-06-22", "usage": 12500},
+    {"date": "2026-09-11", "usage": 13133}
+  ],
+  "drupal/ai_recipe_image_classification": [
+    {"date": "2026-06-22", "downloads": 1180},
+    {"date": "2026-09-11", "downloads": 1234}
+  ]
+}
+```
+
+A few things worth knowing:
+
+- **It grows forever.** Nothing is ever pruned, including for a module or recipe that later drops out of `results.json` — its history is kept as a record even after it stops appearing in the current run.
+- **It's written on every normal run, but not by `--categorize`.** `--categorize` re-applies the category rules to an existing `results.json` without refetching any usage/downloads data, so it would have nothing real to add to the history.
+- **The Trend column compares only the two most recent runs** — not a longer trend line. You need at least two runs of `drupal_ai_dependents.py` before any row shows a real trend; until then (or if a machine_name has no history at all) it renders as `—`.
+- A failed usage/downloads fetch is recorded as `usage: null` / `downloads: null` rather than being skipped — a gap in the data is meaningful (the fetch was attempted and failed that day), not the same as no entry existing.
 
 ## Categorization
 

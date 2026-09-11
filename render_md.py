@@ -3,13 +3,14 @@
 Render a Markdown table from results.json produced by drupal_ai_dependents.py.
 
 Usage:
-  python3 render_md.py results.json [-o output.md]
+  python3 render_md.py results.json [-o output.md] [--history history.json]
 """
 
 import argparse
 import html
 import json
 import sys
+from datetime import datetime
 
 # Security advisory coverage icons.
 # Filled shield — covered + stable release — Drupal.org's own SVG via img tag.
@@ -52,8 +53,70 @@ def _categories_cell(r: dict) -> str:
     return html.escape(", ".join(cats), quote=False).replace("|", "\\|")
 
 
-def render_md(payload: dict) -> str:
-    """Return a Markdown string from a results.json payload."""
+def _trend(history: dict, machine_name: str, metric: str):
+    """Compare the latest two history.json points for one package.
+
+    Returns (percent_change, direction, raw_delta, prev_date) — direction is
+    "up"/"down"/"flat", raw_delta is the plain signed difference (e.g. +34),
+    and prev_date is the earlier point's "date" string (for the tooltip) —
+    or None if there's no history, fewer than two points, or the baseline
+    point is missing/null/zero (can't compute a % change from that). Kept as
+    a local copy in both renderers rather than a shared import — see
+    CATEGORY_ORDER in render_html.py for the same "no cross-file import"
+    convention.
+    """
+    points = history.get(machine_name)
+    if not points or len(points) < 2:
+        return None
+    prev_point, latest_point = points[-2], points[-1]
+    prev_val = prev_point.get(metric)
+    latest_val = latest_point.get(metric)
+    if not prev_val or latest_val is None:
+        return None
+    raw_delta = latest_val - prev_val
+    pct = raw_delta / prev_val * 100
+    direction = "up" if pct > 0 else "down" if pct < 0 else "flat"
+    return pct, direction, raw_delta, prev_point.get("date")
+
+
+_TREND_ARROW = {"up": "▲", "down": "▼", "flat": "●"}
+
+
+def _format_trend_date(date_str: str | None) -> str:
+    """'2026-09-01' -> 'Sep 1 2026', for the trend tooltip."""
+    if not date_str:
+        return "—"
+    try:
+        return datetime.strptime(date_str, "%Y-%m-%d").strftime("%b %-d %Y")
+    except ValueError:
+        return date_str
+
+
+def _trend_title(raw_delta: int, prev_date: str | None) -> str:
+    """'+34 since Sep 1 2026' / '-543 since Aug 15 2026' — the trend tooltip text."""
+    return f"{raw_delta:+,} since {_format_trend_date(prev_date)}"
+
+
+def _trend_cell(history: dict, machine_name: str, metric: str) -> str:
+    """Build the Trend cell: arrow + percent change, with a tooltip showing
+    the raw value change and the date of the previous run. '—' with no history.
+    """
+    result = _trend(history, machine_name, metric)
+    if result is None:
+        return "—"
+    pct, direction, raw_delta, prev_date = result
+    title = html.escape(_trend_title(raw_delta, prev_date), quote=True)
+    return f'<span title="{title}">{_TREND_ARROW[direction]} {pct:+.1f}%</span>'
+
+
+def render_md(payload: dict, history: dict | None = None) -> str:
+    """Return a Markdown string from a results.json payload.
+
+    `history` is the parsed history.json dict (see drupal_ai_dependents.py's
+    History section) used to compute each row's Trend cell. Defaults to {}
+    (blank Trend column) so this still works if a caller omits it.
+    """
+    history      = history or {}
     rows         = payload["modules"]
     recipe_rows  = payload.get("recipes", [])  # back-compat: older files have no "recipes" key
     today        = payload["generated"]
@@ -67,8 +130,8 @@ def render_md(payload: dict) -> str:
         f" Drupal {v_label} compatible · all stability levels*\n",
         "Sponsored by DrupalEasy's [*Responsible Drupal AI Basics*](https://drupaleasy.com/rdab) course\n",
         "## Modules\n",
-        "| Label | URL | Latest Version | Release Date | Security | Usage | Categories |",
-        "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|------------|",
+        "| Label | URL | Latest Version | Release Date | Security | Usage | Trend | Categories |",
+        "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|:-----:|------------|",
     ]
     for r in rows:
         usage_str = f"{r['usage']:,}" if r["usage"] else "—"
@@ -82,6 +145,7 @@ def render_md(payload: dict) -> str:
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {security_str} | {usage_str} |"
+            f" {_trend_cell(history, r['machine_name'], 'usage')} |"
             f" {_categories_cell(r)} |"
         )
 
@@ -94,10 +158,11 @@ def render_md(payload: dict) -> str:
 
     # Recipes have no Drupal.org usage tracking and no meaningful security-advisory
     # status, so those two columns are omitted. Packagist total downloads are
-    # available and provide a comparable popularity signal.
+    # available and provide a comparable popularity signal, and are what the
+    # Trend column tracks for recipes (the only metric history.json has for them).
     lines.append("\n## Recipes\n")
-    lines.append("| Label | URL | Latest Version | Release Date | Packagist downloads | Packagist stars | Categories |")
-    lines.append("|-------|-----|:--------------:|:------------:|--------------------:|----------------:|------------|")
+    lines.append("| Label | URL | Latest Version | Release Date | Packagist downloads | Packagist stars | Trend | Categories |")
+    lines.append("|-------|-----|:--------------:|:------------:|--------------------:|----------------:|:-----:|------------|")
     for r in recipe_rows:
         downloads = r.get("downloads")
         downloads_str = f"{downloads:,}" if downloads is not None else "—"
@@ -106,6 +171,7 @@ def render_md(payload: dict) -> str:
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {downloads_str} | {stars_str} |"
+            f" {_trend_cell(history, r['machine_name'], 'downloads')} |"
             f" {_categories_cell(r)} |"
         )
 
@@ -121,12 +187,25 @@ def main() -> None:
                         help="Path to results.json from drupal_ai_dependents.py")
     parser.add_argument("--output", "-o", metavar="OUT",
                         help="Write to OUT instead of stdout")
+    parser.add_argument(
+        "--history", metavar="FILE", default="history.json",
+        help="Path to history.json (written by drupal_ai_dependents.py) used "
+             "to compute the Trend column. Defaults to history.json alongside "
+             "the results file. Missing file is fine — the Trend column is "
+             "just blank ('—') for every row.",
+    )
     args = parser.parse_args()
 
     with open(args.json_file, encoding="utf-8") as fh:
         payload = json.load(fh)
 
-    output = render_md(payload)
+    try:
+        with open(args.history, encoding="utf-8") as fh:
+            history = json.load(fh)
+    except FileNotFoundError:
+        history = {}
+
+    output = render_md(payload, history)
 
     if args.output:
         with open(args.output, "w", encoding="utf-8") as fh:
