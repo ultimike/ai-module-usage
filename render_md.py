@@ -60,18 +60,47 @@ def render_md(payload: dict) -> str:
     v_label      = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
     count        = len(rows)
     recipe_count = len(recipe_rows)
+    # Back-compat: files from before --full-ecosystem existed were all
+    # dependency-only crawls, so treat a missing key as False.
+    full_ecosystem = payload.get("full_ecosystem", False)
+
+    # Without --full-ecosystem every row requires drupal/ai, so the column
+    # would be a wall of identical ticks — state the scope in the header
+    # instead and drop the column.
+    if full_ecosystem:
+        scope_line = (
+            "*Modules with a hard dependency on"
+            " [drupal/ai](https://www.drupal.org/project/ai) or filed under"
+            " drupal.org's \"Artificial Intelligence (AI)\" project category*\n"
+        )
+        header_row = ("| Label | URL | Latest Version | Release Date | Security"
+                      " | Usage | drupal/ai | Categories |")
+        divider_row = ("|-------|-----|:--------------:|:------------:|"
+                       ":------------------:|----------------:|:---------:|------------|")
+    else:
+        scope_line = ("*Only includes projects with a dependency on the"
+                      " [Drupal AI module](https://www.drupal.org/project/ai)*\n")
+        header_row = ("| Label | URL | Latest Version | Release Date | Security"
+                      " | Usage | Categories |")
+        divider_row = ("|-------|-----|:--------------:|:------------:|"
+                       ":------------------:|----------------:|------------|")
 
     lines = [
-        f"# Drupal Modules and Recipes with a Hard Dependency on [AI](https://www.drupal.org/project/ai)\n",
+        f"# Drupal AI Modules and Recipes\n",
+        scope_line,
         f"*Generated {today} · {count} modules · {recipe_count} recipes ·"
         f" Drupal {v_label} compatible · all stability levels*\n",
         "Sponsored by DrupalEasy's [*Responsible Drupal AI Basics*](https://drupaleasy.com/rdab) course\n",
         "## Modules\n",
-        "| Label | URL | Latest Version | Release Date | Security | Usage | Categories |",
-        "|-------|-----|:--------------:|:------------:|:------------------:|----------------:|------------|",
+        header_row,
+        divider_row,
     ]
     for r in rows:
         usage_str = f"{r['usage']:,}" if r["usage"] else "—"
+        # Back-compat: results.json files from before the AI-category source
+        # only ever contained hard dependents, so default to True.
+        requires_ai_cell = (f" {'✓' if r.get('requires_ai', True) else '—'} |"
+                            if full_ecosystem else "")
         if r["security_covered"]:
             stability = r.get("stability", "stable")
             security_str = (SECURITY_COVERED_STABLE_MD
@@ -82,15 +111,19 @@ def render_md(payload: dict) -> str:
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
             f" {r['release_date']} | {security_str} | {usage_str} |"
-            f" {_categories_cell(r)} |"
+            f"{requires_ai_cell} {_categories_cell(r)} |"
         )
 
-    lines.append(
+    legend = (
         f"\n*Security coverage:*"
         f" {SECURITY_COVERED_STABLE_MD} Covered (stable release)"
         f" &nbsp;·&nbsp; {SECURITY_COVERED_PRERELEASE_MD} Covered (pre-release)"
         f" &nbsp;·&nbsp; {SECURITY_NOT_COVERED_EMOJI} Not covered by security advisory policy"
     )
+    if full_ecosystem:
+        legend += (f"<br>*drupal/ai:* ✓ Hard composer dependency on drupal/ai"
+                   f" &nbsp;·&nbsp; — AI project category only")
+    lines.append(legend)
 
     # Recipes have no Drupal.org usage tracking and no meaningful security-advisory
     # status, so those two columns are omitted. Packagist total downloads are

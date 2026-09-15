@@ -1,6 +1,6 @@
 # Drupal AI Dependents
 
-`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables. Every module and recipe is also tagged with one or more **categories** (Tool, Cloud Providers, Search, Chat, Agents, Media, …) derived from its name and description — both renderers show these in a Categories column, and the HTML page lets you filter by them.
+`drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. Passing **`--full-ecosystem`** widens that to also include every module filed under drupal.org's **"Artificial Intelligence (AI)" project category**, which qualifies by tag alone even without the composer dependency; those runs record which case applies per module in a `requires_ai` boolean and add a filterable `drupal/ai` column (✓ / —) to both renderers. Without the flag the output contains only drupal/ai dependents and both renderers say so in the header. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count) and Recipes (same first four columns plus Packagist download count and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables. Every module and recipe is also tagged with one or more **categories** (Tool, Cloud Providers, Search, Chat, Agents, Media, …) derived from its name and description — both renderers show these in a Categories column, and the HTML page lets you filter by them.
 
 ## Requirements
 
@@ -20,9 +20,15 @@ python3 render_html.py results.json -o index.html
 # Re-apply the category rules to an existing results.json without re-crawling
 # (fast, no network) — use this to iterate on the keyword rules
 python3 drupal_ai_dependents.py --categorize results.json
+
+# Widen the crawl: also include modules filed under drupal.org's "Artificial
+# Intelligence (AI)" project category, even without a drupal/ai dependency
+python3 drupal_ai_dependents.py --full-ecosystem --json results.json
 ```
 
 A normal `--json` run already tags every module and recipe with its categories, so you only need `--categorize` when tuning the rules — see [Categorization](#categorization) below.
+
+By default the results contain **only** projects with a hard dependency on drupal/ai, and both renderers say so in the header. `--full-ecosystem` adds drupal.org's AI project category as a third discovery source — see [Stage 1](#stage-1--candidate-discovery-two-sources-or-three-with---full-ecosystem) below. The mode is recorded as a `full_ecosystem` boolean in the JSON, so the renderers adapt automatically (the `drupal/ai` column and its filter only appear on `--full-ecosystem` output, where they're meaningful).
 
 `drupal_ai_dependents.py` only ever writes JSON (to a file with `--json FILE`, or to stdout if `--json` is omitted) — it has no markdown or HTML rendering of its own. An earlier version did, via `-o`/`--output` and `--html` flags, but that inline rendering fell out of sync with `render_html.py` every time the real renderer gained a feature (recipes, stability badges, filter checkboxes never made it into the inline version). Those flags are gone; `render_md.py` and `render_html.py` are now the only renderers.
 
@@ -163,13 +169,15 @@ packages to `stderr`, then rewrites the file in place. Re-render afterwards with
 
 ## How it works
 
-### Stage 1 — Candidate discovery (two sources, union-merged)
+### Stage 1 — Candidate discovery (two sources, or three with `--full-ecosystem`)
 
 **Source 1:** Paginates through all pages of `drupal.org/project/ai/ecosystem` — the AI module's curated ecosystem listing — to collect project machine names.
 
 **Source 2:** Paginates through `packages.drupal.org/8/search.json?s=ai` — a full-text search of the Drupal Composer repository — to collect additional candidate package names. This catches modules that depend on drupal/ai but have not been added to the ecosystem listing.
 
-Both sources are merged and deduplicated (~730 unique candidates on a typical run).
+**Source 3 (`--full-ecosystem` only):** Paginates through `www.drupal.org/api-d7/node.json?type=project_module&taxonomy_vocabulary_3=204588` — every module whose drupal.org "Project category" includes **Artificial Intelligence (AI)** (~395 names). Modules from this source are included even without a composer dependency on drupal/ai (the tag is the maintainer's own claim that the module is AI-related), so it catches integrations like WebMCP modules that have no code-level drupal/ai dependency at all. Without the flag this source is skipped entirely rather than crawled-and-filtered, since none of its names would survive the dependency check that the other two sources' candidates face.
+
+Sources are merged and deduplicated: ~1000 unique candidates by default, ~1060 with `--full-ecosystem` (most tagged names are already found by the other two sources — the flag's value is that it *also* relaxes the dependency check for them).
 
 ### Stage 2 — Dependency verification (authoritative)
 
@@ -182,10 +190,10 @@ packages.drupal.org/files/packages/8/p2/drupal/{name}.json
 This file contains the parsed contents of each version's `composer.json`. The script checks:
 
 1. `type == "drupal-module"` — excludes recipes, profiles, and distributions
-2. `"drupal/ai"` is present in the `require` field — confirms a hard dependency
+2. `"drupal/ai"` is present in the `require` field — confirms a hard dependency. Under `--full-ecosystem` this check is **skipped for candidates from the AI project category (Source 3)**, which qualify by tag; the outcome is recorded per module in a `requires_ai` boolean.
 3. The `drupal/core` constraint includes Drupal 10 or 11
 
-Only modules passing all three checks are included. This makes the list **more precise** than an ecosystem-page approach: modules that appear on the ecosystem page but don't actually require drupal/ai (e.g. companion modules, integrations) are correctly excluded.
+Only modules passing these checks are included. Candidates from Sources 1 and 2 must pass all three, so ecosystem-page or search hits that don't actually require drupal/ai are correctly excluded — unless `--full-ecosystem` is in play and they also carry the AI project category, in which case the maintainer's own categorization is the qualification (and the `drupal/ai` column shows — instead of ✓).
 
 The p2 file also provides:
 - The exact version string

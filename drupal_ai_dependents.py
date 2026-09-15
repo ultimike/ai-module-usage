@@ -1,17 +1,26 @@
 #!/usr/bin/env python3
 """
 Find all Drupal modules and recipes with a hard dependency on drupal/ai
-(https://www.drupal.org/project/ai) and write the results as JSON. This
-script only collects and verifies data — render the output with
-render_md.py (markdown) or render_html.py (sortable/filterable HTML).
+(https://www.drupal.org/project/ai) and write the results as JSON — or, with
+--full-ecosystem, widen that to every module filed under drupal.org's
+"Artificial Intelligence (AI)" project category too, dependency or not. This
+script only collects and verifies data — render the output with render_md.py
+(markdown) or render_html.py (sortable/filterable HTML).
 
 Module candidate discovery (two sources, union-merged):
   1. drupal.org/project/ai/ecosystem  — curated AI ecosystem listing
   2. packages.drupal.org search "ai"  — package name/description search
+  3. drupal.org AI project category   — modules tagged "Artificial
+     Intelligence (AI)" via the api-d7 node listing.
+     ONLY crawled with --full-ecosystem.
 
 Module dependency verification (authoritative, reads composer.json directly):
   packages.drupal.org/files/packages/8/p2/drupal/{name}.json
   Confirms type=drupal-module AND drupal/ai is in the require field.
+  Under --full-ecosystem, candidates from source 3 skip that second check —
+  being filed under the AI project category is treated as its own
+  qualification — and every module row records whether the dependency is
+  present in a `requires_ai` boolean.
   Also supplies version, Drupal core constraint, and release datestamp.
 
 Module additional data:
@@ -29,12 +38,15 @@ general rate limits are already enforced server-side via HTTP 429 with a
 Retry-After header, which _http_get() honors.
 
 Usage:
-  python3 drupal_ai_dependents.py [--json FILE]
+  python3 drupal_ai_dependents.py [--json FILE] [--full-ecosystem]
 
   # Write JSON, then render separately (recommended):
   python3 drupal_ai_dependents.py --json results.json
   python3 render_md.py results.json -o results.md
   python3 render_html.py results.json -o results.html
+
+  # Include AI-category-tagged modules that don't require drupal/ai:
+  python3 drupal_ai_dependents.py --full-ecosystem --json results.json
 """
 
 # Python's standard library modules — no composer/npm needed.
@@ -80,6 +92,13 @@ PACKAGIST_STATS_URL  = "https://packagist.org/packages/drupal/{name}.json"
 # A Python `set` is like a PHP array used as a lookup table (array_flip'd),
 # where only unique values matter and order doesn't. Membership checks are O(1).
 TARGET_VERSIONS = {10, 11}
+
+# Taxonomy term ID of drupal.org's "Artificial Intelligence (AI)" project
+# category (the "Project category" shown on project pages). Found via
+# www.drupal.org/api-d7/taxonomy_term.json?name=Artificial intelligence (AI).
+# Modules carrying this tag are included in the results even when they have
+# no composer dependency on drupal/ai — see get_tagged_candidates().
+AI_CATEGORY_TID = 204588
 
 # No self-throttling delays and no concurrency. Per direct feedback from
 # drupal.org sysadmins: concurrent requests are what risks tipping into DoS
@@ -367,6 +386,59 @@ def get_search_candidates(query: str = "ai") -> list[str]:
 
 
 # ---------------------------------------------------------------------------
+# Candidate discovery — source 3: drupal.org "Artificial Intelligence (AI)"
+# project category
+# ---------------------------------------------------------------------------
+
+def get_tagged_candidates() -> list[str]:
+    """Paginate the drupal.org api-d7 node listing for every module whose
+    "Project category" includes "Artificial Intelligence (AI)".
+
+    This is the tag that project maintainers pick on their drupal.org project
+    page, so it captures the maintainer's own claim that the module is
+    AI-related — including modules with no composer dependency on drupal/ai
+    at all (e.g. WebMCP integrations), which the other two sources would
+    verify-and-reject. Names from this source are therefore exempted from
+    the drupal/ai `require` check in get_p2_info(); they still must exist on
+    packages.drupal.org as a Drupal 10/11-compatible drupal-module.
+
+    Uses _drupal_api_get(), which already handles the drupal.org API's
+    503-style rate limiting with Retry-After support.
+    """
+    all_names, seen = [], set()
+    page = 0
+
+    while True:
+        data = _drupal_api_get({
+            "type": "project_module",
+            "taxonomy_vocabulary_3": AI_CATEGORY_TID,
+            "limit": 50,
+            "page": page,
+        })
+        if data is None:
+            # A failed page means the tail of the listing is unknown — warn
+            # loudly rather than silently pretending the listing ended here.
+            print(f"  Warning: AI category listing page {page} failed; "
+                  f"continuing with {len(all_names)} tagged names collected so far.",
+                  file=sys.stderr)
+            break
+
+        for node in data.get("list", []):
+            n = node.get("field_project_machine_name")
+            if n and n not in seen and n != "ai":
+                seen.add(n)
+                all_names.append(n)
+
+        # Same next-page convention as packages.drupal.org search: the API
+        # includes a "next" link until the last page.
+        if not data.get("next"):
+            break
+        page += 1
+
+    return all_names
+
+
+# ---------------------------------------------------------------------------
 # Candidate discovery — recipes, source 1: Packagist type search
 # ---------------------------------------------------------------------------
 
@@ -484,10 +556,15 @@ def _core_is_d10_d11(constraint: str) -> bool:
 
 
 def _select_best_ai_dependent_version(
-    versions: list[dict], required_type: str
+    versions: list[dict], required_type: str, require_ai: bool = True
 ) -> dict | None:
     """Filter a p2 version list down to the newest version that matches
     `required_type` and has a Drupal 10/11-compatible drupal/ai dependency.
+
+    With require_ai=False the drupal/ai `require` check is skipped — used for
+    modules discovered via the drupal.org AI project category, which qualify
+    by tag rather than by composer dependency (type and core-constraint
+    checks still apply).
 
     Shared by get_p2_info() (modules, packages.drupal.org) and
     get_recipe_info() (recipes, Packagist) — the verification rules are
@@ -507,7 +584,7 @@ def _select_best_ai_dependent_version(
     candidates = []
     for v in versions:
         require = v.get("require") or {}
-        if "drupal/ai" not in require:
+        if require_ai and "drupal/ai" not in require:
             continue
         core_constraint = require.get("drupal/core", "")
         if not _core_is_d10_d11(core_constraint):
@@ -525,15 +602,20 @@ def _select_best_ai_dependent_version(
     )
 
 
-def get_p2_info(machine_name: str) -> dict | None:
+def get_p2_info(machine_name: str, require_ai: bool = True) -> dict | None:
     """Fetch and parse a module's Composer p2 metadata from packages.drupal.org.
 
     The p2 format is Composer's v2 repository format. Each package gets its own
     JSON file listing every published version along with its full composer.json
     contents — so we can read `require`, `type`, and `extra` directly.
 
+    require_ai=False relaxes the drupal/ai dependency check — used for modules
+    that qualify via the drupal.org AI project category instead. The returned
+    `ai_constraint` is None when the chosen version has no drupal/ai require.
+
     Returns a dict with version/date/constraints, or None if the module fails
-    any of our three checks (exists, is a module, requires drupal/ai for D10/11).
+    verification (exists, is a module, D10/11-compatible, and — unless
+    require_ai=False — requires drupal/ai).
     """
     url = P2_URL.format(name=machine_name)
     try:
@@ -558,7 +640,7 @@ def get_p2_info(machine_name: str) -> dict | None:
 
     # Type check excludes recipes (`drupal-recipe`), profiles, distributions —
     # those are handled by the separate get_recipe_info() pipeline.
-    best = _select_best_ai_dependent_version(versions, "drupal-module")
+    best = _select_best_ai_dependent_version(versions, "drupal-module", require_ai)
     if best is None:
         return None
 
@@ -573,7 +655,7 @@ def get_p2_info(machine_name: str) -> dict | None:
     return {
         "version":         best.get("version", ""),
         "date":            date,
-        "ai_constraint":   require["drupal/ai"],
+        "ai_constraint":   require.get("drupal/ai"),
         "core_constraint": core_constraint,
         # The package's own composer.json "name" field, e.g. "drupal/ai_agents" —
         # already present in the p2 payload, so no extra request is needed.
@@ -1251,7 +1333,17 @@ def main() -> None:
              "existing results.json (FILE) and write it back in place. Fast "
              "(no network) — use this to iterate on the category keyword rules.",
     )
+    parser.add_argument(
+        "--full-ecosystem", action="store_true",
+        help="Widen the crawl beyond hard drupal/ai dependents: also include "
+             "modules filed under drupal.org's 'Artificial Intelligence (AI)' "
+             "project category, even when they have no composer dependency on "
+             "drupal/ai. Off by default, in which case the results contain "
+             "only projects that require drupal/ai.",
+    )
     # args.json will be a filename string if provided, or None if omitted (print to stdout).
+    # args.full_ecosystem is a bool — argparse converts the --full-ecosystem
+    # flag's dash to an underscore.
     args = parser.parse_args()
 
     # --categorize is a fast, network-free path: re-derive categories on an
@@ -1262,29 +1354,53 @@ def main() -> None:
         return
 
     # -------------------------------------------------------------------------
-    # Step 1: Collect candidate module names from both sources
+    # Step 1: Collect candidate module names from the enabled sources
     # -------------------------------------------------------------------------
+    # The first two sources always run and feed the strict "must require
+    # drupal/ai" verification. The third (drupal.org's AI project category)
+    # only runs under --full-ecosystem, because it deliberately admits
+    # modules that have no drupal/ai dependency at all.
+    full_ecosystem = args.full_ecosystem
+    source_count = 3 if full_ecosystem else 2
     print("Collecting candidates …", file=sys.stderr)
 
     # `file=sys.stderr` sends output to STDERR instead of STDOUT.
     # This keeps progress messages separate from the markdown output,
     # so piping or redirecting stdout only captures the final table.
-    print("  [1/2] Scraping AI ecosystem pages …", file=sys.stderr)
+    print(f"  [1/{source_count}] Scraping AI ecosystem pages …", file=sys.stderr)
     eco_names = get_ecosystem_candidates()
     print(f"        {len(eco_names)} names found", file=sys.stderr)
     # len() is like PHP's count().
 
-    print("  [2/2] Searching packages.drupal.org for 'ai' …", file=sys.stderr)
+    print(f"  [2/{source_count}] Searching packages.drupal.org for 'ai' …", file=sys.stderr)
     search_names = get_search_candidates("ai")
     print(f"        {len(search_names)} names found", file=sys.stderr)
 
+    if full_ecosystem:
+        print(f"  [3/{source_count}] Listing modules in drupal.org's AI project category …",
+              file=sys.stderr)
+        tagged_names = get_tagged_candidates()
+        print(f"        {len(tagged_names)} names found", file=sys.stderr)
+    else:
+        # Skipped entirely rather than crawled-and-filtered: this source adds
+        # ~300 candidates, and every one of them would need its own p2 request
+        # only to be rejected by the drupal/ai check.
+        tagged_names = []
+        print("  Skipping drupal.org AI project category "
+              "(pass --full-ecosystem to include it)", file=sys.stderr)
+
+    # Modules from the AI category source qualify by tag alone — they are
+    # exempt from the drupal/ai `require` check during verification below.
+    # Empty without --full-ecosystem, so every candidate is checked strictly.
+    tagged_set = set(tagged_names)
+
     # Union-merge: start with ecosystem names (preserving their order),
-    # then append any search names not already in the set.
+    # then append any search/tagged names not already in the set.
     # set(eco_names) builds a set from a list in one step — like array_flip()
     # in PHP to create an O(1) lookup table.
     seen: set[str] = set(eco_names)
     all_candidates = list(eco_names)  # list() copies the list
-    for n in search_names:
+    for n in search_names + tagged_names:
         if n not in seen:
             seen.add(n)
             all_candidates.append(n)
@@ -1304,7 +1420,7 @@ def main() -> None:
 
     for done, name in enumerate(all_candidates, 1):
         try:
-            result = get_p2_info(name)
+            result = get_p2_info(name, require_ai=name not in tagged_set)
         except Exception as exc:
             print(f"  [{done}/{total}] {name}: error — {exc}", file=sys.stderr)
             result = None
@@ -1359,6 +1475,9 @@ def main() -> None:
             "usage":             usage,
             "security_covered":  security_covered,
             "stability":         detect_stability(p2["version"]),
+            # False only for AI-category-tagged modules whose latest release
+            # has no drupal/ai in its composer require.
+            "requires_ai":       p2["ai_constraint"] is not None,
         })
 
     print(
@@ -1481,6 +1600,9 @@ def main() -> None:
     search_set = set(search_names)
     mod_eco    = sum(1 for n in p2_map if n in eco_set)
     mod_search = sum(1 for n in p2_map if n in search_set)
+    mod_tagged = sum(1 for n in p2_map if n in tagged_set)
+    mod_tag_only = sum(1 for n in p2_map
+                       if n in tagged_set and n not in eco_set and n not in search_set)
     mod_both   = sum(1 for n in p2_map if n in eco_set and n in search_set)
 
     eco_unmatched_set = set(eco_unmatched)
@@ -1495,8 +1617,10 @@ def main() -> None:
     print(f"  Modules ({len(rows)}):", file=sys.stderr)
     print(f"    ecosystem page:              {mod_eco:3}  ({mod_eco - mod_both} unique to this source)", file=sys.stderr)
     print(f"    packages.drupal.org search:  {mod_search:3}  ({mod_search - mod_both} unique to this source)", file=sys.stderr)
+    if full_ecosystem:
+        print(f"    drupal.org AI category tag:  {mod_tagged:3}  ({mod_tag_only} unique to this source)", file=sys.stderr)
     if mod_both:
-        print(f"    in both sources:             {mod_both:3}", file=sys.stderr)
+        print(f"    in both eco + search:        {mod_both:3}", file=sys.stderr)
     print(f"  Recipes ({len(recipe_rows)}):", file=sys.stderr)
     print(f"    ecosystem (unmatched modules): {rec_eco:3}", file=sys.stderr)
     print(f"    Packagist type+keyword search: {rec_search:3}", file=sys.stderr)
@@ -1526,6 +1650,10 @@ def main() -> None:
     payload = {
         "generated":       datetime.now().strftime("%Y-%m-%d"),
         "drupal_versions": sorted(TARGET_VERSIONS),
+        # Records which crawl produced this file, so the renderers can state
+        # the scope accurately (and know whether the drupal/ai column is
+        # meaningful — without --full-ecosystem every row requires drupal/ai).
+        "full_ecosystem":  full_ecosystem,
         "modules":         rows,
         "recipes":         recipe_rows,
     }

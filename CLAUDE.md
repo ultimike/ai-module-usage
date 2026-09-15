@@ -11,10 +11,14 @@ re-discovering everything from scratch.
 
 `drupal_ai_dependents.py` finds all Drupal **modules and recipes** that
 declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)**
-in their `composer.json`. It only collects and verifies data, writing the
-result as JSON — rendering is `render_md.py`'s and `render_html.py`'s job
-(two sorted tables: Modules, then Recipes — separate `##` sections in
-markdown, separate tabs in HTML).
+in their `composer.json`. With **`--full-ecosystem`** it also includes every
+module filed under drupal.org's **"Artificial Intelligence (AI)" project
+category** (taxonomy term 204588), which qualifies by tag alone even without
+the composer dependency. The mode is recorded as a `full_ecosystem` boolean in
+the payload so the renderers can state the scope accurately. It only collects
+and verifies data, writing the result as JSON — rendering is `render_md.py`'s
+and `render_html.py`'s job (two sorted tables: Modules, then Recipes —
+separate `##` sections in markdown, separate tabs in HTML).
 
 **Modules table:**
 - Label — the module's actual display title, from its `*.info.yml` `name:` key (linked to the project page)
@@ -28,6 +32,13 @@ markdown, separate tabs in HTML).
   - Outline shield (inline SVG, stroke only, 50% opacity) — covered + pre-release (rc/beta/alpha/dev)
   - 🚫 — not covered by the security advisory policy
 - Active install count ("Drupal.org usage")
+- drupal/ai dependency (`requires_ai` in JSON) — ✓ when the latest release has
+  a hard composer dependency on drupal/ai, — when the module is included via
+  the AI project category only; HTML adds a Requires/AI-category-only
+  checkbox filter. **Only rendered for `--full-ecosystem` payloads** — without
+  the flag every row would be ✓, so both renderers drop the column and put
+  "Only includes projects with a dependency on the Drupal AI module" in the
+  header instead.
 - Categories — one or more categories derived from the label + description +
   machine name (see the Categorization section below); shown as pills in HTML,
   comma-separated in markdown
@@ -82,7 +93,7 @@ format, and this script's only job is producing correct, complete JSON.
 
 ## Data sources and why each was chosen
 
-### 1. Candidate discovery — two sources, union-merged
+### 1. Candidate discovery — two sources, or three with `--full-ecosystem`
 
 **Source A: `drupal.org/project/ai/ecosystem` (HTML scraping)**
 - Scraped with a regex matching `href="/project/([a-z0-9_]+)"`
@@ -97,8 +108,30 @@ format, and this script's only job is producing correct, complete JSON.
 - Limitation: matches on name/description, not on dependency — produces false
   positives that are filtered out in stage 2
 
-Total after dedup: ~733 candidates. Ecosystem names come first; search names
-are appended only if not already seen.
+**Source C (`--full-ecosystem` only): drupal.org "Artificial Intelligence (AI)"
+project category
+(`www.drupal.org/api-d7/node.json?type=project_module&taxonomy_vocabulary_3=204588`)**
+- Returns ~395 names; gated behind `--full-ecosystem` and **skipped entirely**
+  without it, not crawled-and-filtered. Most of those names are already found
+  by sources A/B (only ~55 are new), so the flag's real effect isn't the extra
+  candidates — it's that these names skip the drupal/ai `require` check
+- Paginates with `limit=50` + `page=N`, stopping when the response has no
+  `next` link; goes through `_drupal_api_get()` so the drupal.org API's
+  rate limiting (503 + Retry-After) is already handled
+- The term ID 204588 is the "Artificial Intelligence (AI)" project category
+  maintainers pick on their drupal.org project page (found via
+  `api-d7/taxonomy_term.json?name=Artificial intelligence (AI)`)
+- **Names from this source are exempt from the drupal/ai `require` check in
+  stage 2** — the maintainer's own categorization is the qualification. They
+  still must exist on packages.drupal.org as a D10/11-compatible
+  `drupal-module`, so tagged-but-unreleased/sandbox projects are filtered out.
+- This is what catches AI-related modules with no code dependency on
+  drupal/ai at all (e.g. `webmcp_user_forms`), which sources A/B would
+  discover but stage 2 would previously always reject.
+
+Total after dedup: ~1000 candidates by default, ~1060 with `--full-ecosystem`.
+Ecosystem names come first; search and tagged names are appended only if not
+already seen.
 
 ### 2. Dependency verification — `packages.drupal.org/files/packages/8/p2/drupal/{name}.json`
 
@@ -109,7 +142,12 @@ contents (require, type, extra, etc.).
 Three checks are applied (all must pass):
 1. `type == "drupal-module"` — excludes recipes (`drupal-recipe`), profiles,
    distributions. Checked on the first (latest) version only, as type is stable.
-2. `"drupal/ai"` present in `require` — confirms hard dependency
+2. `"drupal/ai"` present in `require` — confirms hard dependency. Under
+   `--full-ecosystem`, **skipped (`require_ai=False`) for candidates from the
+   AI project category source**, which qualify by tag; each module row records
+   the outcome in a `requires_ai` boolean (False only for tag-qualified
+   modules whose chosen release has no drupal/ai require). Without the flag
+   `tagged_set` is empty, so every candidate is checked strictly.
 3. `drupal/core` constraint includes `\b10\b` or `\b11\b` — Drupal 10/11 compat.
    Missing or `"*"` constraint is treated as compatible (the /8 repo only
    serves modern packages).
