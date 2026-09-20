@@ -38,7 +38,7 @@ general rate limits are already enforced server-side via HTTP 429 with a
 Retry-After header, which _http_get() honors.
 
 Usage:
-  python3 drupal_ai_dependents.py [--json FILE] [--full-ecosystem]
+  python3 drupal_ai_dependents.py [--json FILE] [--history FILE] [--full-ecosystem]
 
   # Write JSON, then render separately (recommended):
   python3 drupal_ai_dependents.py --json results.json
@@ -47,6 +47,10 @@ Usage:
 
   # Include AI-category-tagged modules that don't require drupal/ai:
   python3 drupal_ai_dependents.py --full-ecosystem --json results.json
+
+Every normal run also appends this run's usage (modules) / downloads
+(recipes) numbers to history.json (see --history), which the renderers read
+to compute a Trend column comparing the two most recent runs.
 """
 
 # Python's standard library modules — no composer/npm needed.
@@ -179,12 +183,16 @@ def _http_get(url: str, params: dict | None = None) -> tuple[int, bytes, dict]:
             # Any other status (including a 429 with no retries left) is
             # not retried — a 404 won't become a 200 on retry.
             return exc.code, b"", hdrs
+            
+        except OSError as exc:
+            # OSError covers network-level failures: timeouts, SSL errors,
+            # DNS failures, connection resets. URLError is an OSError
+            # subclass, but urllib doesn't wrap errors raised while reading
+            # the response (e.g. TimeoutError from getresponse()), so the
+            # raw socket errors must be caught here too. These are often
+            # transient, so we retry with exponential backoff before giving
+            # up. HTTPError is a subclass of URLError, but caught above first.
 
-        except urllib.error.URLError as exc:
-            # URLError covers network-level failures: timeouts, SSL errors,
-            # DNS failures, connection resets. These are often transient, so
-            # we retry with exponential backoff before giving up.
-            # HTTPError is a subclass of URLError, but caught above first.
             if attempt + 1 < MAX_RETRIES:
                 wait = RETRY_BACKOFF * (2 ** attempt)  # 2s, 4s, 8s …
                 print(
@@ -1308,6 +1316,62 @@ def recategorize_file(path: str) -> None:
 
 
 # ---------------------------------------------------------------------------
+# History — usage/downloads data points over time, for the renderers' Trend column
+# ---------------------------------------------------------------------------
+#
+# A separate, ever-growing JSON file (default history.json), keyed by
+# machine_name, recording one {date, usage} (modules) or {date, downloads}
+# (recipes) entry per run. Kept apart from results.json (a point-in-time
+# snapshot) since this is a time series instead. Nothing is ever pruned —
+# a package that later disappears from results.json keeps its history, since
+# it's still a real historical record. render_md.py / render_html.py read
+# this file (independently — see their own copies of _trend()) to compute a
+# Trend column comparing the two most recent data points for each package.
+
+def load_history(path: str) -> dict:
+    """Load history.json if it exists, else return an empty dict.
+
+    A missing file just means this is the first run with history tracking —
+    not an error condition.
+    """
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return json.load(fh)
+    except FileNotFoundError:
+        return {}
+
+
+def update_history(history: dict, payload: dict, today: str) -> dict:
+    """Append today's usage/downloads data point for every module and recipe.
+
+    Mutates and returns `history`. Modules contribute a "usage" entry,
+    recipes a "downloads" entry — mirroring the fields already distinct
+    between module and recipe rows in results.json. A machine_name missing
+    from this run's payload (a package that dropped out of results.json)
+    keeps its prior entries untouched — history is never pruned. A None
+    value (that run's fetch failed) is still recorded as null rather than
+    skipped: a gap is itself informative, not the same as no entry existing.
+    """
+    for entry in payload.get("modules", []):
+        name = entry.get("machine_name")
+        if not name:
+            continue
+        history.setdefault(name, []).append({"date": today, "usage": entry.get("usage")})
+    for entry in payload.get("recipes", []):
+        name = entry.get("machine_name")
+        if not name:
+            continue
+        history.setdefault(name, []).append({"date": today, "downloads": entry.get("downloads")})
+    return history
+
+
+def save_history(path: str, history: dict) -> None:
+    """Write history.json, same formatting convention as results.json."""
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(history, fh, indent=2, ensure_ascii=False)
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
@@ -1340,6 +1404,15 @@ def main() -> None:
              "project category, even when they have no composer dependency on "
              "drupal/ai. Off by default, in which case the results contain "
              "only projects that require drupal/ai.",
+    )
+    parser.add_argument(
+        "--history", metavar="FILE", default="history.json",
+        help="Append this run's usage (modules) / downloads (recipes) numbers, "
+             "keyed by machine_name and dated, to FILE. Grows forever — every "
+             "run's data point is kept, nothing pruned — so render_md.py and "
+             "render_html.py can show a Trend column vs. the previous run. "
+             "Written on every normal run, not with --categorize (which "
+             "doesn't refetch data). Defaults to history.json.",
     )
     # args.json will be a filename string if provided, or None if omitted (print to stdout).
     # args.full_ecosystem is a bool — argparse converts the --full-ecosystem
@@ -1661,6 +1734,13 @@ def main() -> None:
     # Tag every module and recipe with its categories (derived from label,
     # description and machine name). Pure text processing — no extra requests.
     apply_categories(payload)
+
+    # Append this run's usage/downloads data point to history.json (unbounded
+    # retention — see the History section above). Unconditional on every
+    # normal run, unlike --json which is optional.
+    history = load_history(args.history)
+    update_history(history, payload, payload["generated"])
+    save_history(args.history, history)
 
     if args.json:
         with open(args.json, "w", encoding="utf-8") as fh:

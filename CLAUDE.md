@@ -32,21 +32,23 @@ separate `##` sections in markdown, separate tabs in HTML).
   - Outline shield (inline SVG, stroke only, 50% opacity) — covered + pre-release (rc/beta/alpha/dev)
   - 🚫 — not covered by the security advisory policy
 - Active install count ("Drupal.org usage")
+- Trend — arrow + percent change in usage vs. the previous run, from
+  `history.json` (see "Usage/downloads history and the Trend column" below)
 - drupal/ai dependency (`requires_ai` in JSON) — ✓ when the latest release has
   a hard composer dependency on drupal/ai, — when the module is included via
   the AI project category only; HTML adds a Requires/AI-category-only
   checkbox filter. **Only rendered for `--full-ecosystem` payloads** — without
   the flag every row would be ✓, so both renderers drop the column and put
   "Only includes projects with a dependency on the Drupal AI module" in the
-  header instead.
+  header instead. Sits between Trend and Categories when present.
 - Categories — one or more categories derived from the label + description +
   machine name (see the Categorization section below); shown as pills in HTML,
   comma-separated in markdown
 
 **Recipes table:** Label, Description (same source/treatment as modules, but
 from `recipe.yml`'s `description:` key), machine name, URL, version, release
-date, Packagist downloads, Packagist stars, Categories — no Drupal.org security
-coverage or usage columns.
+date, Packagist downloads, Trend (downloads vs. previous run), Packagist
+stars, Categories — no Drupal.org security coverage or usage columns.
 Recipes (Drupal projects of type `drupal-recipe`, applied via `drush recipe`
 rather than installed as code) genuinely have neither of those: `project_usage`
 is absent from Drupal.org's API response for a recipe (not zero — absent),
@@ -75,9 +77,9 @@ run for many minutes — without per-module output it used to only print when
 a release-date fallback was needed (rare), making the whole run look hung.
 
 ```bash
-python3 drupal_ai_dependents.py --json results.json  # slow, once
+python3 drupal_ai_dependents.py --json results.json  # slow, once (also appends to history.json)
 
-# Fast re-render from saved JSON (no network calls):
+# Fast re-render from saved JSON (no network calls); both read history.json for the Trend column:
 python3 render_md.py results.json -o results.md
 python3 render_html.py results.json -o results.html
 ```
@@ -495,8 +497,13 @@ often 429/503 retries actually trigger, which will vary run to run.
   directory) so re-runs don't re-fetch every package. p2 files rarely change
   and the main cost is the 3s delay per request.
 
-- **Delta reporting** — compare two runs and show what's new, what changed
-  version, and what disappeared. Useful for tracking ecosystem growth over time.
+- ~~**Delta reporting**~~ — partially addressed: `history.json` (see the
+  "Usage/downloads history" section above) now tracks usage/downloads over
+  time and both renderers show a Trend column. Still open: showing what's
+  new (a machine_name appearing in `results.json` for the first time) and
+  what disappeared (a machine_name no longer in `results.json` but still
+  present in `history.json`) — `history.json` has the data to compute both,
+  nothing currently renders them.
 
 - **`--candidate-source` flag** to let the user restrict to one source
   (ecosystem-only or search-only) for faster targeted runs.
@@ -669,6 +676,106 @@ have several categories (unlike single-valued stability/security), this filter
 deliberately differs from — and is not shared with — the stability/security
 filter logic.
 
+## Usage/downloads history and the Trend column
+
+`drupal_ai_dependents.py` also writes a second, separate output file:
+**`history.json`** (path configurable via `--history FILE`, default
+`history.json`). Unlike `results.json` — a point-in-time snapshot,
+overwritten fresh every run — `history.json` is an ever-growing time series,
+one data point appended per module/recipe per run, keyed by `machine_name`:
+
+```json
+{
+  "drupal/ai_agents": [
+    {"date": "2026-06-22", "usage": 13133},
+    {"date": "2026-09-11", "usage": 13980}
+  ],
+  "drupal/ai_recipe_image_classification": [
+    {"date": "2026-06-22", "downloads": 1180},
+    {"date": "2026-09-11", "downloads": 1234}
+  ]
+}
+```
+
+Module entries carry `usage`; recipe entries carry `downloads` — no
+separate `"metric"` field, since which key is present already discriminates
+module vs. recipe rows, mirroring how `results.json` itself distinguishes
+them. A `None` value (that run's fetch failed) is still recorded as
+`usage: null` / `downloads: null` rather than skipped — a gap is itself
+informative ("we checked and got nothing that day"), not the same as no
+entry existing at all.
+
+**Written unconditionally on every normal run**, right after
+`apply_categories(payload)` and before the `--json` write, via three small
+functions (`load_history()`, `update_history()`, `save_history()`) living
+next to `apply_categories`/`recategorize_file` — same "load → mutate → write
+back" shape. `update_history()` uses `payload["generated"]` as the date (the
+same value already stamped on `results.json`) rather than a fresh
+`datetime.now()` call, so both files agree on "today" even if a run
+straddles midnight.
+
+**Retention is unbounded — nothing is ever pruned.** A machine_name that
+drops out of `results.json` (module/recipe no longer verifies, or fell out
+of the candidate lists) simply stops getting new entries appended; its
+existing history is left untouched, since it's still a real historical
+record, not stale data to discard.
+
+**Not written by `--categorize`.** That fast path re-derives categories on
+an existing `results.json` without refetching usage/downloads, so appending
+a new history data point there would fabricate a data point for a run that
+never actually happened.
+
+**Trend column (both renderers):** each renderer keeps its own small,
+identical `_trend(history, machine_name, metric)` helper — deliberately
+duplicated rather than imported, same "runs on its own" convention as
+`CATEGORY_ORDER` in `render_html.py`. It compares only the two most recent
+history entries (`points[-2]` vs `points[-1]`) and returns
+`(percent_change, direction, raw_delta, prev_date)` — direction is
+`up`/`down`/`flat`, `raw_delta` is the plain signed difference (e.g. `+34`),
+`prev_date` is the earlier point's `"date"` string — or `None` when there's
+no history, fewer than two points, or the baseline point is
+missing/null/zero. Displayed as an arrow + percent (`▲ +4.2%` / `▼ -1.8%` /
+`● 0.0%`), with a `title` attribute tooltip showing the raw value change and
+when the comparison point is from, e.g. `"+34 since Sep 1 2026"` /
+`"-543 since Aug 15 2026"` — built by two more small duplicated helpers,
+`_format_trend_date()` (`"2026-09-01"` → `"Sep 1 2026"`) and
+`_trend_title()`. In `render_md.py` the tooltip is a `<span title="…">`
+wrapping the cell text (same "HTML works inside a markdown table cell"
+approach already used for the security shield `<img>` tags); in
+`render_html.py` it's the `title` attribute on the existing
+`<span class="trend-{direction}">`. Shows `—` (no tooltip) when `_trend()`
+returns `None` — this is the fallback for a missing
+`history.json`, a machine_name absent from it, or only one data point so
+far (expected right after history tracking is first turned on; a second run
+is needed before any row shows a real trend).
+
+Both `render_md.py` and `render_html.py` gained a `--history FILE` flag
+(default `history.json`, same default as the collector) read with a
+`try/except FileNotFoundError → {}` — a missing file is not an error, it
+just means every row's Trend cell renders blank. `render_md(payload)` and
+`render_html(payload)` both gained a second `history` parameter (default
+`None`, treated as `{}`) so any direct caller omitting it doesn't crash.
+
+Column placement: Trend sits immediately after the metric it's derived from
+— after Usage in the Modules table, after Packagist downloads (not stars) in
+the Recipes table, since downloads is the only metric `history.json` tracks
+for recipes. In `render_html.py` this means the Modules table's Categories
+column shifts from `data-col="5"` to `"6"`, and the Recipes table's Stars
+column shifts from `"4"` to `"5"` (Categories `"5"`→`"6"`) — but Usage stays
+`data-col="4"` and Downloads stays `data-col="3"` (Trend is inserted *after*
+them), so the JS initial-sort calls
+(`modulesSorter.sortTable(4, 'num')`, `recipesSorter.sortTable(3, 'num')`)
+need no change. Trend's `data-val` is the signed percent as a string (`""`
+when missing), which the existing generic sorter already treats as
+`-Infinity` — no sorter changes needed either.
+
+Trend is **display-only** — sortable, like every other column, but with no
+dedicated filter checkboxes. It's a derived, continuously-valued number, not
+a stable categorical per-row state like stability/security/category, so it
+doesn't fit the existing Set-based filter pattern well; sorting the column
+already covers "what's rising/falling fastest." Revisit if a filter turns
+out to be wanted later.
+
 ## JSON output and rendering pipeline
 
 `drupal_ai_dependents.py` writes JSON and nothing else — `--json FILE`
@@ -769,11 +876,15 @@ than crashing.
 
 Recommended workflow:
 ```bash
-python3 drupal_ai_dependents.py --json results.json       # slow, once (output already categorized)
-python3 drupal_ai_dependents.py --categorize results.json # fast — only when tuning category rules
-python3 render_md.py results.json -o results.md           # fast, re-run anytime
-python3 render_html.py results.json -o results.html       # fast, re-run anytime
+python3 drupal_ai_dependents.py --json results.json       # slow, once (output already categorized, history.json also written/updated)
+python3 drupal_ai_dependents.py --categorize results.json # fast — only when tuning category rules (does NOT touch history.json)
+python3 render_md.py results.json -o results.md           # fast, re-run anytime (reads history.json for the Trend column)
+python3 render_html.py results.json -o results.html       # fast, re-run anytime (reads history.json for the Trend column)
 ```
+
+See "Usage/downloads history and the Trend column" above for `history.json`'s
+schema and the `--history FILE` flag (default `history.json`) shared by all
+three scripts.
 
 ---
 
@@ -781,9 +892,10 @@ python3 render_html.py results.json -o results.html       # fast, re-run anytime
 
 | File | Purpose |
 |------|---------|
-| `drupal_ai_dependents.py` | Main script — data collection, candidate verification, and categorization (`detect_categories` / `apply_categories` / `--categorize`) |
-| `render_md.py` | Markdown renderer — reads `results.json`, outputs markdown table (incl. Categories column) |
-| `render_html.py` | HTML renderer — reads `results.json`, outputs HTML with stability/security/category filters |
+| `drupal_ai_dependents.py` | Main script — data collection, candidate verification, categorization (`detect_categories` / `apply_categories` / `--categorize`), and usage/downloads history (`load_history` / `update_history` / `save_history` / `--history`) |
+| `render_md.py` | Markdown renderer — reads `results.json` (+ `history.json`), outputs markdown table (incl. Categories and Trend columns) |
+| `render_html.py` | HTML renderer — reads `results.json` (+ `history.json`), outputs HTML with stability/security/category filters and a sortable Trend column |
+| `history.json` | Generated data, same treatment as `results.json`/`results.md`/`results.html` (tracked in git, not gitignored) — one usage/downloads data point per module/recipe per run, appended forever |
 | `README.md` | User-facing documentation (usage, limitations, how it works) |
 | `CLAUDE.md` | This file — context for future Claude Code sessions |
 
@@ -791,4 +903,6 @@ Recipe support (modules-and-recipes) was added entirely within these four
 files — no new files were introduced. The categorization system was likewise
 added within `drupal_ai_dependents.py` and the two renderers (an early
 standalone `categorize.py` draft was folded into the main script) — still no
-new files.
+new files. The usage/downloads history + Trend column feature added exactly
+one new file, `history.json` (generated output, not new source code) — all
+the logic lives in the same three existing files.
