@@ -1,9 +1,10 @@
 {
-  "generated": "2026-09-18",
+  "generated": "2026-09-20",
   "drupal_versions": [
     10,
     11
   ],
+  "full_ecosystem": false,
   "modules": [
     {
       "machine_name": "drupal/ai_provider_openai",
@@ -15,6 +16,7 @@
       "usage": 13239,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -29,6 +31,7 @@
       "usage": 10350,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Media",
         "Accessibility"
@@ -44,6 +47,7 @@
       "usage": 10093,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Agents"
       ]
@@ -58,6 +62,7 @@
       "usage": 8498,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -72,6 +77,7 @@
       "usage": 6072,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -86,6 +92,7 @@
       "usage": 5697,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -100,6 +107,7 @@
       "usage": 1589,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -114,6 +122,7 @@
       "usage": 1288,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Translation"
       ]
@@ -128,6 +137,7 @@
       "usage": 1279,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -142,6 +152,7 @@
       "usage": 1079,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Local Providers",
         "Translation"
@@ -157,6 +168,7 @@
       "usage": 1040,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Automation"
       ]
@@ -171,6 +183,7 @@
       "usage": 1007,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Agents",
         "Tool"
@@ -186,6 +199,7 @@
       "usage": 797,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "SEO & Metadata"
@@ -201,6 +215,7 @@
       "usage": 750,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -215,6 +230,7 @@
       "usage": 732,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Agents"
       ]
@@ -229,6 +245,7 @@
       "usage": 721,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -243,6 +260,7 @@
       "usage": 667,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -257,6 +275,7 @@
       "usage": 618,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -271,6 +290,7 @@
       "usage": 592,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -285,6 +305,7 @@
       "usage": 585,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -299,6 +320,7 @@
       "usage": 481,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -313,6 +335,7 @@
       "usage": 459,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -327,6 +350,7 @@
       "usage": 453,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -341,6 +365,7 @@
       "usage": 451,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -355,6 +380,7 @@
       "usage": 443,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -369,6 +395,7 @@
       "usage": 430,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Search",
@@ -385,6 +412,7 @@
       "usage": 370,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Media"
       ]
@@ -399,6 +427,7 @@
       "usage": 307,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -413,6 +442,7 @@
       "usage": 279,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial"
       ]
@@ -427,6 +457,7 @@
       "usage": 270,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -441,6 +472,7 @@
       "usage": 226,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -455,6 +487,7 @@
       "usage": 162,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -469,6 +502,7 @@
       "usage": 144,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Translation"
@@ -484,6 +518,7 @@
       "usage": 143,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Content",
@@ -500,6 +535,7 @@
       "usage": 126,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -514,6 +550,7 @@
       "usage": 122,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Content"
@@ -529,6 +566,7 @@
       "usage": 116,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -543,6 +581,7 @@
       "usage": 114,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -557,6 +596,7 @@
       "usage": 113,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -571,6 +611,7 @@
       "usage": 109,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -585,6 +626,7 @@
       "usage": 91,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -599,6 +641,7 @@
       "usage": 91,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -613,6 +656,7 @@
       "usage": 77,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
@@ -628,6 +672,7 @@
       "usage": 74,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -642,6 +687,7 @@
       "usage": 73,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Media"
@@ -657,6 +703,7 @@
       "usage": 70,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -671,6 +718,7 @@
       "usage": 61,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Analytics"
@@ -686,6 +734,7 @@
       "usage": 60,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -700,6 +749,7 @@
       "usage": 59,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -714,6 +764,7 @@
       "usage": 58,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Analytics"
@@ -729,6 +780,7 @@
       "usage": 57,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
@@ -744,6 +796,7 @@
       "usage": 54,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -758,6 +811,7 @@
       "usage": 54,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Translation"
       ]
@@ -772,6 +826,7 @@
       "usage": 53,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -786,6 +841,7 @@
       "usage": 52,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Analytics",
@@ -802,6 +858,7 @@
       "usage": 51,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -816,6 +873,7 @@
       "usage": 48,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Translation"
@@ -831,6 +889,7 @@
       "usage": 46,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -845,6 +904,7 @@
       "usage": 46,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -859,6 +919,7 @@
       "usage": 41,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -873,6 +934,7 @@
       "usage": 40,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Accessibility"
@@ -888,6 +950,7 @@
       "usage": 39,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Agents",
         "Analytics",
@@ -904,6 +967,7 @@
       "usage": 35,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -918,6 +982,7 @@
       "usage": 34,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Media"
@@ -933,6 +998,7 @@
       "usage": 33,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial"
       ]
@@ -947,6 +1013,7 @@
       "usage": 32,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -961,6 +1028,7 @@
       "usage": 30,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation"
@@ -976,6 +1044,7 @@
       "usage": 30,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Automation"
       ]
@@ -990,6 +1059,7 @@
       "usage": 29,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1004,6 +1074,7 @@
       "usage": 27,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Chat"
@@ -1019,6 +1090,7 @@
       "usage": 23,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Agents",
         "Tool"
@@ -1034,6 +1106,7 @@
       "usage": 22,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1048,6 +1121,7 @@
       "usage": 22,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1062,6 +1136,7 @@
       "usage": 22,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -1076,6 +1151,7 @@
       "usage": 22,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Media"
@@ -1091,6 +1167,7 @@
       "usage": 20,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1105,6 +1182,7 @@
       "usage": 19,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Tool"
       ]
@@ -1119,6 +1197,7 @@
       "usage": 18,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -1133,6 +1212,7 @@
       "usage": 17,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Analytics"
@@ -1148,6 +1228,7 @@
       "usage": 17,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Automation"
@@ -1163,6 +1244,7 @@
       "usage": 16,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -1177,6 +1259,7 @@
       "usage": 15,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Safety & Governance"
       ]
@@ -1191,6 +1274,7 @@
       "usage": 14,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Search"
@@ -1206,6 +1290,7 @@
       "usage": 13,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation",
@@ -1222,6 +1307,7 @@
       "usage": 13,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -1236,6 +1322,7 @@
       "usage": 13,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -1250,6 +1337,7 @@
       "usage": 12,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Automation"
       ]
@@ -1264,6 +1352,7 @@
       "usage": 12,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1278,6 +1367,7 @@
       "usage": 10,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Translation"
       ]
@@ -1292,6 +1382,7 @@
       "usage": 10,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -1306,6 +1397,7 @@
       "usage": 9,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1320,6 +1412,7 @@
       "usage": 9,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -1334,6 +1427,7 @@
       "usage": 9,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -1348,6 +1442,7 @@
       "usage": 9,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Content",
@@ -1366,6 +1461,7 @@
       "usage": 9,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -1380,6 +1476,7 @@
       "usage": 9,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Content",
@@ -1397,6 +1494,7 @@
       "usage": 9,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Translation"
       ]
@@ -1411,6 +1509,7 @@
       "usage": 8,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation"
@@ -1426,6 +1525,7 @@
       "usage": 8,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Media"
@@ -1441,6 +1541,7 @@
       "usage": 7,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial"
       ]
@@ -1455,6 +1556,7 @@
       "usage": 7,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Safety & Governance"
@@ -1470,6 +1572,7 @@
       "usage": 6,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Chat"
@@ -1485,6 +1588,7 @@
       "usage": 6,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation"
@@ -1500,6 +1604,7 @@
       "usage": 6,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
@@ -1515,6 +1620,7 @@
       "usage": 6,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -1529,6 +1635,7 @@
       "usage": 6,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1543,6 +1650,7 @@
       "usage": 6,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Agents"
@@ -1558,6 +1666,7 @@
       "usage": 6,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation",
@@ -1574,6 +1683,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Media"
       ]
@@ -1588,6 +1698,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Media"
       ]
@@ -1602,6 +1713,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Analytics",
@@ -1618,6 +1730,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -1632,6 +1745,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Media"
@@ -1647,6 +1761,7 @@
       "usage": 5,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1661,6 +1776,7 @@
       "usage": 5,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "SEO & Metadata"
@@ -1676,6 +1792,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1690,6 +1807,7 @@
       "usage": 5,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Search",
@@ -1706,6 +1824,7 @@
       "usage": 5,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Media",
@@ -1723,6 +1842,7 @@
       "usage": 5,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -1737,6 +1857,7 @@
       "usage": 4,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation",
@@ -1753,6 +1874,7 @@
       "usage": 4,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -1767,6 +1889,7 @@
       "usage": 4,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -1781,6 +1904,7 @@
       "usage": 4,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -1795,6 +1919,7 @@
       "usage": 4,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -1809,6 +1934,7 @@
       "usage": 4,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -1823,6 +1949,7 @@
       "usage": 4,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Editorial",
@@ -1839,6 +1966,7 @@
       "usage": 3,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Content",
@@ -1855,6 +1983,7 @@
       "usage": 3,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -1869,6 +1998,7 @@
       "usage": 3,
       "security_covered": false,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -1883,6 +2013,7 @@
       "usage": 3,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
@@ -1898,6 +2029,7 @@
       "usage": 3,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -1912,6 +2044,7 @@
       "usage": 3,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -1926,23 +2059,10 @@
       "usage": 3,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Media",
         "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_agent_memory",
-      "label": "AI Agent Memory",
-      "description": "Persists AI agent state across conversation turns so agents retain tool call history and context.",
-      "url": "https://www.drupal.org/project/ai_agent_memory",
-      "version": "1.0.0",
-      "release_date": "2026-06-10",
-      "usage": 3,
-      "security_covered": true,
-      "stability": "stable",
-      "categories": [
-        "Agents"
       ]
     },
     {
@@ -1955,8 +2075,24 @@
       "usage": 3,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_agent_memory",
+      "label": "AI Agent Memory",
+      "description": "Persists AI agent state across conversation turns so agents retain tool call history and context.",
+      "url": "https://www.drupal.org/project/ai_agent_memory",
+      "version": "1.0.0",
+      "release_date": "2026-06-10",
+      "usage": 3,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Agents"
       ]
     },
     {
@@ -1969,6 +2105,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Media"
@@ -1984,6 +2121,7 @@
       "usage": 2,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Media"
@@ -1999,6 +2137,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -2013,6 +2152,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Automation"
       ]
@@ -2027,6 +2167,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Tool"
       ]
@@ -2041,6 +2182,7 @@
       "usage": 2,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -2055,6 +2197,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "SEO & Metadata"
       ]
@@ -2069,6 +2212,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Developer Tools"
@@ -2084,6 +2228,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
@@ -2098,6 +2243,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Analytics"
@@ -2113,6 +2259,7 @@
       "usage": 2,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Chat"
@@ -2128,6 +2275,7 @@
       "usage": 2,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Media"
@@ -2143,6 +2291,7 @@
       "usage": 2,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Vector Database"
       ]
@@ -2157,6 +2306,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Agents"
@@ -2172,6 +2322,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Evaluation & Testing"
       ]
@@ -2186,6 +2337,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Developer Tools"
@@ -2201,6 +2353,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Tool"
       ]
@@ -2215,6 +2368,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -2229,6 +2383,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -2243,6 +2398,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Media",
         "Accessibility"
@@ -2258,6 +2414,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Agents"
       ]
@@ -2272,6 +2429,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Search",
@@ -2289,6 +2447,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Tool",
         "Editorial"
@@ -2304,6 +2463,7 @@
       "usage": 1,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -2318,6 +2478,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation",
@@ -2334,6 +2495,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Chat",
         "Media"
@@ -2349,6 +2511,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Agents"
       ]
@@ -2363,6 +2526,7 @@
       "usage": 1,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Evaluation & Testing"
       ]
@@ -2377,6 +2541,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Tool",
         "Agents"
@@ -2392,6 +2557,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Tool",
         "SEO & Metadata"
@@ -2407,6 +2573,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Agents"
       ]
@@ -2421,6 +2588,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Evaluation & Testing"
@@ -2436,6 +2604,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Automation",
@@ -2450,8 +2619,9 @@
       "version": "1.0.0-alpha1",
       "release_date": "2026-09-17",
       "usage": null,
-      "security_covered": false,
+      "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Content"
@@ -2467,6 +2637,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -2481,6 +2652,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Media"
       ]
@@ -2495,6 +2667,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Developer Tools"
@@ -2510,6 +2683,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Tool"
       ]
@@ -2524,6 +2698,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Search",
@@ -2540,6 +2715,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Agents"
@@ -2555,6 +2731,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Chat",
         "Evaluation & Testing"
@@ -2570,6 +2747,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Media",
@@ -2586,6 +2764,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -2600,6 +2779,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -2614,6 +2794,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Analytics"
@@ -2629,6 +2810,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -2643,6 +2825,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -2657,6 +2840,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -2671,6 +2855,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -2685,6 +2870,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Tool"
       ]
@@ -2699,6 +2885,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Analytics"
@@ -2714,6 +2901,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -2728,6 +2916,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Media"
@@ -2743,6 +2932,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Tool",
         "Developer Tools"
@@ -2758,6 +2948,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Safety & Governance"
@@ -2773,6 +2964,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Media"
       ]
@@ -2787,6 +2979,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Analytics"
@@ -2802,6 +2995,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Chat",
@@ -2818,6 +3012,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Media"
@@ -2833,6 +3028,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation"
@@ -2848,6 +3044,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Developer Tools"
@@ -2863,6 +3060,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -2877,6 +3075,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -2891,6 +3090,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -2905,6 +3105,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Safety & Governance"
@@ -2920,24 +3121,10 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_plus",
-      "label": "AI +",
-      "description": "Adds an AI chatbot tool to Edit Mode.",
-      "url": "https://www.drupal.org/project/ai_plus",
-      "version": "1.0.2",
-      "release_date": "2026-07-04",
-      "usage": null,
-      "security_covered": true,
-      "stability": "stable",
-      "categories": [
-        "Editorial",
-        "Chat"
       ]
     },
     {
@@ -2950,6 +3137,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -2964,6 +3152,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Analytics",
@@ -2980,6 +3169,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -2994,6 +3184,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -3008,6 +3199,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Safety & Governance"
@@ -3023,6 +3215,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -3037,6 +3230,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content"
       ]
@@ -3051,9 +3245,25 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Accessibility"
+      ]
+    },
+    {
+      "machine_name": "drupal/webai",
+      "label": "Web AI",
+      "description": "A picked collection of AI tools and providers, with more advanced artificial intelligence options.",
+      "url": "https://www.drupal.org/project/webai",
+      "version": "12.0.2",
+      "release_date": "2026-09-18",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Uncategorized"
       ]
     },
     {
@@ -3066,9 +3276,26 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/cxo_ai_content_editor",
+      "label": "CXO AI Content Editor",
+      "description": "Editor-controlled AI content suggestions for allowlisted Drupal fields.",
+      "url": "https://www.drupal.org/project/cxo_ai_content_editor",
+      "version": "1.0.1-alpha1",
+      "release_date": "2026-09-18",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Editorial",
+        "Content"
       ]
     },
     {
@@ -3081,6 +3308,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Editorial",
         "Content",
@@ -3099,6 +3327,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Media"
       ]
@@ -3113,6 +3342,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Chat"
@@ -3128,6 +3358,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -3142,6 +3373,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Media",
         "Translation"
@@ -3157,6 +3389,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
@@ -3172,6 +3405,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -3186,6 +3420,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Chat"
@@ -3201,6 +3436,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers",
         "Automation",
@@ -3217,6 +3453,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Media",
         "Accessibility"
@@ -3227,11 +3464,12 @@
       "label": "AI Chatbot Assistant UI",
       "description": "assistant-ui (React) chat frontend for the AI Assistant API.",
       "url": "https://www.drupal.org/project/ai_chatbot_assistant_ui",
-      "version": "1.0.0-beta6",
-      "release_date": "2026-09-14",
+      "version": "1.0.0-beta7",
+      "release_date": "2026-09-18",
       "usage": null,
       "security_covered": false,
       "stability": "beta",
+      "requires_ai": true,
       "categories": [
         "Chat"
       ]
@@ -3246,6 +3484,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial"
       ]
@@ -3260,6 +3499,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Editorial"
       ]
@@ -3274,6 +3514,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Search"
@@ -3289,6 +3530,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Analytics",
         "Safety & Governance"
@@ -3304,6 +3546,7 @@
       "usage": null,
       "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Analytics"
       ]
@@ -3318,6 +3561,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Search"
       ]
@@ -3332,6 +3576,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Automation"
@@ -3347,6 +3592,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Developer Tools"
       ]
@@ -3361,6 +3607,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Tool"
       ]
@@ -3375,6 +3622,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "rc",
+      "requires_ai": true,
       "categories": [
         "Chat",
         "Media",
@@ -3382,17 +3630,19 @@
       ]
     },
     {
-      "machine_name": "drupal/webai",
-      "label": "Web AI",
-      "description": "A picked collection of AI tools and providers, with more advanced artificial intelligence options.",
-      "url": "https://www.drupal.org/project/webai",
-      "version": "12.0.0",
-      "release_date": "2026-09-17",
+      "machine_name": "drupal/ai_plus",
+      "label": "AI +",
+      "description": "Adds an AI chatbot tool to Edit Mode.",
+      "url": "https://www.drupal.org/project/ai_plus",
+      "version": "1.0.2",
+      "release_date": "2026-07-04",
       "usage": null,
-      "security_covered": false,
+      "security_covered": true,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
-        "Uncategorized"
+        "Editorial",
+        "Chat"
       ]
     },
     {
@@ -3405,6 +3655,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Content",
         "Search"
@@ -3420,6 +3671,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Cloud Providers"
       ]
@@ -3434,6 +3686,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Automation",
         "Analytics",
@@ -3450,6 +3703,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "stable",
+      "requires_ai": true,
       "categories": [
         "Search",
         "Vector Database"
@@ -3465,6 +3719,7 @@
       "usage": null,
       "security_covered": false,
       "stability": "alpha",
+      "requires_ai": true,
       "categories": [
         "Uncategorized"
       ]
@@ -3476,10 +3731,10 @@
       "label": "AI Assistant",
       "description": "Adds integration with AI services, such as alt text generation and a chat bot to assist with site building. You can choose from several providers: amazee.ai, OpenAI or Anthropic.",
       "url": "https://www.drupal.org/project/drupal_cms_ai",
-      "version": "2.1.3",
-      "release_date": "2026-06-01",
+      "version": "2.1.5",
+      "release_date": "2026-09-10",
       "stability": "stable",
-      "downloads": 200828,
+      "downloads": 202021,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3495,7 +3750,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 29333,
+      "downloads": 29593,
       "stars": 1,
       "categories": [
         "Editorial"
@@ -3509,7 +3764,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 28926,
+      "downloads": 29186,
       "stars": 1,
       "categories": [
         "Content",
@@ -3524,7 +3779,7 @@
       "version": "1.0.1",
       "release_date": "2025-07-01",
       "stability": "stable",
-      "downloads": 28920,
+      "downloads": 29180,
       "stars": 1,
       "categories": [
         "Automation",
@@ -3540,7 +3795,7 @@
       "version": "1.0.4",
       "release_date": "2025-11-17",
       "stability": "stable",
-      "downloads": 20370,
+      "downloads": 20408,
       "stars": 1,
       "categories": [
         "Chat",
@@ -3555,7 +3810,7 @@
       "version": "1.0.2",
       "release_date": "2025-07-22",
       "stability": "stable",
-      "downloads": 20224,
+      "downloads": 20262,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3571,7 +3826,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 9303,
+      "downloads": 9565,
       "stars": 0,
       "categories": [
         "Search",
@@ -3586,7 +3841,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 9248,
+      "downloads": 9507,
       "stars": 0,
       "categories": [
         "Safety & Governance"
@@ -3600,7 +3855,7 @@
       "version": "1.0.0",
       "release_date": "2026-09-05",
       "stability": "stable",
-      "downloads": 8465,
+      "downloads": 8687,
       "stars": 1,
       "categories": [
         "Safety & Governance"
@@ -3614,7 +3869,7 @@
       "version": "1.0.1",
       "release_date": "2026-09-08",
       "stability": "stable",
-      "downloads": 3965,
+      "downloads": 4106,
       "stars": 0,
       "categories": [
         "Uncategorized"
@@ -3628,7 +3883,7 @@
       "version": "1.3.0",
       "release_date": "2026-03-26",
       "stability": "stable",
-      "downloads": 3037,
+      "downloads": 3098,
       "stars": 0,
       "categories": [
         "Cloud Providers",
@@ -3643,7 +3898,7 @@
       "version": "0.1.1",
       "release_date": "2025-12-03",
       "stability": "stable",
-      "downloads": 1152,
+      "downloads": 1192,
       "stars": 0,
       "categories": [
         "SEO & Metadata"
@@ -3657,7 +3912,7 @@
       "version": "1.1.1",
       "release_date": "2026-09-16",
       "stability": "stable",
-      "downloads": 840,
+      "downloads": 881,
       "stars": 0,
       "categories": [
         "Media"
@@ -3685,7 +3940,7 @@
       "version": "1.0.0",
       "release_date": "2025-10-09",
       "stability": "stable",
-      "downloads": 667,
+      "downloads": 705,
       "stars": 0,
       "categories": [
         "Content",
@@ -3700,7 +3955,7 @@
       "version": "2.0.0-alpha2",
       "release_date": "2026-06-26",
       "stability": "alpha",
-      "downloads": 647,
+      "downloads": 685,
       "stars": 0,
       "categories": [
         "Content",
@@ -3714,9 +3969,9 @@
       "description": "Provides basic configuration for implementing RAG search within site content.",
       "url": "https://www.drupal.org/project/ai_recipe_content_search_vector",
       "version": "1.x-dev",
-      "release_date": "2026-09-10",
+      "release_date": "2026-09-19",
       "stability": "dev",
-      "downloads": 645,
+      "downloads": 682,
       "stars": 0,
       "categories": [
         "Content",
@@ -3732,7 +3987,7 @@
       "version": "1.x-dev",
       "release_date": "2026-09-15",
       "stability": "dev",
-      "downloads": 641,
+      "downloads": 678,
       "stars": 0,
       "categories": [
         "Media",
@@ -3747,7 +4002,7 @@
       "version": "1.x-dev",
       "release_date": "2026-06-11",
       "stability": "dev",
-      "downloads": 638,
+      "downloads": 675,
       "stars": 0,
       "categories": [
         "Content",
@@ -3762,7 +4017,7 @@
       "version": "1.x-dev",
       "release_date": "2026-06-11",
       "stability": "dev",
-      "downloads": 638,
+      "downloads": 675,
       "stars": 0,
       "categories": [
         "Content"
@@ -3792,7 +4047,7 @@
       "version": "1.0.x-dev",
       "release_date": "2026-09-16",
       "stability": "dev",
-      "downloads": 264,
+      "downloads": 302,
       "stars": 0,
       "categories": [
         "Uncategorized"
@@ -3803,10 +4058,10 @@
       "label": "AI CKEditor",
       "description": "Adds AI integration to the CKEditor.",
       "url": "https://www.drupal.org/project/ai_recipe_ckeditor",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-09-09",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-09-18",
       "stability": "alpha",
-      "downloads": 140,
+      "downloads": 177,
       "stars": 0,
       "categories": [
         "Editorial"
@@ -3820,7 +4075,7 @@
       "version": "1.0.0-beta3",
       "release_date": "2026-09-16",
       "stability": "beta",
-      "downloads": 140,
+      "downloads": 177,
       "stars": 0,
       "categories": [
         "Search",
@@ -3835,7 +4090,7 @@
       "version": "1.0.0-beta1",
       "release_date": "2026-05-17",
       "stability": "beta",
-      "downloads": 120,
+      "downloads": 123,
       "stars": 0,
       "categories": [
         "Developer Tools"
@@ -3853,6 +4108,21 @@
       "stars": 0,
       "categories": [
         "Tool"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_recipe_image_crop",
+      "label": "AI Image Crop",
+      "description": "Adds AI-suggested focal points to Images. Editors get a \"Suggest AI Focal Point\" button on image fields, and a vision-capable AI model places the focal point for them.",
+      "url": "https://www.drupal.org/project/ai_recipe_image_crop",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-09-16",
+      "stability": "alpha",
+      "downloads": 98,
+      "stars": 0,
+      "categories": [
+        "Editorial",
+        "Media"
       ]
     },
     {
@@ -3885,17 +4155,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_recipe_image_crop",
-      "label": "AI Image Crop",
-      "description": "Adds AI-suggested focal points to Images. Editors get a \"Suggest AI Focal Point\" button on image fields, and a vision-capable AI model places the focal point for them.",
-      "url": "https://www.drupal.org/project/ai_recipe_image_crop",
-      "version": "1.0.0-alpha2",
-      "release_date": "2026-09-16",
-      "stability": "alpha",
-      "downloads": 61,
+      "machine_name": "drupal/plus_suite_ai",
+      "label": "Plus Suite AI",
+      "description": "Installs the complete Plus Suite page builder plus the AI editing assistant: Entity Blueprint, the AI + in-page assistant, agent memory, the Anthropic (chat) provider, and the Google Gemini (image...",
+      "url": "https://www.drupal.org/project/plus_suite_ai",
+      "version": "1.0.3",
+      "release_date": "2026-07-04",
+      "stability": "stable",
+      "downloads": 60,
       "stars": 0,
       "categories": [
-        "Editorial",
+        "Cloud Providers",
+        "Chat",
         "Media"
       ]
     },
@@ -3913,22 +4184,6 @@
         "Editorial",
         "Content",
         "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/plus_suite_ai",
-      "label": "Plus Suite AI",
-      "description": "Installs the complete Plus Suite page builder plus the AI editing assistant: Entity Blueprint, the AI + in-page assistant, agent memory, the Anthropic (chat) provider, and the Google Gemini (image...",
-      "url": "https://www.drupal.org/project/plus_suite_ai",
-      "version": "1.0.3",
-      "release_date": "2026-07-04",
-      "stability": "stable",
-      "downloads": 45,
-      "stars": 0,
-      "categories": [
-        "Cloud Providers",
-        "Chat",
-        "Media"
       ]
     },
     {
@@ -3988,6 +4243,20 @@
       "stars": 0,
       "categories": [
         "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/daedalus_recipe",
+      "label": "Daedalus",
+      "description": "Installs the complete Daedalus page builder on a new site: the bundled umbrella at ingredients/daedalus (configuration only), then the starter header, footer, welcome page and demo media of ingredi...",
+      "url": "https://www.drupal.org/project/daedalus_recipe",
+      "version": "1.0.0-alpha0",
+      "release_date": "2026-09-19",
+      "stability": "alpha",
+      "downloads": 8,
+      "stars": 0,
+      "categories": [
+        "Media"
       ]
     },
     {

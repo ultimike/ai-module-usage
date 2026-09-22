@@ -3,10 +3,11 @@
 Render a self-contained HTML table from results.json produced by drupal_ai_dependents.py.
 
 Features: a Modules/Recipes tabbed view, sortable columns, name filter,
-stability-level checkboxes (stable/rc/beta/alpha/dev) and security coverage
-checkboxes (covered/not covered) on the Modules tab — recipes have neither
-usage tracking nor meaningful security-advisory data, so the Recipes tab
-only offers sorting and a name filter.
+stability-level checkboxes (stable/rc/beta/alpha/dev), security coverage
+checkboxes (covered/not covered) and drupal/ai dependency checkboxes
+(requires / AI category only) on the Modules tab — recipes have neither
+usage tracking nor meaningful security-advisory data (and always require
+drupal/ai), so the Recipes tab only offers sorting and a name filter.
 
 Usage:
   python3 render_html.py results.json -o output.html [--history history.json]
@@ -55,6 +56,17 @@ SECURITY_ORDER = ["covered", "not-covered"]
 _SECURITY_META = {
     "covered":     ("Covered", SECURITY_COVERED_STABLE_HTML),
     "not-covered": ("Not covered", SECURITY_NOT_COVERED_EMOJI),
+}
+
+# drupal/ai dependency filter — same checkbox pattern as SECURITY_ORDER.
+# "requires" = hard composer dependency on drupal/ai; "tag-only" = included
+# via drupal.org's "Artificial Intelligence (AI)" project category without
+# the composer dependency. Values match each row's data-dep attribute.
+DEP_ORDER = ["requires", "tag-only"]
+
+_DEP_META = {
+    "requires": "Requires drupal/ai",
+    "tag-only": "AI category only",
 }
 
 # Category filter ordering. Mirrors CATEGORIES in drupal_ai_dependents.py; any
@@ -245,6 +257,8 @@ _CSS = """\
     th.col-security { text-align: center; }
     .col-usage        { text-align: right; }
     th.col-usage      { text-align: right; }
+    .col-dep          { text-align: center; }
+    th.col-dep        { text-align: center; }
     .col-downloads    { text-align: right; }
     th.col-downloads  { text-align: right; }
     .col-stars        { text-align: right; }
@@ -407,15 +421,25 @@ _JS = """\
           Array.from(document.querySelectorAll('.sec-cb:checked'))
                .map(function (cb) { return cb.value; })
         );
+        // The drupal/ai checkboxes only exist on --full-ecosystem renders;
+        // when they're absent every row qualifies (they all require
+        // drupal/ai), so the filter has to be a no-op rather than an empty
+        // allowlist that would hide the whole table.
+        var hasDepFilter = document.querySelector('.dep-cb') !== null;
+        var depChecked = new Set(
+          Array.from(document.querySelectorAll('.dep-cb:checked'))
+               .map(function (cb) { return cb.value; })
+        );
         var catSelected = catModules ? Array.from(catModules.selectedOptions).map(function (o) { return o.value; }) : [];
         var visible = 0;
         Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var stabMatch = stabChecked.has(row.dataset.stability);
           var secMatch = secChecked.has(row.dataset.security);
+          var depMatch = !hasDepFilter || depChecked.has(row.dataset.dep);
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
           var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
-          var show = nameMatch && stabMatch && secMatch && catMatch;
+          var show = nameMatch && stabMatch && secMatch && depMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
@@ -423,7 +447,7 @@ _JS = """\
       }
 
       filterModules.addEventListener('input', applyModulesFilter);
-      Array.from(document.querySelectorAll('.stab-cb, .sec-cb')).forEach(function (cb) {
+      Array.from(document.querySelectorAll('.stab-cb, .sec-cb, .dep-cb')).forEach(function (cb) {
         cb.addEventListener('change', applyModulesFilter);
       });
       if (catModules) catModules.addEventListener('change', applyModulesFilter);
@@ -525,6 +549,11 @@ def render_html(payload: dict, history: dict | None = None) -> str:
     v_label      = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
     count        = len(rows)
     recipe_count = len(recipe_rows)
+    # Back-compat: files from before --full-ecosystem existed were all
+    # dependency-only crawls, so treat a missing key as False. When False
+    # every row requires drupal/ai, so that column and its filter are
+    # omitted and the scope is stated in the header instead.
+    full_ecosystem = payload.get("full_ecosystem", False)
 
     def esc(s) -> str:
         return html.escape(str(s), quote=True)
@@ -551,6 +580,16 @@ def render_html(payload: dict, history: dict | None = None) -> str:
             sec_disp = SECURITY_NOT_COVERED_EMOJI
         sec_val      = "1" if sec_covered else "0"
         sec_status   = "covered" if sec_covered else "not-covered"
+        # Back-compat: results.json files from before the AI-category source
+        # only ever contained hard dependents, so default to True.
+        requires_ai  = r.get("requires_ai", True)
+        dep_disp     = ("<span title=\"Hard composer dependency on drupal/ai\">✓</span>"
+                        if requires_ai
+                        else "<span title=\"AI project category only (no drupal/ai dependency)\">—</span>")
+        dep_val      = "1" if requires_ai else "0"
+        dep_status   = "requires" if requires_ai else "tag-only"
+        dep_cell     = (f'<td data-val="{dep_val}" class="col-dep">{dep_disp}</td>'
+                        if full_ecosystem else "")
         stab_label, css_class = _STABILITY_META.get(stability, ("Stable", "stab-stable"))
         badge = f'<span class="badge {css_class}">{stab_label}</span>'
         desc = r.get("description")
@@ -561,13 +600,14 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         cat_html = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
         trend_val, trend_disp = _trend_val_disp(history, r["machine_name"], "usage")
         row_lines.append(
-            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-categories="{cat_data}">'
+            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-dep="{dep_status}" data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}{badge}</td>'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
             f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
             f'<td data-val="{trend_val}" class="col-trend">{trend_disp}</td>'
+            f'{dep_cell}'
             f'<td data-val="{cat_val}" class="col-cat">{cat_html}</td>'
             f'</tr>'
         )
@@ -626,6 +666,49 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         for status in SECURITY_ORDER
     )
 
+    # Only rendered for --full-ecosystem payloads — see full_ecosystem above.
+    dep_checkboxes = "\n      ".join(
+        f'<label><input type="checkbox" class="dep-cb" value="{status}" checked>'
+        f' {_DEP_META[status]}</label>'
+        for status in DEP_ORDER
+    )
+    dep_filter_html = (
+        '        <span class="stab-filters">drupal/ai:\n'
+        f'          {dep_checkboxes}\n'
+        '        </span>\n'
+        if full_ecosystem else ""
+    )
+
+    # The drupal/ai column sits between Trend and Categories, so Categories'
+    # data-col shifts when it's omitted.
+    dep_header_html = (
+        '          <th data-col="6" data-type="num" class="col-dep"'
+        ' title="Hard composer dependency on drupal/ai">drupal/ai</th>\n'
+        if full_ecosystem else ""
+    )
+    cat_col_index = 7 if full_ecosystem else 6
+
+    dep_legend_html = (
+        '    <p class="legend">drupal/ai:\n'
+        '      ✓ Hard composer dependency on drupal/ai &nbsp;&middot;&nbsp;\n'
+        '      — Listed in drupal.org&#8217;s AI project category only\n'
+        '    </p>\n'
+        if full_ecosystem else ""
+    )
+
+    if full_ecosystem:
+        scope_html = (
+            '  <p class="meta">Modules with a hard dependency on'
+            ' <a href="https://www.drupal.org/project/ai">drupal/ai</a>'
+            ' or filed under drupal.org&#8217;s &ldquo;Artificial Intelligence (AI)&rdquo;'
+            ' project category</p>\n'
+        )
+    else:
+        scope_html = (
+            '  <p class="meta">Only includes projects with a dependency on the'
+            ' <a href="https://www.drupal.org/project/ai">Drupal AI module</a></p>\n'
+        )
+
     # Category multi-select dropdowns (enhanced by Chosen.js), one per tab.
     def _cat_select(cats: list, select_id: str) -> str:
         options = "\n        ".join(
@@ -650,8 +733,8 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         f'  <style>\n{_CSS}\n  </style>\n'
         '</head>\n'
         '<body>\n'
-        '  <h1>Drupal Modules &amp; Recipes &mdash; '
-        '<a href="https://www.drupal.org/project/ai">drupal/ai</a> Dependents</h1>\n'
+        '  <h1>Drupal AI Modules &amp; Recipes</h1>\n'
+        f'{scope_html}'
         f'  <p class="meta">Generated {today} &middot; {count} modules'
         f' &middot; {recipe_count} recipes &middot; Drupal {v_label} compatible</p>\n'
         '  <p class="sponsor">Sponsored by DrupalEasy\'s'
@@ -669,6 +752,7 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         '        <span class="stab-filters">Security:\n'
         f'          {security_checkboxes}\n'
         '        </span>\n'
+        f'{dep_filter_html}'
         '      </div>\n'
         '      <div class="controls-row controls-inputs">\n'
         '        <input id="filter-modules" type="search" placeholder="Filter by module name&hellip;">\n'
@@ -684,7 +768,8 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         '          <th data-col="3" data-type="num" class="col-security" title="Security Coverage">Security</th>\n'
         '          <th data-col="4" data-type="num" class="col-usage" title="Drupal.org Usage">Usage</th>\n'
         '          <th data-col="5" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
-        '          <th data-col="6" data-type="text" class="col-cat">Categories</th>\n'
+        f'{dep_header_html}'
+        f'          <th data-col="{cat_col_index}" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-modules">\n'
@@ -696,6 +781,7 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         f'      {SECURITY_COVERED_PRERELEASE_HTML} Covered (pre-release) &nbsp;&middot;&nbsp;\n'
         f'      {SECURITY_NOT_COVERED_EMOJI} Not covered by security advisory policy\n'
         '    </p>\n'
+        f'{dep_legend_html}'
         '    <p id="no-results-modules">No modules match your filter.</p>\n'
         '  </div>\n'
         '  <div class="tab-panel" id="panel-recipes">\n'
