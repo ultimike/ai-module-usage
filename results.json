@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-06",
+  "generated": "2026-10-24",
   "drupal_versions": [
     10,
     11
@@ -13,7 +13,7 @@
       "url": "https://www.drupal.org/project/ai_provider_openai",
       "version": "1.2.5",
       "release_date": "2026-08-20",
-      "usage": 15737,
+      "usage": 16859,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -28,7 +28,7 @@
       "url": "https://www.drupal.org/project/ai_image_alt_text",
       "version": "1.0.3",
       "release_date": "2026-10-01",
-      "usage": 13291,
+      "usage": 14221,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -44,7 +44,7 @@
       "url": "https://www.drupal.org/project/ai_agents",
       "version": "1.2.7",
       "release_date": "2026-08-13",
-      "usage": 13186,
+      "usage": 13560,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -59,7 +59,7 @@
       "url": "https://www.drupal.org/project/ai_provider_anthropic",
       "version": "1.2.2",
       "release_date": "2026-03-19",
-      "usage": 10866,
+      "usage": 11639,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -68,33 +68,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_amazeeio",
-      "label": "amazee.ai AI Provider",
-      "description": "This enables the use of amazee.ai AI for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_amazeeio",
-      "version": "1.4.5",
-      "release_date": "2026-10-02",
-      "usage": 8283,
+      "machine_name": "drupal/ai_translate",
+      "label": "Ai Translate",
+      "description": null,
+      "url": "https://www.drupal.org/project/ai_translate",
+      "version": "1.4.3",
+      "release_date": "2026-10-13",
+      "usage": 10002,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_dashboard",
-      "label": "AI Dashboard",
-      "description": "Provides a dashboard for AI modules and features",
-      "url": "https://www.drupal.org/project/ai_dashboard",
-      "version": "1.0.3",
-      "release_date": "2026-03-05",
-      "usage": 8025,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Analytics"
+        "Translation"
       ]
     },
     {
@@ -102,14 +87,29 @@
       "label": "AI Content Suggestions",
       "description": "Allows a configured AI to be passed content to suggest alterations",
       "url": "https://www.drupal.org/project/ai_content_suggestions",
-      "version": "1.5.1",
-      "release_date": "2026-10-02",
-      "usage": 5500,
+      "version": "1.3.0",
+      "release_date": "2026-02-23",
+      "usage": 9276,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_amazeeio",
+      "label": "amazee.ai AI Provider",
+      "description": "This enables the use of amazee.ai AI for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_amazeeio",
+      "version": "1.4.6",
+      "release_date": "2026-10-08",
+      "usage": 9275,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
       ]
     },
     {
@@ -119,7 +119,7 @@
       "url": "https://www.drupal.org/project/ai_logging",
       "version": "1.3.3",
       "release_date": "2026-09-23",
-      "usage": 5086,
+      "usage": 8885,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -132,14 +132,29 @@
       "label": "AI Validations",
       "description": "This provides AI support for the Field Validation module.",
       "url": "https://www.drupal.org/project/ai_validations",
-      "version": "1.3.0",
-      "release_date": "2026-07-01",
-      "usage": 4907,
+      "version": "1.4.0",
+      "release_date": "2026-10-15",
+      "usage": 8663,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_dashboard",
+      "label": "AI Dashboard",
+      "description": "Provides a dashboard for AI modules and features",
+      "url": "https://www.drupal.org/project/ai_dashboard",
+      "version": "1.0.3",
+      "release_date": "2026-03-05",
+      "usage": 8619,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Analytics"
       ]
     },
     {
@@ -149,7 +164,7 @@
       "url": "https://www.drupal.org/project/ai_vdb_provider_azure_ai_search",
       "version": "1.1.0-beta2",
       "release_date": "2025-12-19",
-      "usage": 1906,
+      "usage": 1896,
       "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
@@ -164,8 +179,8 @@
       "description": "This enables the use of Azure AI Studio for the AI module.",
       "url": "https://www.drupal.org/project/ai_provider_azure",
       "version": "1.2.0-beta1",
-      "release_date": "2026-10-01",
-      "usage": 1733,
+      "release_date": "2026-10-08",
+      "usage": 1760,
       "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
@@ -180,7 +195,7 @@
       "url": "https://www.drupal.org/project/gemini_provider",
       "version": "1.1.0",
       "release_date": "2026-09-29",
-      "usage": 1493,
+      "usage": 1412,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
@@ -189,19 +204,19 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_seo",
-      "label": "AI SEO/GEO analyzer",
-      "description": "Analyze your page SEO/GEO and receive recommendations on how to improve it.",
-      "url": "https://www.drupal.org/project/ai_seo",
-      "version": "1.1.3",
-      "release_date": "2026-07-08",
-      "usage": 1027,
+      "machine_name": "drupal/ai_tmgmt",
+      "label": "AI Translator",
+      "description": "TMGMT implementation of AI Module to allow use of many AI Providers like OpenAI, Ollama, etc.",
+      "url": "https://www.drupal.org/project/ai_tmgmt",
+      "version": "1.0.0-beta6",
+      "release_date": "2026-06-11",
+      "usage": 1051,
       "security_covered": true,
-      "stability": "stable",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Analytics",
-        "SEO & Metadata"
+        "Local Providers",
+        "Translation"
       ]
     },
     {
@@ -211,7 +226,7 @@
       "url": "https://www.drupal.org/project/ai_context",
       "version": "1.0.0-rc1",
       "release_date": "2026-09-25",
-      "usage": 804,
+      "usage": 917,
       "security_covered": true,
       "stability": "rc",
       "requires_ai": true,
@@ -221,13 +236,28 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_seo",
+      "label": "Ai Seo",
+      "description": null,
+      "url": "https://www.drupal.org/project/ai_seo",
+      "version": "1.1.3",
+      "release_date": "2026-07-08",
+      "usage": 855,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "SEO & Metadata"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_vdb_provider_milvus",
       "label": "Milvus/Zilliz VDB Provider",
       "description": "This enables the use of Milvus (local) or Zilliz (cloud) Vector Database in the AI module.",
       "url": "https://www.drupal.org/project/ai_vdb_provider_milvus",
       "version": "1.1.0-beta4",
       "release_date": "2026-06-11",
-      "usage": 730,
+      "usage": 821,
       "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
@@ -242,72 +272,12 @@
       "url": "https://www.drupal.org/project/ai_integration_eca",
       "version": "1.0.1",
       "release_date": "2026-09-21",
-      "usage": 711,
+      "usage": 798,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Automation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_ollama",
-      "label": "Ollama Provider",
-      "description": "This enables the use of Ollama for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_ollama",
-      "version": "1.2.0-rc3",
-      "release_date": "2026-04-08",
-      "usage": 622,
-      "security_covered": true,
-      "stability": "rc",
-      "requires_ai": true,
-      "categories": [
-        "Local Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_litellm",
-      "label": "LiteLLM AI Provider",
-      "description": "This enables the use of a LiteLLM proxy as a provider for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_litellm",
-      "version": "1.3.1",
-      "release_date": "2026-08-19",
-      "usage": 618,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/metatag_ai",
-      "label": "Metatag AI Generator",
-      "description": "Provides an API endpoint to generate meta tags using AI module providers and integrate with metatag module.",
-      "url": "https://www.drupal.org/project/metatag_ai",
-      "version": "2.0.5",
-      "release_date": "2026-01-21",
-      "usage": 603,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "SEO & Metadata"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_media_image",
-      "label": "AI Media Image",
-      "description": "Create a media entity image from a prompt to the AI text-to-image model.",
-      "url": "https://www.drupal.org/project/ai_media_image",
-      "version": "1.0.0-alpha4",
-      "release_date": "2025-06-12",
-      "usage": 509,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Media"
       ]
     },
     {
@@ -317,12 +287,42 @@
       "url": "https://www.drupal.org/project/ai_ckeditor",
       "version": "1.4.3",
       "release_date": "2026-09-23",
-      "usage": 470,
+      "usage": 738,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Editorial"
+      ]
+    },
+    {
+      "machine_name": "drupal/metatag_ai",
+      "label": "Metatag AI Generator",
+      "description": "Provides an API endpoint to generate meta tags using AI module providers and integrate with metatag module.",
+      "url": "https://www.drupal.org/project/metatag_ai",
+      "version": "2.0.5",
+      "release_date": "2026-01-21",
+      "usage": 657,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "SEO & Metadata"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_litellm",
+      "label": "LiteLLM AI Provider",
+      "description": "This enables the use of a LiteLLM proxy as a provider for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_litellm",
+      "version": "1.3.1",
+      "release_date": "2026-08-19",
+      "usage": 602,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
       ]
     },
     {
@@ -332,7 +332,7 @@
       "url": "https://www.drupal.org/project/ai_search",
       "version": "2.0.0-alpha2",
       "release_date": "2026-06-24",
-      "usage": 453,
+      "usage": 591,
       "security_covered": true,
       "stability": "alpha",
       "requires_ai": true,
@@ -343,18 +343,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_vdb_provider_pinecone",
-      "label": "Pinecone Serverless VDB Provider",
-      "description": "This enables the use of Pinecone Serverless VDB in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_pinecone",
-      "version": "1.1.0-beta5",
-      "release_date": "2026-07-12",
-      "usage": 377,
+      "machine_name": "drupal/ai_provider_ollama",
+      "label": "Ollama Provider",
+      "description": "This enables the use of Ollama for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_ollama",
+      "version": "1.2.0-rc3",
+      "release_date": "2026-04-08",
+      "usage": 588,
       "security_covered": true,
-      "stability": "beta",
+      "stability": "rc",
       "requires_ai": true,
       "categories": [
-        "Vector Database"
+        "Local Providers"
       ]
     },
     {
@@ -364,27 +364,12 @@
       "url": "https://www.drupal.org/project/ai_figma",
       "version": "1.0.2",
       "release_date": "2026-09-25",
-      "usage": 372,
+      "usage": 570,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Uncategorized"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_vdb_provider_postgres",
-      "label": "Postgres VDB Provider",
-      "description": "This enables the use of a Postgres (pgvector) VDB in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_postgres",
-      "version": "1.0.0-alpha4",
-      "release_date": "2026-09-10",
-      "usage": 354,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Vector Database"
       ]
     },
     {
@@ -394,8 +379,8 @@
       "url": "https://www.drupal.org/project/ai_agent_modes",
       "version": "1.0.1",
       "release_date": "2026-09-25",
-      "usage": 353,
-      "security_covered": false,
+      "usage": 568,
+      "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
@@ -407,9 +392,9 @@
       "label": "Varbase AI Figma",
       "description": "Varbase customization of AI Figma: tunes the general Figma-to-Canvas engine for the Bootstrap 5.3 vartheme_bs5 theme and wires Context Control Center (ai_context). Configures layouts, component cho...",
       "url": "https://www.drupal.org/project/varbase_ai_figma",
-      "version": "1.0.4",
-      "release_date": "2026-09-25",
-      "usage": 345,
+      "version": "1.0.5",
+      "release_date": "2026-10-21",
+      "usage": 563,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -418,18 +403,48 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_groq",
-      "label": "Groq Provider",
-      "description": "This enables the use of Groq for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_groq",
-      "version": "1.2.0-rc1",
-      "release_date": "2025-10-13",
-      "usage": 335,
+      "machine_name": "drupal/ai_vdb_provider_pinecone",
+      "label": "Pinecone Serverless VDB Provider",
+      "description": "This enables the use of Pinecone Serverless VDB in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_pinecone",
+      "version": "1.1.0-beta5",
+      "release_date": "2026-07-12",
+      "usage": 424,
       "security_covered": true,
-      "stability": "rc",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_vdb_provider_postgres",
+      "label": "Postgres VDB Provider",
+      "description": "This enables the use of a Postgres (pgvector) VDB in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_postgres",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-09-10",
+      "usage": 393,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_media_image",
+      "label": "AI Media Image",
+      "description": "Create a media entity image from a prompt to the AI text-to-image model.",
+      "url": "https://www.drupal.org/project/ai_media_image",
+      "version": "1.0.0-alpha4",
+      "release_date": "2025-06-12",
+      "usage": 389,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Media"
       ]
     },
     {
@@ -439,7 +454,7 @@
       "url": "https://www.drupal.org/project/flowdrop_ai_provider",
       "version": "2.1.0",
       "release_date": "2026-10-04",
-      "usage": 321,
+      "usage": 388,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -454,7 +469,7 @@
       "url": "https://www.drupal.org/project/ai_provider_aws_bedrock",
       "version": "1.1.0-beta4",
       "release_date": "2026-04-15",
-      "usage": 236,
+      "usage": 286,
       "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
@@ -463,13 +478,29 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_mistral",
-      "label": "Mistral AI Provider",
-      "description": "This enables the use of Mistral AI for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_mistral",
-      "version": "1.1.0-rc1",
-      "release_date": "2026-02-19",
-      "usage": 197,
+      "machine_name": "drupal/ai_vdb_provider_opensearch",
+      "label": "OpenSearch VDB Provider",
+      "description": "This enables the use of OpenSearch Vector Database in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_opensearch",
+      "version": "1.1.0-alpha2",
+      "release_date": "2025-11-18",
+      "usage": 247,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_groq",
+      "label": "Groq Provider",
+      "description": "This enables the use of Groq for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_groq",
+      "version": "1.2.0-rc1",
+      "release_date": "2025-10-13",
+      "usage": 220,
       "security_covered": true,
       "stability": "rc",
       "requires_ai": true,
@@ -484,24 +515,9 @@
       "url": "https://www.drupal.org/project/ai_provider_deepseek",
       "version": "1.1.0",
       "release_date": "2026-05-26",
-      "usage": 175,
+      "usage": 200,
       "security_covered": false,
       "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_huggingface",
-      "label": "Huggingface Provider",
-      "description": "This enables the use of Huggingface Inference API for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_huggingface",
-      "version": "1.0.0-rc1",
-      "release_date": "2026-02-26",
-      "usage": 160,
-      "security_covered": true,
-      "stability": "rc",
       "requires_ai": true,
       "categories": [
         "Cloud Providers"
@@ -512,11 +528,11 @@
       "label": "DeepL Provider",
       "description": "This enables the use of DeepL for the translations module.",
       "url": "https://www.drupal.org/project/ai_provider_deepl",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-01-21",
-      "usage": 155,
+      "version": "1.0.0-beta1",
+      "release_date": "2026-10-23",
+      "usage": 191,
       "security_covered": false,
-      "stability": "alpha",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
         "Cloud Providers",
@@ -524,13 +540,13 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_openai_compatible",
-      "label": "OpenAI Compatible Provider",
-      "description": "Provider for OpenAI compatible APIs (DeepSeek, etc.)",
-      "url": "https://www.drupal.org/project/ai_provider_openai_compatible",
-      "version": "1.2.1",
-      "release_date": "2026-04-07",
-      "usage": 150,
+      "machine_name": "drupal/ai_provider_openrouter",
+      "label": "OpenRouter Provider",
+      "description": "AI Provider plugin module for connecting to OpenRouter",
+      "url": "https://www.drupal.org/project/ai_provider_openrouter",
+      "version": "1.1.7",
+      "release_date": "2026-10-18",
+      "usage": 175,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
@@ -539,15 +555,15 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_openrouter",
-      "label": "OpenRouter Provider",
-      "description": "AI Provider plugin module for connecting to OpenRouter",
-      "url": "https://www.drupal.org/project/ai_provider_openrouter",
-      "version": "1.1.6",
-      "release_date": "2026-06-26",
-      "usage": 141,
-      "security_covered": false,
-      "stability": "stable",
+      "machine_name": "drupal/ai_provider_mistral",
+      "label": "Mistral AI Provider",
+      "description": "This enables the use of Mistral AI for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_mistral",
+      "version": "1.1.0-rc1",
+      "release_date": "2026-02-19",
+      "usage": 174,
+      "security_covered": true,
+      "stability": "rc",
       "requires_ai": true,
       "categories": [
         "Cloud Providers"
@@ -558,9 +574,9 @@
       "label": "CKEditor AI Agent",
       "description": "Adds AI-powered content generation capabilities to CKEditor 5.",
       "url": "https://www.drupal.org/project/ckeditor_ai_agent",
-      "version": "2.1.0",
-      "release_date": "2026-10-01",
-      "usage": 130,
+      "version": "2.1.1",
+      "release_date": "2026-10-20",
+      "usage": 154,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -571,51 +587,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_summarize_document",
-      "label": "AI: Summarize Document",
-      "description": "Provides an integration with CKEditor and Drupal AI modules to summarize documents via LLMs.",
-      "url": "https://www.drupal.org/project/ai_summarize_document",
-      "version": "1.1.0",
-      "release_date": "2025-07-17",
-      "usage": 122,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Editorial",
-        "Content"
-      ]
-    },
-    {
-      "machine_name": "drupal/tts",
-      "label": "Text-to-Speech (TTS)",
-      "description": "Provides Text-to-Speech (TTS) functionality for Drupal content using AI-powered natural voices. Converts node content into spoken audio.",
-      "url": "https://www.drupal.org/project/tts",
-      "version": "1.2.1",
-      "release_date": "2024-10-20",
-      "usage": 120,
+      "machine_name": "drupal/ai_search_block",
+      "label": "AI Search Block",
+      "description": "Provides a block for AI search functionality.",
+      "url": "https://www.drupal.org/project/ai_search_block",
+      "version": "1.0.0-rc24",
+      "release_date": "2026-06-18",
+      "usage": 141,
       "security_covered": true,
-      "stability": "stable",
+      "stability": "rc",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_editoria11y",
-      "label": "AI Editoria11y",
-      "description": "Adds \"Fix with AI\" buttons to Editoria11y accessibility tooltips in CKEditor5, using AI to suggest WCAG 2.1 AA compliant fixes.",
-      "url": "https://www.drupal.org/project/ai_editoria11y",
-      "version": "1.0.0-beta1",
-      "release_date": "2026-03-05",
-      "usage": 119,
-      "security_covered": false,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Editorial",
-        "Accessibility"
+        "Search"
       ]
     },
     {
@@ -625,83 +608,7 @@
       "url": "https://www.drupal.org/project/elevenlabs",
       "version": "1.2.0",
       "release_date": "2026-08-20",
-      "usage": 111,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_vdb_provider_opensearch",
-      "label": "OpenSearch VDB Provider",
-      "description": "This enables the use of OpenSearch Vector Database in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_opensearch",
-      "version": "1.1.0-alpha2",
-      "release_date": "2025-11-18",
-      "usage": 106,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Search",
-        "Vector Database"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_acquia",
-      "label": "Acquia AI Gateway",
-      "description": "This enables the use of Acquia AI services for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_acquia",
-      "version": "1.0.0",
-      "release_date": "2026-02-18",
-      "usage": 105,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_search_block",
-      "label": "AI Search Block",
-      "description": "Provides a block for AI search functionality.",
-      "url": "https://www.drupal.org/project/ai_search_block",
-      "version": "1.0.0-rc24",
-      "release_date": "2026-06-18",
-      "usage": 98,
-      "security_covered": true,
-      "stability": "rc",
-      "requires_ai": true,
-      "categories": [
-        "Search"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_metering",
-      "label": "AI Metering",
-      "description": "Tracks token usage and cost for every AI operation dispatched through the ai module — any provider, any operation. Adds per-user quotas, multi-currency display with live exchange rates, and a usage...",
-      "url": "https://www.drupal.org/project/ai_metering",
-      "version": "1.0.2",
-      "release_date": "2026-08-14",
-      "usage": 98,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Analytics"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_google_vertex",
-      "label": "Google Vertex",
-      "description": "This enables the use of Google Vertex Studio for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_google_vertex",
-      "version": "1.1.1",
-      "release_date": "2025-09-05",
-      "usage": 93,
+      "usage": 140,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -716,7 +623,7 @@
       "url": "https://www.drupal.org/project/ai_vdb_provider_mariadb",
       "version": "1.0.1",
       "release_date": "2026-06-17",
-      "usage": 83,
+      "usage": 134,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -725,63 +632,80 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_penpot",
-      "label": "AI Penpot",
-      "description": "Reads live Penpot design context via the Penpot API and exposes it to Drupal AI Agent tools, so the Drupal Canvas AI assistant can build from a real design. Config-driven, theme- and framework-agno...",
-      "url": "https://www.drupal.org/project/ai_penpot",
-      "version": "1.0.0-beta1",
-      "release_date": "2026-10-04",
-      "usage": 76,
-      "security_covered": true,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Uncategorized"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_playwright",
-      "label": "AI Playwright",
-      "description": "Gives Drupal AI Agents eyes on a rendered page: a Playwright browser tool that opens a page of this site in headless Chromium and returns a screenshot, title, visible text and console errors, so th...",
-      "url": "https://www.drupal.org/project/ai_playwright",
-      "version": "1.0.0-beta1",
-      "release_date": "2026-10-04",
-      "usage": 75,
-      "security_covered": true,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Tool"
-      ]
-    },
-    {
-      "machine_name": "drupal/display_builder_ai",
-      "label": "Display Builder AI",
-      "description": "Integrates Drupal AI (agents + tools + chatbot) with the Display Builder module.",
-      "url": "https://www.drupal.org/project/display_builder_ai",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-09-24",
-      "usage": 74,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Chat"
-      ]
-    },
-    {
-      "machine_name": "drupal/webai",
-      "label": "Web AI",
-      "description": "A picked collection of AI tools and providers, with more advanced artificial intelligence options.",
-      "url": "https://www.drupal.org/project/webai",
-      "version": "12.0.3",
-      "release_date": "2026-10-01",
-      "usage": 69,
+      "machine_name": "drupal/ai_summarize_document",
+      "label": "AI: Summarize Document",
+      "description": "Provides an integration with CKEditor and Drupal AI modules to summarize documents via LLMs.",
+      "url": "https://www.drupal.org/project/ai_summarize_document",
+      "version": "1.1.0",
+      "release_date": "2025-07-17",
+      "usage": 123,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Uncategorized"
+        "Editorial",
+        "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_metering",
+      "label": "AI Metering",
+      "description": "Tracks token usage and cost for every AI operation dispatched through the ai module — any provider, any operation. Adds per-user quotas, multi-currency display with live exchange rates, and a usage...",
+      "url": "https://www.drupal.org/project/ai_metering",
+      "version": "1.0.2",
+      "release_date": "2026-08-14",
+      "usage": 110,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_google_vertex",
+      "label": "Google Vertex",
+      "description": "This enables the use of Google Vertex Studio for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_google_vertex",
+      "version": "1.1.1",
+      "release_date": "2025-09-05",
+      "usage": 103,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_openai_compatible",
+      "label": "OpenAI Compatible Provider",
+      "description": "Provider for OpenAI compatible APIs (DeepSeek, etc.)",
+      "url": "https://www.drupal.org/project/ai_provider_openai_compatible",
+      "version": "1.2.1",
+      "release_date": "2026-04-07",
+      "usage": 98,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/tts",
+      "label": "Text-to-Speech (TTS)",
+      "description": "Provides Text-to-Speech (TTS) functionality for Drupal content using AI-powered natural voices. Converts node content into spoken audio.",
+      "url": "https://www.drupal.org/project/tts",
+      "version": "1.2.1",
+      "release_date": "2024-10-20",
+      "usage": 95,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Media"
       ]
     },
     {
@@ -791,7 +715,7 @@
       "url": "https://www.drupal.org/project/ai_content_review",
       "version": "1.0.0-alpha3",
       "release_date": "2026-09-25",
-      "usage": 68,
+      "usage": 94,
       "security_covered": true,
       "stability": "alpha",
       "requires_ai": true,
@@ -801,29 +725,13 @@
       ]
     },
     {
-      "machine_name": "drupal/search_api_solr_dense_vector",
-      "label": "Search API Solr: Dense Vector",
-      "description": "Provides an implementation of Dense Vector field support for Solr 9.x+ in Drupal.",
-      "url": "https://www.drupal.org/project/search_api_solr_dense_vector",
-      "version": "1.0.0-alpha9",
-      "release_date": "2026-01-29",
-      "usage": 66,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Search",
-        "Vector Database"
-      ]
-    },
-    {
       "machine_name": "drupal/ai_content_strategy",
       "label": "AI Content Strategy",
       "description": "Provides AI-powered content strategy recommendations based on existing site content and EEAT framework.",
       "url": "https://www.drupal.org/project/ai_content_strategy",
       "version": "1.3.0",
       "release_date": "2026-10-01",
-      "usage": 65,
+      "usage": 94,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -832,44 +740,14 @@
       ]
     },
     {
-      "machine_name": "drupal/aia",
-      "label": "AI Assistant (AIA)",
-      "description": "AI-powered Drupal configuration generator. Create content types, fields, taxonomies, blocks, and views using natural language AI prompts.",
-      "url": "https://www.drupal.org/project/aia",
-      "version": "1.0.0",
-      "release_date": "2026-05-30",
-      "usage": 64,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Content"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_image_crop",
-      "label": "AI Image Crop",
-      "description": "Provides AI-powered image cropping suggestions for Focal Point and Image Widget Crop.",
-      "url": "https://www.drupal.org/project/ai_image_crop",
-      "version": "1.0.0-alpha4",
-      "release_date": "2026-09-16",
-      "usage": 60,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_vdb_provider_sqlite",
-      "label": "SQLite VDB Provider",
-      "description": "This enables the use of a SQLite (sqlite-vec) VDB in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_sqlite",
-      "version": "1.4.0",
-      "release_date": "2026-07-19",
-      "usage": 60,
-      "security_covered": true,
+      "machine_name": "drupal/ai_vdb_provider_qdrant",
+      "label": "Qdrant VDB Provider",
+      "description": "This enables the use of a qdrant vector database in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_qdrant",
+      "version": "1.3.3",
+      "release_date": "2026-07-25",
+      "usage": 94,
+      "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
@@ -883,7 +761,7 @@
       "url": "https://www.drupal.org/project/ai_answers",
       "version": "1.0.0-beta4",
       "release_date": "2026-09-24",
-      "usage": 60,
+      "usage": 92,
       "security_covered": false,
       "stability": "beta",
       "requires_ai": true,
@@ -892,34 +770,35 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_vdb_provider_qdrant",
-      "label": "Qdrant VDB Provider",
-      "description": "This enables the use of a qdrant vector database in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_qdrant",
-      "version": "1.3.3",
-      "release_date": "2026-07-25",
-      "usage": 56,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Vector Database"
-      ]
-    },
-    {
-      "machine_name": "drupal/analyze_ai_brand_voice",
-      "label": "Analyze AI Brand Voice",
-      "description": "Analyzes content for ai brand voice consistency using AI.",
-      "url": "https://www.drupal.org/project/analyze_ai_brand_voice",
-      "version": "1.3.1",
-      "release_date": "2026-09-01",
-      "usage": 55,
+      "machine_name": "drupal/ai_translate_paragraph_asymetric",
+      "label": "AI Translate Paragraph Asymetric",
+      "description": "This module provides simple -one click- AI powered translations for asymmetric paragraphs.",
+      "url": "https://www.drupal.org/project/ai_translate_paragraph_asymetric",
+      "version": "1.2.2",
+      "release_date": "2026-02-03",
+      "usage": 91,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Analytics"
+        "Search",
+        "Translation"
+      ]
+    },
+    {
+      "machine_name": "drupal/search_api_solr_dense_vector",
+      "label": "Search API Solr: Dense Vector",
+      "description": "Provides an implementation of Dense Vector field support for Solr 9.x+ in Drupal.",
+      "url": "https://www.drupal.org/project/search_api_solr_dense_vector",
+      "version": "1.0.0-alpha9",
+      "release_date": "2026-01-29",
+      "usage": 88,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Search",
+        "Vector Database"
       ]
     },
     {
@@ -929,7 +808,7 @@
       "url": "https://www.drupal.org/project/analyze_ai_sentiments",
       "version": "1.3.1",
       "release_date": "2026-09-01",
-      "usage": 54,
+      "usage": 86,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -938,28 +817,13 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_dxpr",
-      "label": "DXPR AI Provider",
-      "description": "This enables the use of DXPR AI for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_dxpr",
-      "version": "1.2.0",
-      "release_date": "2026-10-01",
-      "usage": 53,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/analyze_ai_content_marketing_audit",
-      "label": "Analyze AI Content Marketing Audit",
-      "description": "AI-powered content marketing audit analyzing usability, knowledge level, actionability, accuracy, business value, messaging, and brand voice fit.",
-      "url": "https://www.drupal.org/project/analyze_ai_content_marketing_audit",
+      "machine_name": "drupal/analyze_ai_brand_voice",
+      "label": "Analyze AI Brand Voice",
+      "description": "Analyzes content for ai brand voice consistency using AI.",
+      "url": "https://www.drupal.org/project/analyze_ai_brand_voice",
       "version": "1.3.1",
       "release_date": "2026-09-01",
-      "usage": 51,
+      "usage": 85,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -969,13 +833,167 @@
       ]
     },
     {
+      "machine_name": "drupal/analyze_ai_content_marketing_audit",
+      "label": "Analyze AI Content Marketing Audit",
+      "description": "AI-powered content marketing audit analyzing usability, knowledge level, actionability, accuracy, business value, messaging, and brand voice fit.",
+      "url": "https://www.drupal.org/project/analyze_ai_content_marketing_audit",
+      "version": "1.3.1",
+      "release_date": "2026-09-01",
+      "usage": 84,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_dxpr",
+      "label": "DXPR AI Provider",
+      "description": "This enables the use of DXPR AI for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_dxpr",
+      "version": "1.3.0",
+      "release_date": "2026-10-20",
+      "usage": 82,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_huggingface",
+      "label": "Huggingface Provider",
+      "description": "This enables the use of Huggingface Inference API for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_huggingface",
+      "version": "1.0.0-rc1",
+      "release_date": "2026-02-26",
+      "usage": 81,
+      "security_covered": true,
+      "stability": "rc",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/analyze_ai_content_security_audit",
+      "label": "Analyze AI Content Security Audit",
+      "description": "A submodule for Analyze that provides AI-powered content security analysis capabilities.",
+      "url": "https://www.drupal.org/project/analyze_ai_content_security_audit",
+      "version": "1.3.1",
+      "release_date": "2026-09-01",
+      "usage": 79,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Analytics",
+        "Safety & Governance"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_editoria11y",
+      "label": "AI Editoria11y",
+      "description": "Adds \"Fix with AI\" buttons to Editoria11y accessibility tooltips in CKEditor5, using AI to suggest WCAG 2.1 AA compliant fixes.",
+      "url": "https://www.drupal.org/project/ai_editoria11y",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-03-05",
+      "usage": 70,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Editorial",
+        "Accessibility"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_lmstudio",
+      "label": "LM Studio Provider",
+      "description": "This enables the use of LM Studio for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_lmstudio",
+      "version": "1.1.0",
+      "release_date": "2025-11-12",
+      "usage": 70,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Local Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_image_crop",
+      "label": "AI Image Crop",
+      "description": "Provides AI-powered image cropping suggestions for Focal Point and Image Widget Crop.",
+      "url": "https://www.drupal.org/project/ai_image_crop",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-09-16",
+      "usage": 69,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_acquia",
+      "label": "Acquia AI Gateway",
+      "description": "This enables the use of Acquia AI services for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_acquia",
+      "version": "1.0.0",
+      "release_date": "2026-02-18",
+      "usage": 66,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_vdb_provider_sqlite",
+      "label": "SQLite VDB Provider",
+      "description": "This enables the use of a SQLite (sqlite-vec) VDB in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_sqlite",
+      "version": "1.4.0",
+      "release_date": "2026-07-19",
+      "usage": 54,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_translate_textfield",
+      "label": "AI Textfield Translation",
+      "description": "Provides AI textfield translation functionality.",
+      "url": "https://www.drupal.org/project/ai_translate_textfield",
+      "version": "2.0.0-alpha3",
+      "release_date": "2026-10-01",
+      "usage": 54,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Translation"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_provider_anythingllm",
       "label": "AnythingLLM Provider",
       "description": "Use AnythingLLM API for the AI module.",
       "url": "https://www.drupal.org/project/ai_provider_anythingllm",
       "version": "1.0.0",
       "release_date": "2026-03-25",
-      "usage": 50,
+      "usage": 51,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -990,7 +1008,7 @@
       "url": "https://www.drupal.org/project/ai_provider_langdock",
       "version": "1.0.0-beta1",
       "release_date": "2026-03-25",
-      "usage": 49,
+      "usage": 50,
       "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
@@ -999,107 +1017,13 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_translate_paragraph_asymetric",
-      "label": "AI Translate Paragraph Asymetric",
-      "description": "This module provides simple -one click- AI powered translations for asymmetric paragraphs.",
-      "url": "https://www.drupal.org/project/ai_translate_paragraph_asymetric",
-      "version": "1.2.2",
-      "release_date": "2026-02-03",
-      "usage": 49,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Search",
-        "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_translate_textfield",
-      "label": "AI Textfield Translation",
-      "description": "Provides AI textfield translation functionality.",
-      "url": "https://www.drupal.org/project/ai_translate_textfield",
-      "version": "2.0.0-alpha3",
-      "release_date": "2026-10-01",
-      "usage": 49,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/analyze_ai_content_security_audit",
-      "label": "Analyze AI Content Security Audit",
-      "description": "A submodule for Analyze that provides AI-powered content security analysis capabilities.",
-      "url": "https://www.drupal.org/project/analyze_ai_content_security_audit",
-      "version": "1.3.1",
-      "release_date": "2026-09-01",
-      "usage": 48,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Content",
-        "Analytics",
-        "Safety & Governance"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_lmstudio",
-      "label": "LM Studio Provider",
-      "description": "This enables the use of LM Studio for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_lmstudio",
-      "version": "1.1.0",
-      "release_date": "2025-11-12",
-      "usage": 48,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Local Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_xai",
-      "label": "xAI Provider",
-      "description": "xAI provider for AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_xai",
-      "version": "1.0.0-alpha1",
-      "release_date": "2025-02-19",
-      "usage": 43,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_simple_pdf_to_text",
-      "label": "AI Simple PDF to Text",
-      "description": "This module offers automators and agents to convert PDF to text",
-      "url": "https://www.drupal.org/project/ai_simple_pdf_to_text",
-      "version": "1.0.0-alpha3",
-      "release_date": "2025-10-15",
-      "usage": 42,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Automation",
-        "Media"
-      ]
-    },
-    {
       "machine_name": "drupal/varbase_ai",
       "label": "Varbase AI",
       "description": "Provides a collection of recipes for AI tools, empowering editorial teams with a wide range of advanced Artificial Intelligence (AI) capabilities. Enables seamless management of custom AI integrati...",
       "url": "https://www.drupal.org/project/varbase_ai",
-      "version": "2.0.11",
-      "release_date": "2026-09-25",
-      "usage": 41,
+      "version": "2.0.12",
+      "release_date": "2026-10-21",
+      "usage": 46,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -1108,36 +1032,34 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_agents_debugger",
-      "label": "AI Agents Debugger",
-      "description": "A debugging tool for monitoring AI agent actions, thoughts, and responses in real-time.",
-      "url": "https://www.drupal.org/project/ai_agents_debugger",
-      "version": "1.0.0-beta2",
-      "release_date": "2026-02-10",
+      "machine_name": "drupal/ai_provider_alibabacloud",
+      "label": "Alibaba Cloud Model Studio AI Provider",
+      "description": "Provides integration with Alibaba Cloud Model Studio (Qwen models) for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_alibabacloud",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-09-09",
       "usage": 39,
       "security_covered": false,
-      "stability": "beta",
+      "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Agents",
-        "Analytics",
-        "Developer Tools"
+        "Cloud Providers"
       ]
     },
     {
-      "machine_name": "drupal/ai_auto_reference",
-      "label": "AI Auto-reference",
-      "description": "Automatically sets or suggests references to other content entities in the site.",
-      "url": "https://www.drupal.org/project/ai_auto_reference",
-      "version": "1.0.0-rc6",
-      "release_date": "2026-06-26",
-      "usage": 38,
+      "machine_name": "drupal/agui",
+      "label": "AG-UI",
+      "description": "AG-UI is a Drupal module that provides an advanced graphical user interface for managing and interacting with AI models within the Drupal ecosystem. It enhances user experience by offering intuitiv...",
+      "url": "https://www.drupal.org/project/agui",
+      "version": "1.0.5",
+      "release_date": "2026-10-13",
+      "usage": 39,
       "security_covered": true,
-      "stability": "rc",
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Automation"
+        "Agents",
+        "Tool"
       ]
     },
     {
@@ -1156,33 +1078,34 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_alibabacloud",
-      "label": "Alibaba Cloud Model Studio AI Provider",
-      "description": "Provides integration with Alibaba Cloud Model Studio (Qwen models) for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_alibabacloud",
-      "version": "1.0.0-alpha1",
-      "release_date": "2025-09-09",
-      "usage": 31,
-      "security_covered": false,
-      "stability": "alpha",
+      "machine_name": "drupal/ai_auto_reference",
+      "label": "AI Auto-reference",
+      "description": "Automatically sets or suggests references to other content entities in the site.",
+      "url": "https://www.drupal.org/project/ai_auto_reference",
+      "version": "1.0.0-rc6",
+      "release_date": "2026-06-26",
+      "usage": 35,
+      "security_covered": true,
+      "stability": "rc",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "Content",
+        "Automation"
       ]
     },
     {
-      "machine_name": "drupal/chat_messenger",
-      "label": "Chat Messenger",
-      "description": "1:1 and group chat between site users via AJAX long-polling, with emoji reactions, presence status, typing indicators, read receipts, profile pictures and file attachments.",
-      "url": "https://www.drupal.org/project/chat_messenger",
-      "version": "1.1.0",
-      "release_date": "2026-07-11",
-      "usage": 31,
-      "security_covered": true,
+      "machine_name": "drupal/ai_provider_moonshot",
+      "label": "Moonshot AI Provider",
+      "description": "This enables the use of Moonshot AI for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_moonshot",
+      "version": "1.2.1",
+      "release_date": "2026-07-18",
+      "usage": 29,
+      "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Chat"
+        "Cloud Providers"
       ]
     },
     {
@@ -1201,13 +1124,73 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_simple_pdf_to_text",
+      "label": "Ai Simple Pdf To Text",
+      "description": null,
+      "url": "https://www.drupal.org/project/ai_simple_pdf_to_text",
+      "version": "1.0.0-alpha3",
+      "release_date": "2025-10-15",
+      "usage": 28,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_usage_limits",
+      "label": "AI usage limits",
+      "description": "Provides token usage limits per AI provider for the Drupal AI module.",
+      "url": "https://www.drupal.org/project/ai_usage_limits",
+      "version": "1.0.0-alpha2",
+      "release_date": "2025-09-26",
+      "usage": 28,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/fireworksai",
+      "label": "Fireworks Provider",
+      "description": "Core provider module for doing calls to Fireworks AI.",
+      "url": "https://www.drupal.org/project/fireworksai",
+      "version": "1.2.0-rc1",
+      "release_date": "2026-06-26",
+      "usage": 25,
+      "security_covered": true,
+      "stability": "rc",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/mcp_client",
+      "label": "MCP Client",
+      "description": "Unlocks connection to external MCP servers",
+      "url": "https://www.drupal.org/project/mcp_client",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-08-22",
+      "usage": 25,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Tool"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_provider_x",
       "label": "X AI Provider",
       "description": "This enables the use of X AI for the AI module.",
       "url": "https://www.drupal.org/project/ai_provider_x",
       "version": "1.0.0",
       "release_date": "2025-03-21",
-      "usage": 28,
+      "usage": 24,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -1216,19 +1199,20 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_nanobanana",
-      "label": "NanoBanana Provider (Gemini 2.5 Flash Image and Gemini 3 Pro Image)",
-      "description": "AI Provider module for Google Gemini's image generation models.",
-      "url": "https://www.drupal.org/project/ai_provider_nanobanana",
-      "version": "1.0.0-beta1",
-      "release_date": "2025-11-21",
-      "usage": 27,
+      "machine_name": "drupal/ai_agents_debugger",
+      "label": "AI Agents Debugger",
+      "description": "A debugging tool for monitoring AI agent actions, thoughts, and responses in real-time.",
+      "url": "https://www.drupal.org/project/ai_agents_debugger",
+      "version": "1.0.0-beta2",
+      "release_date": "2026-02-10",
+      "usage": 23,
       "security_covered": false,
       "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers",
-        "Media"
+        "Agents",
+        "Analytics",
+        "Developer Tools"
       ]
     },
     {
@@ -1238,7 +1222,7 @@
       "url": "https://www.drupal.org/project/ai_audio_generator",
       "version": "1.0.0-alpha4",
       "release_date": "2026-09-29",
-      "usage": 26,
+      "usage": 23,
       "security_covered": true,
       "stability": "alpha",
       "requires_ai": true,
@@ -1249,63 +1233,33 @@
       ]
     },
     {
-      "machine_name": "drupal/mcp_client",
-      "label": "MCP Client",
-      "description": "Unlocks connection to external MCP servers",
-      "url": "https://www.drupal.org/project/mcp_client",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-08-22",
+      "machine_name": "drupal/vais",
+      "label": "Views AI Summary",
+      "description": "A block which on Views page provides summary of View output generated by AI.",
+      "url": "https://www.drupal.org/project/vais",
+      "version": "1.0.0-alpha2",
+      "release_date": "2024-08-22",
       "usage": 23,
       "security_covered": true,
       "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Tool"
+        "Content"
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_moonshot",
-      "label": "Moonshot AI Provider",
-      "description": "This enables the use of Moonshot AI for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_moonshot",
-      "version": "1.2.1",
-      "release_date": "2026-07-18",
-      "usage": 20,
+      "machine_name": "drupal/node_ai_assistant",
+      "label": "Node AI Assistant",
+      "description": "Adds an AI chatbot tab to node edit forms to query field data. Module by digitalnadeem.com",
+      "url": "https://www.drupal.org/project/node_ai_assistant",
+      "version": "3.1.0",
+      "release_date": "2026-04-18",
+      "usage": 23,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/fireworksai",
-      "label": "Fireworks Provider",
-      "description": "Core provider module for doing calls to Fireworks AI.",
-      "url": "https://www.drupal.org/project/fireworksai",
-      "version": "1.2.0-rc1",
-      "release_date": "2026-06-26",
-      "usage": 20,
-      "security_covered": true,
-      "stability": "rc",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/schema_metatag_ai",
-      "label": "Schema Metatag AI Generator",
-      "description": "Provides AI-powered Schema.org structured data generation for metatag fields.",
-      "url": "https://www.drupal.org/project/schema_metatag_ai",
-      "version": "1.0.0",
-      "release_date": "2025-12-04",
-      "usage": 20,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "SEO & Metadata"
+        "Chat"
       ]
     },
     {
@@ -1315,7 +1269,7 @@
       "url": "https://www.drupal.org/project/ai_provider_vllm",
       "version": "1.0.0-alpha1",
       "release_date": "2025-03-04",
-      "usage": 19,
+      "usage": 22,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
@@ -1330,7 +1284,7 @@
       "url": "https://www.drupal.org/project/ai_rag_search_chat",
       "version": "1.2.0",
       "release_date": "2026-10-04",
-      "usage": 19,
+      "usage": 22,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
@@ -1340,18 +1294,49 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_bifrost",
-      "label": "Bifrost AI Provider",
-      "description": "Provides an AI provider plugin for the Bifrost LLM gateway.",
-      "url": "https://www.drupal.org/project/ai_provider_bifrost",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-07-23",
-      "usage": 18,
+      "machine_name": "drupal/schema_metatag_ai",
+      "label": "Schema Metatag AI Generator",
+      "description": "Provides AI-powered Schema.org structured data generation for metatag fields.",
+      "url": "https://www.drupal.org/project/schema_metatag_ai",
+      "version": "1.0.0",
+      "release_date": "2025-12-04",
+      "usage": 22,
       "security_covered": false,
-      "stability": "alpha",
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "SEO & Metadata"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_nanobanana",
+      "label": "NanoBanana Provider (Gemini 2.5 Flash Image and Gemini 3 Pro Image)",
+      "description": "AI Provider module for Google Gemini's image generation models.",
+      "url": "https://www.drupal.org/project/ai_provider_nanobanana",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-11-21",
+      "usage": 22,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/chat_messenger",
+      "label": "Chat Messenger",
+      "description": "1:1 and group chat between site users via AJAX long-polling, with emoji reactions, presence status, typing indicators, read receipts, profile pictures and file attachments.",
+      "url": "https://www.drupal.org/project/chat_messenger",
+      "version": "1.1.0",
+      "release_date": "2026-07-11",
+      "usage": 22,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Chat"
       ]
     },
     {
@@ -1361,43 +1346,12 @@
       "url": "https://www.drupal.org/project/ai_chatblock",
       "version": "1.0.0",
       "release_date": "2026-03-06",
-      "usage": 18,
+      "usage": 21,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Chat"
-      ]
-    },
-    {
-      "machine_name": "drupal/node_ai_assistant",
-      "label": "Node AI Assistant",
-      "description": "Adds an AI chatbot tab to node edit forms to query field data. Module by digitalnadeem.com",
-      "url": "https://www.drupal.org/project/node_ai_assistant",
-      "version": "3.1.0",
-      "release_date": "2026-04-18",
-      "usage": 18,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Chat"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_related_content",
-      "label": "AI Related Content",
-      "description": "Provides a Views Block integration with AI Search to find related content.",
-      "url": "https://www.drupal.org/project/ai_related_content",
-      "version": "1.0.5",
-      "release_date": "2026-09-24",
-      "usage": 17,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Content",
-        "Search"
       ]
     },
     {
@@ -1407,7 +1361,7 @@
       "url": "https://www.drupal.org/project/ai_image",
       "version": "2.0.0-alpha2",
       "release_date": "2026-09-23",
-      "usage": 15,
+      "usage": 17,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
@@ -1423,7 +1377,7 @@
       "url": "https://www.drupal.org/project/ai_provider_yandex",
       "version": "1.0.1",
       "release_date": "2025-10-18",
-      "usage": 15,
+      "usage": 17,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
@@ -1432,52 +1386,111 @@
       ]
     },
     {
-      "machine_name": "drupal/smartlinker_ai",
-      "label": "SmartLinker AI",
-      "description": "Provides an additional feature in the AI CKEditor plugin, allowing editors to prompt AI to analyze content and automatically identify and attach internal links.",
-      "url": "https://www.drupal.org/project/smartlinker_ai",
-      "version": "1.0.1",
-      "release_date": "2026-09-10",
-      "usage": 15,
+      "machine_name": "drupal/ai_webform_guard",
+      "label": "AI Webform Guard",
+      "description": "Protects webforms from spam using AI detection.",
+      "url": "https://www.drupal.org/project/ai_webform_guard",
+      "version": "1.1.8",
+      "release_date": "2026-10-07",
+      "usage": 17,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Editorial",
-        "Content",
-        "Automation",
-        "Analytics"
+        "Safety & Governance"
       ]
     },
     {
-      "machine_name": "drupal/ai_chatbot_assistant_ui",
-      "label": "AI Chatbot Assistant UI",
-      "description": "assistant-ui (React) chat frontend for the AI Assistant API.",
-      "url": "https://www.drupal.org/project/ai_chatbot_assistant_ui",
-      "version": "1.0.0-beta9",
-      "release_date": "2026-10-06",
-      "usage": 15,
-      "security_covered": false,
+      "machine_name": "drupal/ai_provider_typesafeai",
+      "label": "TypeSafe AI Provider",
+      "description": "Adds TypeSafe AI System One models (Jev) to the AI module. Jev returns typed judgments with probabilities instead of generated text.",
+      "url": "https://www.drupal.org/project/ai_provider_typesafeai",
+      "version": "1.1.0-beta2",
+      "release_date": "2026-10-07",
+      "usage": 17,
+      "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Chat"
+        "Cloud Providers"
       ]
     },
     {
-      "machine_name": "drupal/agui",
-      "label": "AG-UI",
-      "description": "AG-UI is a Drupal module that provides an advanced graphical user interface for managing and interacting with AI models within the Drupal ecosystem. It enhances user experience by offering intuitiv...",
-      "url": "https://www.drupal.org/project/agui",
-      "version": "1.0.4",
-      "release_date": "2026-08-20",
-      "usage": 15,
+      "machine_name": "drupal/deepgram",
+      "label": "Deepgram",
+      "description": "Speech to Text and Text to Speech provider.",
+      "url": "https://www.drupal.org/project/deepgram",
+      "version": "1.0.0-beta2",
+      "release_date": "2024-10-29",
+      "usage": 17,
+      "security_covered": true,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/openai_batch",
+      "label": "OpenAI batch",
+      "description": "Drupal integration for OpenAIs Batch API.",
+      "url": "https://www.drupal.org/project/openai_batch",
+      "version": "1.0.0-alpha13",
+      "release_date": "2026-10-05",
+      "usage": 17,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Automation"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_bifrost",
+      "label": "Bifrost AI Provider",
+      "description": "Provides an AI provider plugin for the Bifrost LLM gateway.",
+      "url": "https://www.drupal.org/project/ai_provider_bifrost",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-07-23",
+      "usage": 16,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_related_content",
+      "label": "AI Related Content",
+      "description": "Provides a Views Block integration with AI Search to find related content.",
+      "url": "https://www.drupal.org/project/ai_related_content",
+      "version": "1.0.5",
+      "release_date": "2026-09-24",
+      "usage": 16,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Agents",
-        "Tool"
+        "Content",
+        "Search"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_llms_txt_generator",
+      "label": "AI LLMs.txt Generator",
+      "description": "AI-powered module to generate spec-compliant LLMs.txt files from sitemap.xml using AI providers.",
+      "url": "https://www.drupal.org/project/ai_llms_txt_generator",
+      "version": "1.0.2",
+      "release_date": "2026-09-15",
+      "usage": 16,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "SEO & Metadata"
       ]
     },
     {
@@ -1487,7 +1500,7 @@
       "url": "https://www.drupal.org/project/ai_automator_extractor",
       "version": "1.0.0-beta2",
       "release_date": "2025-09-09",
-      "usage": 13,
+      "usage": 15,
       "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
@@ -1496,19 +1509,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_content_advisor",
-      "label": "AI Content Advisor",
-      "description": "Analyze your content and receive AI-powered recommendations on how to improve it.",
-      "url": "https://www.drupal.org/project/ai_content_advisor",
-      "version": "1.0.0",
-      "release_date": "2025-08-27",
-      "usage": 13,
+      "machine_name": "drupal/ai_document_ocr",
+      "label": "AI Document OCR Provider",
+      "description": "Google Document AI provider for Drupal AI module",
+      "url": "https://www.drupal.org/project/ai_document_ocr",
+      "version": "1.0.0-beta3",
+      "release_date": "2026-06-09",
+      "usage": 15,
       "security_covered": false,
-      "stability": "stable",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Analytics"
+        "Media"
       ]
     },
     {
@@ -1527,13 +1539,44 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_content_advisor",
+      "label": "AI Content Advisor",
+      "description": "Analyze your content and receive AI-powered recommendations on how to improve it.",
+      "url": "https://www.drupal.org/project/ai_content_advisor",
+      "version": "1.0.0",
+      "release_date": "2025-08-27",
+      "usage": 12,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_translate_plus",
+      "label": "AI Translate Plus",
+      "description": "Extends AI Translate to allow per-entity-type and bundle prompts per language and disable translation for selected fields.",
+      "url": "https://www.drupal.org/project/ai_translate_plus",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-11-10",
+      "usage": 12,
+      "security_covered": true,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Translation"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_content_assistant",
       "label": "AI Content Assistant",
       "description": "AI-powered content generation using paragraphs",
       "url": "https://www.drupal.org/project/ai_content_assistant",
       "version": "1.0.2",
       "release_date": "2026-06-05",
-      "usage": 13,
+      "usage": 12,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
@@ -1543,81 +1586,119 @@
       ]
     },
     {
-      "machine_name": "drupal/vais",
-      "label": "Views AI Summary",
-      "description": "A block which on Views page provides summary of View output generated by AI.",
-      "url": "https://www.drupal.org/project/vais",
-      "version": "1.0.0-alpha2",
-      "release_date": "2024-08-22",
-      "usage": 12,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Content"
-      ]
-    },
-    {
-      "machine_name": "drupal/deepgram",
-      "label": "Deepgram",
-      "description": "Speech to Text and Text to Speech provider.",
-      "url": "https://www.drupal.org/project/deepgram",
-      "version": "1.0.0-beta2",
-      "release_date": "2024-10-29",
-      "usage": 11,
-      "security_covered": true,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/openai_batch",
-      "label": "OpenAI batch",
-      "description": "Drupal integration for OpenAIs Batch API.",
-      "url": "https://www.drupal.org/project/openai_batch",
-      "version": "1.0.0-alpha13",
-      "release_date": "2026-10-05",
+      "machine_name": "drupal/ai_content_chat",
+      "label": "AI Content Chat",
+      "description": "AI-powered chatbot that answers questions based on your website content. Integrates with Drupal AI module for intelligent responses.",
+      "url": "https://www.drupal.org/project/ai_content_chat",
+      "version": "2.0.0",
+      "release_date": "2026-02-26",
       "usage": 11,
       "security_covered": false,
-      "stability": "alpha",
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers",
-        "Automation"
+        "Content",
+        "Chat"
       ]
     },
     {
-      "machine_name": "drupal/ai_ckeditor_extras",
-      "label": "AI CKEditor Extras",
-      "description": "Provides AI-powered paraphrasing and tone tools for Drupal's CKEditor.",
-      "url": "https://www.drupal.org/project/ai_ckeditor_extras",
-      "version": "1.0.1",
-      "release_date": "2026-03-12",
-      "usage": 10,
+      "machine_name": "drupal/site_agent",
+      "label": "Site Agent",
+      "description": "Edit your site's content and configuration via chat.",
+      "url": "https://www.drupal.org/project/site_agent",
+      "version": "1.0.2",
+      "release_date": "2026-10-20",
+      "usage": 11,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Editorial"
+        "Content",
+        "Chat",
+        "Agents"
       ]
     },
     {
-      "machine_name": "drupal/flowdrop_ui_agents",
-      "label": "FlowDrop UI Agents",
-      "description": "Provides FlowDrop visual editor integration for AI Agents using Modeler API.",
-      "url": "https://www.drupal.org/project/flowdrop_ui_agents",
-      "version": "2.0.0",
-      "release_date": "2026-07-28",
+      "machine_name": "drupal/ai_anthropic_provider_oauth",
+      "label": "AI Anthropic Provider (OAuth)",
+      "description": "Enables Anthropic AI using OAuth setup tokens from claude setup-token. WARNING: Third-party use of setup tokens may violate ToS. For production use, install ai_provider_anthropic instead. Developme...",
+      "url": "https://www.drupal.org/project/ai_anthropic_provider_oauth",
+      "version": "1.0.0-beta4",
+      "release_date": "2026-03-24",
+      "usage": 11,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_automator_google_vision",
+      "label": "AI Automator Google Vision",
+      "description": "Reads different document using Google Vision AI.",
+      "url": "https://www.drupal.org/project/ai_automator_google_vision",
+      "version": "1.0.0-beta1",
+      "release_date": "2024-10-10",
+      "usage": 10,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Automation",
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/smartlinker_ai",
+      "label": "SmartLinker AI",
+      "description": "Provides an additional feature in the AI CKEditor plugin, allowing editors to prompt AI to analyze content and automatically identify and attach internal links.",
+      "url": "https://www.drupal.org/project/smartlinker_ai",
+      "version": "1.0.3",
+      "release_date": "2026-10-07",
       "usage": 10,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Editorial",
-        "Agents"
+        "Content",
+        "Automation",
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_404_redirect",
+      "label": "AI 404 Redirect",
+      "description": "Uses AI to analyze 404 errors and automatically suggest redirects to appropriate content. Includes bot detection, confidence scoring, and configurable thresholds.",
+      "url": "https://www.drupal.org/project/ai_404_redirect",
+      "version": "1.0.2",
+      "release_date": "2025-12-22",
+      "usage": 10,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Automation",
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/auphonic",
+      "label": "Auphonic Core",
+      "description": "Core module for doing calls to Auphonic.",
+      "url": "https://www.drupal.org/project/auphonic",
+      "version": "1.0.0-beta3",
+      "release_date": "2024-10-10",
+      "usage": 10,
+      "security_covered": true,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Media",
+        "Cloud Providers"
       ]
     },
     {
@@ -1637,13 +1718,62 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_playwright",
+      "label": "AI Playwright",
+      "description": "Gives Drupal AI Agents eyes on a rendered page: a Playwright browser tool that opens a page of this site in headless Chromium and returns a screenshot, title, visible text and console errors, so th...",
+      "url": "https://www.drupal.org/project/ai_playwright",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-10-04",
+      "usage": 9,
+      "security_covered": true,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Tool"
+      ]
+    },
+    {
+      "machine_name": "drupal/llms_txt_ai",
+      "label": "llms.txt AI Generator",
+      "description": "Automatically generate llms.txt files for your Drupal site using AI. Makes your content discoverable by ChatGPT, Claude, Perplexity, Gemini and other Large Language Models.",
+      "url": "https://www.drupal.org/project/llms_txt_ai",
+      "version": "0.0.3",
+      "release_date": "2023-10-30",
+      "usage": 9,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Content",
+        "Chat",
+        "Automation",
+        "SEO & Metadata"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_llama_cpp",
+      "label": "llama.cpp",
+      "description": "Provides a provider for llama.cpp using an OpenAI-compatible /v1 HTTP API.",
+      "url": "https://www.drupal.org/project/ai_provider_llama_cpp",
+      "version": "1.0.0",
+      "release_date": "2026-06-01",
+      "usage": 9,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Local Providers"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_schemadotorg_jsonld",
       "label": "AI Schema.org JSON-LD",
       "description": "Uses AI Automators to generate and attach Schema.org JSON-LD to content types.",
       "url": "https://www.drupal.org/project/ai_schemadotorg_jsonld",
       "version": "1.0.0-alpha1",
       "release_date": "2026-04-30",
-      "usage": 9,
+      "usage": 8,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
@@ -1660,7 +1790,7 @@
       "url": "https://www.drupal.org/project/ai_provider_dropsolidai",
       "version": "1.0.1-alpha1",
       "release_date": "2025-10-10",
-      "usage": 9,
+      "usage": 8,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
@@ -1669,110 +1799,79 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_webform_guard",
-      "label": "AI Webform Guard",
-      "description": "Protects webforms from spam using AI detection.",
-      "url": "https://www.drupal.org/project/ai_webform_guard",
-      "version": "1.1.7",
-      "release_date": "2026-08-21",
-      "usage": 9,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Safety & Governance"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_translate_plus",
-      "label": "AI Translate Plus",
-      "description": "Extends AI Translate to allow per-entity-type and bundle prompts per language and disable translation for selected fields.",
-      "url": "https://www.drupal.org/project/ai_translate_plus",
-      "version": "1.0.0-beta1",
-      "release_date": "2025-11-10",
-      "usage": 9,
-      "security_covered": true,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_content_chat",
-      "label": "AI Content Chat",
-      "description": "AI-powered chatbot that answers questions based on your website content. Integrates with Drupal AI module for intelligent responses.",
-      "url": "https://www.drupal.org/project/ai_content_chat",
-      "version": "2.0.0",
-      "release_date": "2026-02-26",
-      "usage": 7,
+      "machine_name": "drupal/ai_content_migrate",
+      "label": "AI Content Migrate",
+      "description": "Automate content modeling and migration from legacy HTML and databases into Drupal.",
+      "url": "https://www.drupal.org/project/ai_content_migrate",
+      "version": "1.1.0",
+      "release_date": "2026-09-28",
+      "usage": 8,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Content",
-        "Chat"
+        "Automation"
       ]
     },
     {
-      "machine_name": "drupal/ai_document_ocr",
-      "label": "AI Document OCR Provider",
-      "description": "Google Document AI provider for Drupal AI module",
-      "url": "https://www.drupal.org/project/ai_document_ocr",
-      "version": "1.0.0-beta3",
-      "release_date": "2026-06-09",
+      "machine_name": "drupal/ai_penpot",
+      "label": "AI Penpot",
+      "description": "Reads live Penpot design context via the Penpot API and exposes it to Drupal AI Agent tools, so the Drupal Canvas AI assistant can build from a real design. Config-driven, theme- and framework-agno...",
+      "url": "https://www.drupal.org/project/ai_penpot",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-10-04",
       "usage": 7,
-      "security_covered": false,
+      "security_covered": true,
       "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Media"
+        "Uncategorized"
       ]
     },
     {
-      "machine_name": "drupal/flowdrop_agents",
-      "label": "FlowDrop Agents",
-      "description": "This module is integrating AI Agents with Flowdrop core plugins",
-      "url": "https://www.drupal.org/project/flowdrop_agents",
-      "version": "2.0.0",
-      "release_date": "2026-07-27",
+      "machine_name": "drupal/ai_simple_provider_installer",
+      "label": "Ai Simple Provider Installer",
+      "description": null,
+      "url": "https://www.drupal.org/project/ai_simple_provider_installer",
+      "version": "1.0.0-alpha3",
+      "release_date": "2024-12-03",
+      "usage": 7,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_ckeditor_extras",
+      "label": "AI CKEditor Extras",
+      "description": "Provides AI-powered paraphrasing and tone tools for Drupal's CKEditor.",
+      "url": "https://www.drupal.org/project/ai_ckeditor_extras",
+      "version": "1.0.1",
+      "release_date": "2026-03-12",
       "usage": 7,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Agents"
+        "Editorial"
       ]
     },
     {
-      "machine_name": "drupal/ai_llms_txt_generator",
-      "label": "AI LLMs.txt Generator",
-      "description": "AI-powered module to generate spec-compliant LLMs.txt files from sitemap.xml using AI providers.",
-      "url": "https://www.drupal.org/project/ai_llms_txt_generator",
-      "version": "1.0.2",
-      "release_date": "2026-09-15",
+      "machine_name": "drupal/workers_ai_provider",
+      "label": "Workers AI Provider",
+      "description": "This enables the use of Workers AI for the AI module.",
+      "url": "https://www.drupal.org/project/workers_ai_provider",
+      "version": "1.0.1",
+      "release_date": "2025-05-20",
       "usage": 7,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "SEO & Metadata"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_anthropic_provider_oauth",
-      "label": "AI Anthropic Provider (OAuth)",
-      "description": "Enables Anthropic AI using OAuth setup tokens from claude setup-token. WARNING: Third-party use of setup tokens may violate ToS. For production use, install ai_provider_anthropic instead. Developme...",
-      "url": "https://www.drupal.org/project/ai_anthropic_provider_oauth",
-      "version": "1.0.0-beta4",
-      "release_date": "2026-03-24",
-      "usage": 7,
-      "security_covered": false,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Analytics"
+        "Cloud Providers"
       ]
     },
     {
@@ -1795,11 +1894,11 @@
       "label": "AI Basic Chatbot",
       "description": "AI Basic Chatbot with logging and rating functionality",
       "url": "https://www.drupal.org/project/ai_basic_chatbot",
-      "version": "1.0.0-beta9",
-      "release_date": "2026-09-30",
+      "version": "1.0.0-rc3",
+      "release_date": "2026-10-21",
       "usage": 6,
       "security_covered": true,
-      "stability": "beta",
+      "stability": "rc",
       "requires_ai": true,
       "categories": [
         "Chat"
@@ -1822,20 +1921,19 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_migration",
-      "label": "AI Migration",
-      "description": "Leverages AI to make migration of content easier.",
-      "url": "https://www.drupal.org/project/ai_migration",
-      "version": "1.0.0-rc1",
-      "release_date": "2026-08-15",
+      "machine_name": "drupal/ai_provider_speechify",
+      "label": "Speechify",
+      "description": "Provides a Speechify provider for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_speechify",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-09-29",
       "usage": 6,
       "security_covered": true,
-      "stability": "rc",
+      "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Search",
-        "Automation"
+        "Cloud Providers",
+        "Media"
       ]
     },
     {
@@ -1854,18 +1952,19 @@
       ]
     },
     {
-      "machine_name": "drupal/workers_ai_provider",
-      "label": "Workers AI Provider",
-      "description": "This enables the use of Workers AI for the AI module.",
-      "url": "https://www.drupal.org/project/workers_ai_provider",
-      "version": "1.0.1",
-      "release_date": "2025-05-20",
+      "machine_name": "drupal/ai_budget_control",
+      "label": "AI Budget Control",
+      "description": "Governance layer for AI operations: manage, monitor and limit AI usage and costs per provider, role and user.",
+      "url": "https://www.drupal.org/project/ai_budget_control",
+      "version": "1.0.2",
+      "release_date": "2026-08-06",
       "usage": 6,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "Analytics",
+        "Safety & Governance"
       ]
     },
     {
@@ -1886,178 +1985,53 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_grounding",
-      "label": "AI Grounding",
-      "description": "Runtime, output-side faithfulness verifier for RAG and AI chat answers. Scores how well each claim is supported by retrieved sources and can force abstain or hold-for-review when grounding is weak.",
-      "url": "https://www.drupal.org/project/ai_grounding",
-      "version": "1.0.1",
-      "release_date": "2026-07-21",
+      "machine_name": "drupal/media_accessibility_audit",
+      "label": "AI Media Accessibility Audit",
+      "description": "Audits media entities for accessibility and SEO issues and provides AI-assisted suggestions.",
+      "url": "https://www.drupal.org/project/media_accessibility_audit",
+      "version": "1.0.0",
+      "release_date": "2025-12-24",
       "usage": 6,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Analytics",
+        "Media",
+        "SEO & Metadata",
+        "Accessibility"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_vdb_provider_elasticsearch",
+      "label": "Elasticsearch VDB Provider",
+      "description": "Provides an Elasticsearch backend for the AI Search module using native dense_vector mappings and HNSW algorithms.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_elasticsearch",
+      "version": "1.0.0-rc1",
+      "release_date": "2026-05-09",
+      "usage": 5,
+      "security_covered": true,
+      "stability": "rc",
+      "requires_ai": true,
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_rag_service",
+      "label": "AI RAG Service",
+      "description": "Headless, authenticated, rate-limited RAG/AI HTTP API (grounded Q&A, chat, semantic search) with a swappable backend. JSON:API for AI.",
+      "url": "https://www.drupal.org/project/ai_rag_service",
+      "version": "1.0.0",
+      "release_date": "2026-06-21",
+      "usage": 5,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
         "Search",
         "Chat"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_content_migrate",
-      "label": "AI Content Migrate",
-      "description": "Automate content modeling and migration from legacy HTML and databases into Drupal.",
-      "url": "https://www.drupal.org/project/ai_content_migrate",
-      "version": "1.1.0",
-      "release_date": "2026-09-28",
-      "usage": 6,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Content",
-        "Automation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_automator_google_vision",
-      "label": "AI Automator Google Vision",
-      "description": "Reads different document using Google Vision AI.",
-      "url": "https://www.drupal.org/project/ai_automator_google_vision",
-      "version": "1.0.0-beta1",
-      "release_date": "2024-10-10",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Automation",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_workspace",
-      "label": "AI Workspace",
-      "description": "Enterprise-grade, per-user AI chat workspace with full persistence, streaming, and provider-agnostic model selection via the Drupal AI module.",
-      "url": "https://www.drupal.org/project/ai_workspace",
-      "version": "1.0.0-rc4",
-      "release_date": "2026-03-04",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "rc",
-      "requires_ai": true,
-      "categories": [
-        "Chat"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_cloudflare_gateway",
-      "label": "Cloudflare AI Gateway Provider",
-      "description": "Routes the Drupal AI module through a Cloudflare AI Gateway, adding caching, logging and cost analytics across every upstream provider.",
-      "url": "https://www.drupal.org/project/ai_provider_cloudflare_gateway",
-      "version": "1.0.0-alpha7",
-      "release_date": "2026-07-11",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Analytics"
-      ]
-    },
-    {
-      "machine_name": "drupal/rag_search",
-      "label": "RAG (Retrieval-Augmented Generation) Search",
-      "description": "Provides the ability to answer the user's questions by using the site's context with an LLM.",
-      "url": "https://www.drupal.org/project/rag_search",
-      "version": "1.0.5",
-      "release_date": "2026-04-17",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Search"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_metatag_generator",
-      "label": "AI Metatag Generator",
-      "description": "Generates metatags for nodes using AI module integration",
-      "url": "https://www.drupal.org/project/ai_metatag_generator",
-      "version": "1.0.0-alpha5",
-      "release_date": "2026-09-24",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "SEO & Metadata"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_budget_control",
-      "label": "AI Budget Control",
-      "description": "Governance layer for AI operations: manage, monitor and limit AI usage and costs per provider, role and user.",
-      "url": "https://www.drupal.org/project/ai_budget_control",
-      "version": "1.0.2",
-      "release_date": "2026-08-06",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Analytics",
-        "Safety & Governance"
-      ]
-    },
-    {
-      "machine_name": "drupal/llms_txt_ai",
-      "label": "llms.txt AI Generator",
-      "description": "Automatically generate llms.txt files for your Drupal site using AI. Makes your content discoverable by ChatGPT, Claude, Perplexity, Gemini and other Large Language Models.",
-      "url": "https://www.drupal.org/project/llms_txt_ai",
-      "version": "0.0.3",
-      "release_date": "2023-10-30",
-      "usage": 5,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Content",
-        "Chat",
-        "Automation",
-        "SEO & Metadata"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_webform_generator",
-      "label": "AI Webform Generator",
-      "description": "Generates Drupal Webforms from a plain-English description using the site's configured AI Core provider.",
-      "url": "https://www.drupal.org/project/ai_webform_generator",
-      "version": "1.0.2",
-      "release_date": "2026-07-03",
-      "usage": 5,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Uncategorized"
-      ]
-    },
-    {
-      "machine_name": "drupal/auphonic",
-      "label": "Auphonic Core",
-      "description": "Core module for doing calls to Auphonic.",
-      "url": "https://www.drupal.org/project/auphonic",
-      "version": "1.0.0-beta3",
-      "release_date": "2024-10-10",
-      "usage": 5,
-      "security_covered": true,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Media",
-        "Cloud Providers"
       ]
     },
     {
@@ -2076,6 +2050,21 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_provider_apertus",
+      "label": "Apertus Provider",
+      "description": "This enables the use of Apertus AI for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_apertus",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-10-17",
+      "usage": 4,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_seo_link_advisor",
       "label": "AI SEO Link Advisor",
       "description": "Check SEO metrics for a given url and provides AI-based recommendations.",
@@ -2088,6 +2077,51 @@
       "requires_ai": true,
       "categories": [
         "SEO & Metadata"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_workspace",
+      "label": "AI Workspace",
+      "description": "Enterprise-grade, per-user AI chat workspace with full persistence, streaming, and provider-agnostic model selection via the Drupal AI module.",
+      "url": "https://www.drupal.org/project/ai_workspace",
+      "version": "1.0.0-rc4",
+      "release_date": "2026-03-04",
+      "usage": 4,
+      "security_covered": false,
+      "stability": "rc",
+      "requires_ai": true,
+      "categories": [
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_assemblyai",
+      "label": "Assembly AI Provider",
+      "description": "This enables the use of AssemblyAI for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_assemblyai",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-02-23",
+      "usage": 4,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/rag_search",
+      "label": "RAG (Retrieval-Augmented Generation) Search",
+      "description": "Provides the ability to answer the user's questions by using the site's context with an LLM.",
+      "url": "https://www.drupal.org/project/rag_search",
+      "version": "1.0.5",
+      "release_date": "2026-04-17",
+      "usage": 4,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Search"
       ]
     },
     {
@@ -2106,69 +2140,64 @@
       ]
     },
     {
-      "machine_name": "drupal/metatag_ai_bulk_update",
-      "label": "Bulk Metatag AI Generator",
-      "description": "Automatically generates SEO-friendly metatags for multiple nodes at once using AI.",
-      "url": "https://www.drupal.org/project/metatag_ai_bulk_update",
-      "version": "1.0.2",
-      "release_date": "2026-03-25",
+      "machine_name": "drupal/ai_metatag_generator",
+      "label": "AI Metatag Generator",
+      "description": "Generates metatags for nodes using AI module integration",
+      "url": "https://www.drupal.org/project/ai_metatag_generator",
+      "version": "1.0.0-alpha5",
+      "release_date": "2026-09-24",
       "usage": 4,
-      "security_covered": true,
-      "stability": "stable",
+      "security_covered": false,
+      "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Automation",
         "SEO & Metadata"
       ]
     },
     {
-      "machine_name": "drupal/media_accessibility_audit",
-      "label": "AI Media Accessibility Audit",
-      "description": "Audits media entities for accessibility and SEO issues and provides AI-assisted suggestions.",
-      "url": "https://www.drupal.org/project/media_accessibility_audit",
-      "version": "1.0.0",
-      "release_date": "2025-12-24",
+      "machine_name": "drupal/ai_ckeditor_cefr",
+      "label": "AI CKEditor CEFR",
+      "description": "Adds a CEFR rewrite plugin for AI CKEditor.",
+      "url": "https://www.drupal.org/project/ai_ckeditor_cefr",
+      "version": "1.1.0",
+      "release_date": "2026-10-16",
       "usage": 4,
       "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Analytics",
-        "Media",
-        "SEO & Metadata",
-        "Accessibility"
+        "Editorial"
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_llama_cpp",
-      "label": "llama.cpp",
-      "description": "Provides a provider for llama.cpp using an OpenAI-compatible /v1 HTTP API.",
-      "url": "https://www.drupal.org/project/ai_provider_llama_cpp",
-      "version": "1.0.0",
-      "release_date": "2026-06-01",
+      "machine_name": "drupal/ai_eval",
+      "label": "AI Eval",
+      "description": "Evaluation framework for AI agents: pluggable graders, YAML datasets, scoring, and prompt optimization via Drush.",
+      "url": "https://www.drupal.org/project/ai_eval",
+      "version": "1.1.0-alpha2",
+      "release_date": "2026-10-23",
       "usage": 4,
       "security_covered": false,
-      "stability": "stable",
+      "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Local Providers"
+        "Evaluation & Testing"
       ]
     },
     {
-      "machine_name": "drupal/ai_404_redirect",
-      "label": "AI 404 Redirect",
-      "description": "Uses AI to analyze 404 errors and automatically suggest redirects to appropriate content. Includes bot detection, confidence scoring, and configurable thresholds.",
-      "url": "https://www.drupal.org/project/ai_404_redirect",
-      "version": "1.0.2",
-      "release_date": "2025-12-22",
+      "machine_name": "drupal/flowdrop_ui_agents",
+      "label": "FlowDrop UI Agents",
+      "description": "Provides FlowDrop visual editor integration for AI Agents using Modeler API.",
+      "url": "https://www.drupal.org/project/flowdrop_ui_agents",
+      "version": "2.0.0",
+      "release_date": "2026-07-28",
       "usage": 4,
-      "security_covered": false,
+      "security_covered": true,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Automation",
-        "Analytics"
+        "Editorial",
+        "Agents"
       ]
     },
     {
@@ -2186,6 +2215,71 @@
         "Cloud Providers",
         "Editorial",
         "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_chatlog",
+      "label": "AI Chatlog",
+      "description": "Records and browses AI assistant conversations in owned storage.",
+      "url": "https://www.drupal.org/project/ai_chatlog",
+      "version": "1.0.0-beta2",
+      "release_date": "2026-10-12",
+      "usage": 3,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Search",
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_editor_actions",
+      "label": "AI Editor Actions",
+      "description": "AI text actions for CKEditor 5: users define and share the transformations (rephrase, translate, summarize, and more) available in the editor dropdown, run them on selected text or the whole docume...",
+      "url": "https://www.drupal.org/project/ai_editor_actions",
+      "version": "1.0.0-alpha9",
+      "release_date": "2026-07-22",
+      "usage": 3,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Editorial",
+        "Content",
+        "Translation"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_migration",
+      "label": "AI Migration",
+      "description": "Leverages AI to make migration of content easier.",
+      "url": "https://www.drupal.org/project/ai_migration",
+      "version": "1.0.0",
+      "release_date": "2026-10-23",
+      "usage": 3,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Search",
+        "Automation"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_aliyun_bailian",
+      "label": "Aliyun Bailian (for qwen series models) Provider",
+      "description": "This enables the use of Aliyun Bailian for the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_aliyun_bailian",
+      "version": "1.0.0-beta1",
+      "release_date": "2025-06-20",
+      "usage": 3,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
       ]
     },
     {
@@ -2208,44 +2302,61 @@
       "label": "AI Provider: Universal",
       "description": "Universal multi-instance AI provider. Servers and models as config entities, dynamic operation-type detection, per-model capability overrides. Ships ten OpenAI-compatible backends (Ollama, Groq, Op...",
       "url": "https://www.drupal.org/project/ai_provider_universal",
-      "version": "1.0.0-beta3",
-      "release_date": "2026-08-26",
+      "version": "1.0.0-rc1",
+      "release_date": "2026-10-11",
       "usage": 3,
       "security_covered": false,
-      "stability": "beta",
+      "stability": "rc",
       "requires_ai": true,
       "categories": [
         "Local Providers"
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_typesafeai",
-      "label": "TypeSafe AI Provider",
-      "description": "Adds TypeSafe AI System One models (Jev) to the AI module. Jev returns typed judgments with probabilities instead of generated text.",
-      "url": "https://www.drupal.org/project/ai_provider_typesafeai",
-      "version": "1.1.0-beta1",
-      "release_date": "2026-10-01",
+      "machine_name": "drupal/ai_grounding",
+      "label": "AI Grounding",
+      "description": "Runtime, output-side faithfulness verifier for RAG and AI chat answers. Scores how well each claim is supported by retrieved sources and can force abstain or hold-for-review when grounding is weak.",
+      "url": "https://www.drupal.org/project/ai_grounding",
+      "version": "1.0.1",
+      "release_date": "2026-07-21",
       "usage": 3,
-      "security_covered": true,
-      "stability": "beta",
+      "security_covered": false,
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "Search",
+        "Chat"
       ]
     },
     {
-      "machine_name": "drupal/ai_eval",
-      "label": "AI Eval",
-      "description": "Evaluation framework for AI agents: pluggable graders, YAML datasets, scoring, and prompt optimization via Drush.",
-      "url": "https://www.drupal.org/project/ai_eval",
-      "version": "1.0.0-beta6",
-      "release_date": "2026-09-25",
+      "machine_name": "drupal/ai_vdb_provider_openai",
+      "label": "OpenAI VDB Provider",
+      "description": "This enables the use of OpenAI as a Vector Database in the AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_openai",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-09-29",
       "usage": 3,
       "security_covered": false,
-      "stability": "beta",
+      "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Evaluation & Testing"
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/midgard",
+      "label": "Midgard",
+      "description": "Modular Intelligence & Drupal Governance for AI-driven Runtime & Deployment. Turns Drupal 11 into a safe, auditable AI operations layer.",
+      "url": "https://www.drupal.org/project/midgard",
+      "version": "1.0.0-alpha4",
+      "release_date": "2026-10-18",
+      "usage": 3,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Analytics",
+        "Safety & Governance"
       ]
     },
     {
@@ -2265,35 +2376,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_editor_actions",
-      "label": "AI Editor Actions",
-      "description": "AI text actions for CKEditor 5: users define and share the transformations (rephrase, translate, summarize, and more) available in the editor dropdown, run them on selected text or the whole docume...",
-      "url": "https://www.drupal.org/project/ai_editor_actions",
-      "version": "1.0.0-alpha9",
-      "release_date": "2026-07-22",
-      "usage": 2,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Editorial",
-        "Content",
-        "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_apertus",
-      "label": "Apertus Provider",
-      "description": "This enables the use of Apertus AI for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_apertus",
+      "machine_name": "drupal/ai_decoupled",
+      "label": "AI Decoupled",
+      "description": "Expose AI chat processors (agents, assistants, direct chat) as configurable HTTP endpoints for decoupled front-ends.",
+      "url": "https://www.drupal.org/project/ai_decoupled",
       "version": "1.0.0-alpha1",
-      "release_date": "2025-10-17",
+      "release_date": "2026-08-11",
       "usage": 2,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "Chat"
       ]
     },
     {
@@ -2312,34 +2406,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_aliyun_bailian",
-      "label": "Aliyun Bailian (for qwen series models) Provider",
-      "description": "This enables the use of Aliyun Bailian for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_aliyun_bailian",
-      "version": "1.0.0-beta1",
-      "release_date": "2025-06-20",
-      "usage": 2,
-      "security_covered": false,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_vdb_provider_elasticsearch",
-      "label": "Elasticsearch VDB Provider",
-      "description": "Provides an Elasticsearch backend for the AI Search module using native dense_vector mappings and HNSW algorithms.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_elasticsearch",
-      "version": "1.0.0-rc1",
-      "release_date": "2026-05-09",
+      "machine_name": "drupal/flowdrop_agents",
+      "label": "FlowDrop Agents",
+      "description": "This module is integrating AI Agents with Flowdrop core plugins",
+      "url": "https://www.drupal.org/project/flowdrop_agents",
+      "version": "2.0.0",
+      "release_date": "2026-07-27",
       "usage": 2,
       "security_covered": true,
-      "stability": "rc",
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Search",
-        "Vector Database"
+        "Agents"
       ]
     },
     {
@@ -2359,34 +2437,98 @@
       ]
     },
     {
-      "machine_name": "drupal/semantic_duplicates",
-      "label": "Semantic Duplicates",
-      "description": "Finds duplicate and competing content using word fingerprints and local AI embeddings.",
-      "url": "https://www.drupal.org/project/semantic_duplicates",
+      "machine_name": "drupal/ai_provider_quant_cloud",
+      "label": "Quant Cloud AI Provider",
+      "description": "AI provider for Quant Cloud platform (QuantCDN/QuantGov). Provides chat and embeddings via Dashboard API with OAuth authentication.",
+      "url": "https://www.drupal.org/project/ai_provider_quant_cloud",
+      "version": "1.0.0",
+      "release_date": "2026-02-27",
+      "usage": 2,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Search",
+        "Chat",
+        "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_entity_intake",
+      "label": "AI Entity Intake",
+      "description": "Turn unstructured text into reviewed, draft Drupal entities using the AI module.",
+      "url": "https://www.drupal.org/project/ai_entity_intake",
       "version": "1.0.0-alpha1",
-      "release_date": "2026-09-27",
+      "release_date": "2026-05-19",
       "usage": 2,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Search"
+        "Content"
       ]
     },
     {
-      "machine_name": "drupal/ai_decoupled",
-      "label": "AI Decoupled",
-      "description": "Expose AI chat processors (agents, assistants, direct chat) as configurable HTTP endpoints for decoupled front-ends.",
-      "url": "https://www.drupal.org/project/ai_decoupled",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-08-11",
-      "usage": 1,
+      "machine_name": "drupal/thunder_ai_prompt_management",
+      "label": "Thunder AI Prompt Management",
+      "description": "Manage reusable AI prompts, grouped by task, for content editing suggestions and the AI chatbot assistant.",
+      "url": "https://www.drupal.org/project/thunder_ai_prompt_management",
+      "version": "1.0.0-beta7",
+      "release_date": "2026-09-17",
+      "usage": 2,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_content_factory",
+      "label": "AI Content Factory",
+      "description": "Automates content generation via AI providers using configurable profiles and a managed generation queue.",
+      "url": "https://www.drupal.org/project/ai_content_factory",
+      "version": "1.0.1",
+      "release_date": "2026-05-24",
+      "usage": 2,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Automation"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_agents_ossa",
+      "label": "AI Agents OSSA",
+      "description": "OSSA v0.5.x bridge for Drupal AI agents. Imports OSSA manifests into config entities, derives AiAgent plugins, and maps Tool API capabilities to OSSA.",
+      "url": "https://www.drupal.org/project/ai_agents_ossa",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-03-25",
+      "usage": 2,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Chat"
+        "Agents"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_agent_memory",
+      "label": "AI Agent Memory",
+      "description": "Persists AI agent state across conversation turns so agents retain tool call history and context.",
+      "url": "https://www.drupal.org/project/ai_agent_memory",
+      "version": "1.0.0",
+      "release_date": "2026-06-10",
+      "usage": 2,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Agents"
       ]
     },
     {
@@ -2421,53 +2563,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_baidu",
-      "label": "Baidu Provider",
-      "description": "Baidu LLM Provider for AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_baidu",
-      "version": "1.0.1",
-      "release_date": "2025-08-25",
-      "usage": 1,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_speechify",
-      "label": "Speechify",
-      "description": "Provides a Speechify provider for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_speechify",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-09-29",
-      "usage": 1,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_search_sc",
-      "label": "AI Search - Semantic Chunking",
-      "description": "Adds a semantic (embedding-similarity) chunking strategy to AI Search, as a drop-in alternative to token-based chunking.",
-      "url": "https://www.drupal.org/project/ai_search_sc",
-      "version": "1.0.0",
-      "release_date": "2026-04-17",
-      "usage": 1,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Search",
-        "Analytics"
-      ]
-    },
-    {
       "machine_name": "drupal/aidmi",
       "label": "AIDmi - AI Describe My Image",
       "description": "A module to help generate 508-compliant descriptions for images using AI.",
@@ -2484,18 +2579,19 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_automator_ec_url_transformer",
-      "label": "AI Automator: EC URL Transformer",
-      "description": "Turns a EUR-Lex link into the matching EU Publications Office (Cellar) URL, so an automator can read the document.",
-      "url": "https://www.drupal.org/project/ai_automator_ec_url_transformer",
-      "version": "1.0.0",
-      "release_date": "2026-08-19",
+      "machine_name": "drupal/ai_provider_cloudflare_gateway",
+      "label": "Cloudflare AI Gateway Provider",
+      "description": "Routes the Drupal AI module through a Cloudflare AI Gateway, adding caching, logging and cost analytics across every upstream provider.",
+      "url": "https://www.drupal.org/project/ai_provider_cloudflare_gateway",
+      "version": "1.0.0-alpha7",
+      "release_date": "2026-07-11",
       "usage": 1,
       "security_covered": false,
-      "stability": "stable",
+      "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Automation"
+        "Cloud Providers",
+        "Analytics"
       ]
     },
     {
@@ -2516,6 +2612,22 @@
       ]
     },
     {
+      "machine_name": "drupal/drupaleasy_ai_tools",
+      "label": "DrupalEasy AI tools",
+      "description": "Various helpful AI tools for use with AI agents.",
+      "url": "https://www.drupal.org/project/drupaleasy_ai_tools",
+      "version": "1.0.1",
+      "release_date": "2026-05-30",
+      "usage": 1,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Tool",
+        "Developer Tools"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_compliance_report",
       "label": "AI Compliance Report",
       "description": "Publishes one page that lists every AI feature on the site, what it does with your input and what its result means.",
@@ -2532,65 +2644,15 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_infomaniak",
-      "label": "Infomaniak AI Provider",
-      "description": "Provides Infomaniak AI integration for the AI module, supporting chat, text-to-image, speech-to-text, and image-to-image operations.",
-      "url": "https://www.drupal.org/project/ai_provider_infomaniak",
-      "version": "1.0.0-alpha1",
-      "release_date": "2025-12-30",
-      "usage": 1,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Chat",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_provider_quant_cloud",
-      "label": "Quant Cloud AI Provider",
-      "description": "AI provider for Quant Cloud platform (QuantCDN/QuantGov). Provides chat and embeddings via Dashboard API with OAuth authentication.",
-      "url": "https://www.drupal.org/project/ai_provider_quant_cloud",
-      "version": "1.0.0",
-      "release_date": "2026-02-27",
-      "usage": 1,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers",
-        "Search",
-        "Chat",
-        "Analytics"
-      ]
-    },
-    {
-      "machine_name": "drupal/writer_ai",
-      "label": "Writer AI",
-      "description": "Writer AI provider for AI module.",
-      "url": "https://www.drupal.org/project/writer_ai",
-      "version": "1.0.0-alpha2",
-      "release_date": "2025-08-19",
-      "usage": 1,
-      "security_covered": true,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
       "machine_name": "drupal/gutenberg_ai_tools",
       "label": "Gutenberg AI Tools",
       "description": "This module exposes a Gutenberg block for creating Generative AI prompt/response",
       "url": "https://www.drupal.org/project/gutenberg_ai_tools",
-      "version": "1.0.0-alpha5",
-      "release_date": "2025-04-07",
+      "version": "1.0.0-beta1",
+      "release_date": "2026-10-07",
       "usage": 1,
       "security_covered": true,
-      "stability": "alpha",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
         "Tool",
@@ -2598,33 +2660,50 @@
       ]
     },
     {
-      "machine_name": "drupal/search_ai_feedback",
-      "label": "Search AI Feedback",
-      "description": "Collect helpful/not helpful feedback on search results and generate AI-powered relevance recommendations.",
-      "url": "https://www.drupal.org/project/search_ai_feedback",
-      "version": "1.0.0",
-      "release_date": "2026-06-26",
+      "machine_name": "drupal/ai_provider_telos_brain",
+      "label": "Telos Brain Provider",
+      "description": "Connects Drupal AI Assistant chat to Telos Brain workflows.",
+      "url": "https://www.drupal.org/project/ai_provider_telos_brain",
+      "version": "1.0.0-beta4",
+      "release_date": "2026-10-23",
       "usage": 1,
       "security_covered": false,
-      "stability": "stable",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Search"
+        "Cloud Providers",
+        "Chat",
+        "Automation"
       ]
     },
     {
-      "machine_name": "drupal/ai_costs",
-      "label": "AI Costs",
-      "description": "Provides shared AI model pricing data and provider-neutral cost estimates.",
-      "url": "https://www.drupal.org/project/ai_costs",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-08-04",
+      "machine_name": "drupal/ai_chatbot_assistant_ui",
+      "label": "AI Chatbot Assistant UI",
+      "description": "assistant-ui (React) chat frontend for the AI Assistant API.",
+      "url": "https://www.drupal.org/project/ai_chatbot_assistant_ui",
+      "version": "1.0.0-beta12",
+      "release_date": "2026-10-23",
       "usage": 1,
       "security_covered": false,
-      "stability": "alpha",
+      "stability": "beta",
       "requires_ai": true,
       "categories": [
-        "Analytics"
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_webform_generator",
+      "label": "AI Webform Generator",
+      "description": "Generates Drupal Webforms from a plain-English description using the site's configured AI Core provider.",
+      "url": "https://www.drupal.org/project/ai_webform_generator",
+      "version": "1.0.2",
+      "release_date": "2026-07-03",
+      "usage": 1,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Uncategorized"
       ]
     },
     {
@@ -2644,49 +2723,64 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_vdb_provider_openai",
-      "label": "OpenAI VDB Provider",
-      "description": "This enables the use of OpenAI as a Vector Database in the AI module.",
-      "url": "https://www.drupal.org/project/ai_vdb_provider_openai",
-      "version": "1.0.0-alpha4",
-      "release_date": "2026-09-29",
+      "machine_name": "drupal/ai_image_studio",
+      "label": "AI Image Studio",
+      "description": "Conversational image and video generation using Drupal AI providers.",
+      "url": "https://www.drupal.org/project/ai_image_studio",
+      "version": "1.0.0-beta10",
+      "release_date": "2026-09-16",
       "usage": 1,
+      "security_covered": false,
+      "stability": "beta",
+      "requires_ai": true,
+      "categories": [
+        "Chat",
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/aia",
+      "label": "AI Assistant (AIA)",
+      "description": "AI-powered Drupal configuration generator. Create content types, fields, taxonomies, blocks, and views using natural language AI prompts.",
+      "url": "https://www.drupal.org/project/aia",
+      "version": "1.0.0",
+      "release_date": "2026-05-30",
+      "usage": 1,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/content_syndication",
+      "label": "Content Syndication",
+      "description": "Multi-platform content publishing with AI-assisted caption generation and detection gate.",
+      "url": "https://www.drupal.org/project/content_syndication",
+      "version": "1.0.9",
+      "release_date": "2026-10-08",
+      "usage": 1,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_act",
+      "label": "AI Act",
+      "description": "Audit, human approval and accountability for AI operations and agents.",
+      "url": "https://www.drupal.org/project/ai_act",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-10-20",
+      "usage": null,
       "security_covered": false,
       "stability": "alpha",
       "requires_ai": true,
       "categories": [
-        "Vector Database"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_plus",
-      "label": "AI +",
-      "description": "Adds an AI chatbot tool to Edit Mode.",
-      "url": "https://www.drupal.org/project/ai_plus",
-      "version": "1.0.2",
-      "release_date": "2026-07-04",
-      "usage": 1,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Editorial",
-        "Chat"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_agent_memory",
-      "label": "AI Agent Memory",
-      "description": "Persists AI agent state across conversation turns so agents retain tool call history and context.",
-      "url": "https://www.drupal.org/project/ai_agent_memory",
-      "version": "1.0.0",
-      "release_date": "2026-06-10",
-      "usage": 1,
-      "security_covered": true,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Agents"
+        "Analytics"
       ]
     },
     {
@@ -2866,6 +2960,21 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_provider_baidu",
+      "label": "Baidu Provider",
+      "description": "Baidu LLM Provider for AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_baidu",
+      "version": "1.0.1",
+      "release_date": "2025-08-25",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_provider_zhipuai",
       "label": "Zhipuai Provider",
       "description": "Zhipuai LLM Provider for AI module.",
@@ -2878,6 +2987,22 @@
       "requires_ai": true,
       "categories": [
         "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_search_sc",
+      "label": "AI Search - Semantic Chunking",
+      "description": "Adds a semantic (embedding-similarity) chunking strategy to AI Search, as a drop-in alternative to token-based chunking.",
+      "url": "https://www.drupal.org/project/ai_search_sc",
+      "version": "1.0.0",
+      "release_date": "2026-04-17",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Search",
+        "Analytics"
       ]
     },
     {
@@ -2896,24 +3021,9 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_simple_provider_installer",
-      "label": "AI Simple Provider Installer",
-      "description": "This adds a simple form for installing and setting up simple AI Providers like OpenAI or Anthropic.",
-      "url": "https://www.drupal.org/project/ai_simple_provider_installer",
-      "version": "1.0.0-alpha3",
-      "release_date": "2024-12-03",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Cloud Providers"
-      ]
-    },
-    {
       "machine_name": "drupal/ai_single_page_importer",
-      "label": "AI Single Page Importer",
-      "description": "Uses AI to fetch and populate article fields from external URLs",
+      "label": "Ai Single Page Importer",
+      "description": null,
       "url": "https://www.drupal.org/project/ai_single_page_importer",
       "version": "1.0.0-alpha4",
       "release_date": "2026-06-12",
@@ -2923,52 +3033,6 @@
       "requires_ai": true,
       "categories": [
         "Content"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_translate",
-      "label": "AI Translate",
-      "description": "This module provides simple one-click AI-powered translations.",
-      "url": "https://www.drupal.org/project/ai_translate",
-      "version": "1.4.2",
-      "release_date": "2026-09-14",
-      "usage": null,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_tmgmt",
-      "label": "AI Translator",
-      "description": "TMGMT implementation of AI Module to allow use of many AI Providers like OpenAI, Ollama, etc.",
-      "url": "https://www.drupal.org/project/ai_tmgmt",
-      "version": "1.0.0-beta6",
-      "release_date": "2026-06-11",
-      "usage": null,
-      "security_covered": false,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Local Providers",
-        "Translation"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_usage_limits",
-      "label": "AI usage limits",
-      "description": "Provides token usage limits per AI provider for the Drupal AI module.",
-      "url": "https://www.drupal.org/project/ai_usage_limits",
-      "version": "1.0.0-alpha2",
-      "release_date": "2025-09-26",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Analytics"
       ]
     },
     {
@@ -2987,18 +3051,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_provider_assemblyai",
-      "label": "Assembly AI Provider",
-      "description": "This enables the use of AssemblyAI for the AI module.",
-      "url": "https://www.drupal.org/project/ai_provider_assemblyai",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-02-23",
+      "machine_name": "drupal/ai_automator_ec_url_transformer",
+      "label": "AI Automator: EC URL Transformer",
+      "description": "Turns a EUR-Lex link into the matching EU Publications Office (Cellar) URL, so an automator can read the document.",
+      "url": "https://www.drupal.org/project/ai_automator_ec_url_transformer",
+      "version": "1.0.0",
+      "release_date": "2026-08-19",
       "usage": null,
-      "security_covered": true,
-      "stability": "alpha",
+      "security_covered": false,
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Cloud Providers"
+        "Automation"
       ]
     },
     {
@@ -3063,22 +3127,6 @@
       ]
     },
     {
-      "machine_name": "drupal/drupaleasy_ai_tools",
-      "label": "DrupalEasy AI tools",
-      "description": "Various helpful AI tools for use with AI agents.",
-      "url": "https://www.drupal.org/project/drupaleasy_ai_tools",
-      "version": "1.0.1",
-      "release_date": "2026-05-30",
-      "usage": null,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Tool",
-        "Developer Tools"
-      ]
-    },
-    {
       "machine_name": "drupal/generic_colors",
       "label": "Generic Colors",
       "description": "AI Agent Tool for retrieving predominant colors from images using a local library.",
@@ -3107,6 +3155,23 @@
       "categories": [
         "Automation",
         "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_infomaniak",
+      "label": "Infomaniak AI Provider",
+      "description": "Provides Infomaniak AI integration for the AI module, supporting chat, text-to-image, speech-to-text, and image-to-image operations.",
+      "url": "https://www.drupal.org/project/ai_provider_infomaniak",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-12-30",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Chat",
+        "Media"
       ]
     },
     {
@@ -3157,6 +3222,39 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_vdb_provider_solr",
+      "label": "Solr VDB Provider",
+      "description": "Uses Apache Solr''s dense vectors as the vector database for the AI module and AI Search.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_solr",
+      "version": "1.0.0-alpha1",
+      "release_date": "2026-10-22",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_stackit",
+      "label": "STACKIT Provider",
+      "description": "Use STACKIT AI Model Serving for chat and embeddings in the AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_stackit",
+      "version": "1.0.0",
+      "release_date": "2026-10-20",
+      "usage": null,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers",
+        "Search",
+        "Chat"
+      ]
+    },
+    {
       "machine_name": "drupal/twig_to_sdc",
       "label": "Twig to SDC",
       "description": "Generates SDC .component.yml file by analyzing given tiwg files.",
@@ -3186,6 +3284,51 @@
       "categories": [
         "Cloud Providers",
         "Safety & Governance"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_vdb_provider_weaviate",
+      "label": "Weaviate VDB Provider",
+      "description": "Provides a Weaviate vector database provider for the Drupal AI module.",
+      "url": "https://www.drupal.org/project/ai_vdb_provider_weaviate",
+      "version": "1.0.0",
+      "release_date": "2026-10-09",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/writer_ai",
+      "label": "Writer AI",
+      "description": "Writer AI provider for AI module.",
+      "url": "https://www.drupal.org/project/writer_ai",
+      "version": "1.0.0-alpha2",
+      "release_date": "2025-08-19",
+      "usage": null,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_provider_xai",
+      "label": "xAI Provider",
+      "description": "xAI provider for AI module.",
+      "url": "https://www.drupal.org/project/ai_provider_xai",
+      "version": "1.0.0-alpha1",
+      "release_date": "2025-02-19",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Cloud Providers"
       ]
     },
     {
@@ -3266,21 +3409,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_entity_intake",
-      "label": "AI Entity Intake",
-      "description": "Turn unstructured text into reviewed, draft Drupal entities using the AI module.",
-      "url": "https://www.drupal.org/project/ai_entity_intake",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-05-19",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Content"
-      ]
-    },
-    {
       "machine_name": "drupal/apex_ai",
       "label": "Apex AI",
       "description": "AI orchestration for Drupal via MonkeysLegion Apex. Multi-model AI provider with smart routing, guardrails, cost tracking, and middleware pipeline.",
@@ -3295,21 +3423,6 @@
         "Automation",
         "Analytics",
         "Safety & Governance"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_validation_generator",
-      "label": "AI Validation Generator",
-      "description": "Generates AI-powered field validation rules for Drupal content, and enforces them on save.",
-      "url": "https://www.drupal.org/project/ai_validation_generator",
-      "version": "1.0.0",
-      "release_date": "2026-08-07",
-      "usage": null,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Content"
       ]
     },
     {
@@ -3375,6 +3488,36 @@
       ]
     },
     {
+      "machine_name": "drupal/display_builder_ai",
+      "label": "Display Builder AI",
+      "description": "Integrates Drupal AI (agents + tools + chatbot) with the Display Builder module.",
+      "url": "https://www.drupal.org/project/display_builder_ai",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-10-22",
+      "usage": null,
+      "security_covered": true,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_content_type_generator",
+      "label": "AI Content Type Generator",
+      "description": "Generates Drupal content types and fields from a plain-English description using the site's configured AI Core provider.",
+      "url": "https://www.drupal.org/project/ai_content_type_generator",
+      "version": "1.0.2",
+      "release_date": "2026-07-27",
+      "usage": null,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content"
+      ]
+    },
+    {
       "machine_name": "drupal/ai_ckeditor_wcag",
       "label": "AI CKEditor WCAG",
       "description": "Adds a plugin for CKEditor 5 to let editors prompt AI for checking WCAG compatibily.",
@@ -3391,19 +3534,18 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_rag_service",
-      "label": "AI RAG Service",
-      "description": "Headless, authenticated, rate-limited RAG/AI HTTP API (grounded Q&A, chat, semantic search) with a swappable backend. JSON:API for AI.",
-      "url": "https://www.drupal.org/project/ai_rag_service",
-      "version": "1.0.0",
-      "release_date": "2026-06-21",
+      "machine_name": "drupal/webai",
+      "label": "Web AI",
+      "description": "A picked collection of AI tools and providers, with more advanced artificial intelligence options.",
+      "url": "https://www.drupal.org/project/webai",
+      "version": "12.0.3",
+      "release_date": "2026-10-01",
       "usage": null,
       "security_covered": false,
       "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Search",
-        "Chat"
+        "Uncategorized"
       ]
     },
     {
@@ -3504,19 +3646,64 @@
       ]
     },
     {
-      "machine_name": "drupal/thunder_ai_prompt_management",
-      "label": "Thunder AI Prompt Management",
-      "description": "Manage reusable AI prompts, grouped by task, for content editing suggestions and the AI chatbot assistant.",
-      "url": "https://www.drupal.org/project/thunder_ai_prompt_management",
-      "version": "1.0.0-beta7",
-      "release_date": "2026-09-17",
+      "machine_name": "drupal/search_ai_feedback",
+      "label": "Search AI Feedback",
+      "description": "Collect helpful/not helpful feedback on search results and generate AI-powered relevance recommendations.",
+      "url": "https://www.drupal.org/project/search_ai_feedback",
+      "version": "1.0.0",
+      "release_date": "2026-06-26",
       "usage": null,
       "security_covered": false,
-      "stability": "beta",
+      "stability": "stable",
       "requires_ai": true,
       "categories": [
-        "Content",
-        "Chat"
+        "Search"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_accept_tmgmt",
+      "label": "AI Translation Reviewer",
+      "description": "AI-powered automatic review and acceptance of TMGMT translation jobs",
+      "url": "https://www.drupal.org/project/ai_accept_tmgmt",
+      "version": "1.0.0",
+      "release_date": "2026-10-17",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Automation",
+        "Translation"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_effort",
+      "label": "AI Effort",
+      "description": "One reasoning effort level for every AI provider.",
+      "url": "https://www.drupal.org/project/ai_effort",
+      "version": "1.0.0",
+      "release_date": "2026-10-20",
+      "usage": null,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Uncategorized"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_validation_generator",
+      "label": "AI Validation Generator",
+      "description": "Generates AI-powered field validation rules for Drupal content, and enforces them on save.",
+      "url": "https://www.drupal.org/project/ai_validation_generator",
+      "version": "1.0.0",
+      "release_date": "2026-08-07",
+      "usage": null,
+      "security_covered": false,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Content"
       ]
     },
     {
@@ -3565,6 +3752,21 @@
       "requires_ai": true,
       "categories": [
         "Uncategorized"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_costs",
+      "label": "AI Costs",
+      "description": "Provides shared AI model pricing data and provider-neutral cost estimates.",
+      "url": "https://www.drupal.org/project/ai_costs",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-08-04",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Analytics"
       ]
     },
     {
@@ -3647,55 +3849,6 @@
       ]
     },
     {
-      "machine_name": "drupal/site_agent",
-      "label": "Site Agent",
-      "description": "Edit your site's content and configuration via chat.",
-      "url": "https://www.drupal.org/project/site_agent",
-      "version": "1.0.0-alpha1",
-      "release_date": "2026-10-06",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Content",
-        "Chat",
-        "Agents"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_image_studio",
-      "label": "AI Image Studio",
-      "description": "Conversational image and video generation using Drupal AI providers.",
-      "url": "https://www.drupal.org/project/ai_image_studio",
-      "version": "1.0.0-beta10",
-      "release_date": "2026-09-16",
-      "usage": null,
-      "security_covered": false,
-      "stability": "beta",
-      "requires_ai": true,
-      "categories": [
-        "Chat",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/midgard",
-      "label": "Midgard",
-      "description": "Modular Intelligence & Drupal Governance for AI-driven Runtime & Deployment. Turns Drupal 11 into a safe, auditable AI operations layer.",
-      "url": "https://www.drupal.org/project/midgard",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-10-01",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Analytics",
-        "Safety & Governance"
-      ]
-    },
-    {
       "machine_name": "drupal/webform_document_field_builder_ai",
       "label": "Webform Field Builder AI",
       "description": "Lets administrators analyze documents and create reviewed AI-proposed Webform fields.",
@@ -3743,22 +3896,6 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_content_factory",
-      "label": "AI Content Factory",
-      "description": "Automates content generation via AI providers using configurable profiles and a managed generation queue.",
-      "url": "https://www.drupal.org/project/ai_content_factory",
-      "version": "1.0.1",
-      "release_date": "2026-05-24",
-      "usage": null,
-      "security_covered": false,
-      "stability": "stable",
-      "requires_ai": true,
-      "categories": [
-        "Content",
-        "Automation"
-      ]
-    },
-    {
       "machine_name": "drupal/api_normalization",
       "label": "API Normalization",
       "description": "Comprehensive API development framework for Drupal with OpenAPI 3.1 schema import, validation, multi-provider routing, and enterprise-grade features including circuit breakers, failover, multi-tena...",
@@ -3771,21 +3908,6 @@
       "requires_ai": true,
       "categories": [
         "Developer Tools"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_agents_ossa",
-      "label": "AI Agents OSSA",
-      "description": "OSSA v0.5.x bridge for Drupal AI agents. Imports OSSA manifests into config entities, derives AiAgent plugins, and maps Tool API capabilities to OSSA.",
-      "url": "https://www.drupal.org/project/ai_agents_ossa",
-      "version": "1.0.0-alpha3",
-      "release_date": "2026-03-25",
-      "usage": null,
-      "security_covered": false,
-      "stability": "alpha",
-      "requires_ai": true,
-      "categories": [
-        "Agents"
       ]
     },
     {
@@ -3818,6 +3940,38 @@
         "Chat",
         "Media",
         "Safety & Governance"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_plus",
+      "label": "AI +",
+      "description": "Adds an AI chatbot tool to Edit Mode.",
+      "url": "https://www.drupal.org/project/ai_plus",
+      "version": "1.0.2",
+      "release_date": "2026-07-04",
+      "usage": null,
+      "security_covered": true,
+      "stability": "stable",
+      "requires_ai": true,
+      "categories": [
+        "Editorial",
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/semantic_duplicates",
+      "label": "Semantic Duplicates",
+      "description": "Finds duplicate and competing content using word fingerprints and local AI embeddings.",
+      "url": "https://www.drupal.org/project/semantic_duplicates",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-10-17",
+      "usage": null,
+      "security_covered": false,
+      "stability": "alpha",
+      "requires_ai": true,
+      "categories": [
+        "Content",
+        "Search"
       ]
     },
     {
@@ -3890,10 +4044,10 @@
       "label": "AI Assistant",
       "description": "Adds integration with AI services, such as alt text generation and a chat bot to assist with site building. You can choose from several providers: amazee.ai, OpenAI or Anthropic.",
       "url": "https://www.drupal.org/project/drupal_cms_ai",
-      "version": "2.2.0",
-      "release_date": "2026-09-25",
+      "version": "2.2.6",
+      "release_date": "2026-10-19",
       "stability": "stable",
-      "downloads": 211186,
+      "downloads": 219635,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3906,10 +4060,10 @@
       "label": "Varbase AI Editor Assistant",
       "description": "A recipe to add AI-powered features and an assistant button to a CKEditor 5 text editor.",
       "url": "https://www.drupal.org/project/varbase_ai_editor_assistant",
-      "version": "1.0.1",
-      "release_date": "2025-07-01",
+      "version": "1.0.2",
+      "release_date": "2026-10-11",
       "stability": "stable",
-      "downloads": 31527,
+      "downloads": 33630,
       "stars": 1,
       "categories": [
         "Editorial"
@@ -3923,7 +4077,7 @@
       "version": "2.0.1",
       "release_date": "2026-10-05",
       "stability": "stable",
-      "downloads": 31123,
+      "downloads": 33245,
       "stars": 1,
       "categories": [
         "Editorial",
@@ -3935,10 +4089,10 @@
       "label": "Varbase AI Image Alt",
       "description": "Provides a recipe to automatically generate and fill the alt text of an image field using AI.",
       "url": "https://www.drupal.org/project/varbase_ai_image_alt",
-      "version": "1.0.1",
-      "release_date": "2025-07-01",
+      "version": "1.0.2",
+      "release_date": "2026-10-11",
       "stability": "stable",
-      "downloads": 31114,
+      "downloads": 33217,
       "stars": 1,
       "categories": [
         "Automation",
@@ -3951,10 +4105,10 @@
       "label": "Varbase AI Agents",
       "description": "Provides an AI-powered chatbot for streamlined administration and allows managing multiple agents with distinct functionalities.",
       "url": "https://www.drupal.org/project/varbase_ai_agents",
-      "version": "1.0.4",
-      "release_date": "2025-11-17",
+      "version": "1.0.5",
+      "release_date": "2026-10-11",
       "stability": "stable",
-      "downloads": 21395,
+      "downloads": 22558,
       "stars": 1,
       "categories": [
         "Chat",
@@ -3969,7 +4123,7 @@
       "version": "1.0.3",
       "release_date": "2026-09-27",
       "stability": "stable",
-      "downloads": 21249,
+      "downloads": 22414,
       "stars": 1,
       "categories": [
         "Cloud Providers",
@@ -3985,7 +4139,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 11107,
+      "downloads": 12623,
       "stars": 0,
       "categories": [
         "Search",
@@ -4000,7 +4154,7 @@
       "version": "1.0.0",
       "release_date": "2026-03-18",
       "stability": "stable",
-      "downloads": 11020,
+      "downloads": 12257,
       "stars": 0,
       "categories": [
         "Safety & Governance"
@@ -4014,7 +4168,7 @@
       "version": "1.0.0",
       "release_date": "2026-09-05",
       "stability": "stable",
-      "downloads": 9749,
+      "downloads": 10904,
       "stars": 1,
       "categories": [
         "Safety & Governance"
@@ -4025,10 +4179,10 @@
       "label": "Varbase AI Figma Base",
       "description": "Base recipe for Varbase AI Figma. Applies the Drupal CMS AI recipe first (AI providers and API keys) and Varbase AI Context, then installs the general ai_figma engine and the Varbase AI Figma custo...",
       "url": "https://www.drupal.org/project/varbase_ai_figma_base",
-      "version": "1.0.3",
-      "release_date": "2026-10-04",
+      "version": "1.0.4",
+      "release_date": "2026-10-11",
       "stability": "stable",
-      "downloads": 4949,
+      "downloads": 5743,
       "stars": 0,
       "categories": [
         "Uncategorized"
@@ -4042,7 +4196,7 @@
       "version": "1.3.0",
       "release_date": "2026-03-26",
       "stability": "stable",
-      "downloads": 3717,
+      "downloads": 3999,
       "stars": 0,
       "categories": [
         "Cloud Providers",
@@ -4057,7 +4211,7 @@
       "version": "0.1.1",
       "release_date": "2025-12-03",
       "stability": "stable",
-      "downloads": 1713,
+      "downloads": 1821,
       "stars": 0,
       "categories": [
         "SEO & Metadata"
@@ -4071,24 +4225,9 @@
       "version": "1.1.1",
       "release_date": "2026-09-16",
       "stability": "stable",
-      "downloads": 1359,
+      "downloads": 1465,
       "stars": 0,
       "categories": [
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_recipe_content_classification",
-      "label": "AI Content Classification recipe",
-      "description": "AI-powered Content Classification recipe built for image media type.",
-      "url": "https://www.drupal.org/project/ai_recipe_content_classification",
-      "version": "1.0.0",
-      "release_date": "2025-10-09",
-      "stability": "stable",
-      "downloads": 1156,
-      "stars": 0,
-      "categories": [
-        "Content",
         "Media"
       ]
     },
@@ -4100,7 +4239,7 @@
       "version": "1.x-dev",
       "release_date": "2026-09-15",
       "stability": "dev",
-      "downloads": 1155,
+      "downloads": 1260,
       "stars": 0,
       "categories": [
         "Media",
@@ -4115,12 +4254,27 @@
       "version": "1.x-dev",
       "release_date": "2026-09-19",
       "stability": "dev",
-      "downloads": 1154,
+      "downloads": 1251,
       "stars": 0,
       "categories": [
         "Content",
         "Search",
         "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_recipe_content_classification",
+      "label": "AI Content Classification recipe",
+      "description": "AI-powered Content Classification recipe built for image media type.",
+      "url": "https://www.drupal.org/project/ai_recipe_content_classification",
+      "version": "1.0.0",
+      "release_date": "2025-10-09",
+      "stability": "stable",
+      "downloads": 1238,
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Media"
       ]
     },
     {
@@ -4131,12 +4285,26 @@
       "version": "2.0.0-alpha2",
       "release_date": "2026-06-26",
       "stability": "alpha",
-      "downloads": 1138,
+      "downloads": 1222,
       "stars": 0,
       "categories": [
         "Content",
         "Automation",
         "Safety & Governance"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_recipe_content_suggestions",
+      "label": "AI Content Suggestions",
+      "description": "Adds support for AI content suggestions",
+      "url": "https://www.drupal.org/project/ai_recipe_content_suggestions",
+      "version": "1.x-dev",
+      "release_date": "2026-10-14",
+      "stability": "dev",
+      "downloads": 1201,
+      "stars": 0,
+      "categories": [
+        "Content"
       ]
     },
     {
@@ -4147,39 +4315,11 @@
       "version": "1.x-dev",
       "release_date": "2026-06-11",
       "stability": "dev",
-      "downloads": 1123,
+      "downloads": 1198,
       "stars": 0,
       "categories": [
         "Content",
         "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_recipe_content_suggestions",
-      "label": "AI Content Suggestions",
-      "description": "Adds support for AI content suggestions",
-      "url": "https://www.drupal.org/project/ai_recipe_content_suggestions",
-      "version": "1.x-dev",
-      "release_date": "2026-06-11",
-      "stability": "dev",
-      "downloads": 1123,
-      "stars": 0,
-      "categories": [
-        "Content"
-      ]
-    },
-    {
-      "machine_name": "drupal/drupal_cms_ai_ckeditor",
-      "label": "AI CKEditor",
-      "description": "Adds AI integration to the CKEditor.",
-      "url": "https://www.drupal.org/project/drupal_cms_ai_ckeditor",
-      "version": "1.0.1",
-      "release_date": "2026-02-22",
-      "stability": "stable",
-      "downloads": 791,
-      "stars": 0,
-      "categories": [
-        "Editorial"
       ]
     },
     {
@@ -4190,37 +4330,21 @@
       "version": "1.0.0-beta3",
       "release_date": "2026-09-23",
       "stability": "beta",
-      "downloads": 776,
+      "downloads": 872,
       "stars": 0,
       "categories": [
         "Uncategorized"
       ]
     },
     {
-      "machine_name": "drupal/ai_recipe_validations_image_safety",
-      "label": "AI image safety validation",
-      "description": "Validates uploaded images on the Media: Image bundle using a vision-capable AI provider. Blocks content that falls outside the \"Safe\" tier of Flickr-style safety levels (nudity, sexually suggestive...",
-      "url": "https://www.drupal.org/project/ai_recipe_validations_image_safety",
-      "version": "1.0.1",
-      "release_date": "2026-07-08",
-      "stability": "stable",
-      "downloads": 633,
-      "stars": 0,
-      "categories": [
-        "Content",
-        "Media",
-        "Safety & Governance"
-      ]
-    },
-    {
-      "machine_name": "drupal/ai_recipe_ckeditor",
+      "machine_name": "drupal/drupal_cms_ai_ckeditor",
       "label": "AI CKEditor",
       "description": "Adds AI integration to the CKEditor.",
-      "url": "https://www.drupal.org/project/ai_recipe_ckeditor",
-      "version": "1.0.0-alpha2",
-      "release_date": "2026-09-18",
-      "stability": "alpha",
-      "downloads": 628,
+      "url": "https://www.drupal.org/project/drupal_cms_ai_ckeditor",
+      "version": "1.0.1",
+      "release_date": "2026-02-22",
+      "stability": "stable",
+      "downloads": 797,
       "stars": 0,
       "categories": [
         "Editorial"
@@ -4234,11 +4358,41 @@
       "version": "1.0.0-beta3",
       "release_date": "2026-09-16",
       "stability": "beta",
-      "downloads": 625,
+      "downloads": 718,
       "stars": 0,
       "categories": [
         "Search",
         "Analytics"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_recipe_ckeditor",
+      "label": "AI CKEditor",
+      "description": "Adds AI integration to the CKEditor.",
+      "url": "https://www.drupal.org/project/ai_recipe_ckeditor",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-09-18",
+      "stability": "alpha",
+      "downloads": 706,
+      "stars": 0,
+      "categories": [
+        "Editorial"
+      ]
+    },
+    {
+      "machine_name": "drupal/ai_recipe_validations_image_safety",
+      "label": "AI image safety validation",
+      "description": "Validates uploaded images on the Media: Image bundle using a vision-capable AI provider. Blocks content that falls outside the \"Safe\" tier of Flickr-style safety levels (nudity, sexually suggestive...",
+      "url": "https://www.drupal.org/project/ai_recipe_validations_image_safety",
+      "version": "1.0.1",
+      "release_date": "2026-07-08",
+      "stability": "stable",
+      "downloads": 700,
+      "stars": 0,
+      "categories": [
+        "Content",
+        "Media",
+        "Safety & Governance"
       ]
     },
     {
@@ -4249,7 +4403,7 @@
       "version": "1.0.0-alpha2",
       "release_date": "2026-09-16",
       "stability": "alpha",
-      "downloads": 547,
+      "downloads": 624,
       "stars": 0,
       "categories": [
         "Editorial",
@@ -4264,10 +4418,24 @@
       "version": "1.0.0-beta1",
       "release_date": "2026-05-17",
       "stability": "beta",
-      "downloads": 148,
+      "downloads": 194,
       "stars": 0,
       "categories": [
         "Developer Tools"
+      ]
+    },
+    {
+      "machine_name": "drupal/daedalus_recipe",
+      "label": "Daedalus",
+      "description": "Installs the complete Daedalus page builder on a new site: the bundled umbrella at ingredients/daedalus (configuration only, the theme''s site frame included), then the starter header, footer, welc...",
+      "url": "https://www.drupal.org/project/daedalus_recipe",
+      "version": "1.0.0-alpha3",
+      "release_date": "2026-10-11",
+      "stability": "alpha",
+      "downloads": 111,
+      "stars": 0,
+      "categories": [
+        "Uncategorized"
       ]
     },
     {
@@ -4292,7 +4460,7 @@
       "version": "1.0.0-alpha2",
       "release_date": "2024-10-29",
       "stability": "alpha",
-      "downloads": 88,
+      "downloads": 89,
       "stars": 0,
       "categories": [
         "Developer Tools"
@@ -4326,20 +4494,6 @@
       "categories": [
         "Cloud Providers",
         "Chat",
-        "Media"
-      ]
-    },
-    {
-      "machine_name": "drupal/daedalus_recipe",
-      "label": "Daedalus",
-      "description": "Installs the complete Daedalus page builder on a new site: the bundled umbrella at ingredients/daedalus (configuration only), then the starter header, footer, welcome page and demo media of ingredi...",
-      "url": "https://www.drupal.org/project/daedalus_recipe",
-      "version": "1.0.0-alpha2",
-      "release_date": "2026-09-28",
-      "stability": "alpha",
-      "downloads": 61,
-      "stars": 0,
-      "categories": [
         "Media"
       ]
     },
@@ -4390,6 +4544,20 @@
       ]
     },
     {
+      "machine_name": "drupal/ai_recipe_comment_spam",
+      "label": "AI Comment Spam Moderation",
+      "description": "Adds AI-powered spam scoring, reasoning and auto-unpublishing for comments, including a moderation triage view.",
+      "url": "https://www.drupal.org/project/ai_recipe_comment_spam",
+      "version": "1.0.0-alpha2",
+      "release_date": "2026-07-10",
+      "stability": "alpha",
+      "downloads": 16,
+      "stars": 0,
+      "categories": [
+        "Safety & Governance"
+      ]
+    },
+    {
       "machine_name": "drupal/drupal_module_chatbot_recipe",
       "label": "Drupal Module Chatbot Recipe",
       "description": "Adds the setup of a module searcher index",
@@ -4434,17 +4602,19 @@
       ]
     },
     {
-      "machine_name": "drupal/ai_recipe_comment_spam",
-      "label": "AI Comment Spam Moderation",
-      "description": "Adds AI-powered spam scoring, reasoning and auto-unpublishing for comments, including a moderation triage view.",
-      "url": "https://www.drupal.org/project/ai_recipe_comment_spam",
-      "version": "1.0.0-alpha2",
-      "release_date": "2026-07-10",
-      "stability": "alpha",
+      "machine_name": "drupal/ai_recipe_validations",
+      "label": "AI validations",
+      "description": "Adds AI-powered validation to the Drupal CMS editorial workflow. Basic page content is checked against an editorial policy (no personal data about private individuals, no offensive language, no pla...",
+      "url": "https://www.drupal.org/project/ai_recipe_validations",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-13",
+      "stability": "dev",
       "downloads": 0,
       "stars": 0,
       "categories": [
-        "Safety & Governance"
+        "Editorial",
+        "Content",
+        "Automation"
       ]
     },
     {
@@ -4476,6 +4646,135 @@
       "categories": [
         "Chat",
         "Accessibility"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_answers_base",
+      "label": "Varbase AI Answers Base (Ask AI)",
+      "description": null,
+      "url": "https://www.drupal.org/project/varbase_ai_answers_base",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Uncategorized"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_chatbot_base",
+      "label": "Varbase AI Chatbot Base",
+      "description": null,
+      "url": "https://www.drupal.org/project/varbase_ai_chatbot_base",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Chat"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_content_operations_base",
+      "label": "Varbase AI Content Operations Base",
+      "description": null,
+      "url": "https://www.drupal.org/project/varbase_ai_content_operations_base",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_content_review_base",
+      "label": "Varbase AI Content Review Base",
+      "description": null,
+      "url": "https://www.drupal.org/project/varbase_ai_content_review_base",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Content"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_media_base",
+      "label": "Varbase AI Media Base",
+      "description": "Generate images and SVGs with AI from the Media Library on Varbase 11, with the AI Media module: \"Generated image with AI\" and \"Generated SVG with AI\" media types, offered right after Image in the...",
+      "url": "https://www.drupal.org/project/varbase_ai_media_base",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-23",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Media"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_search_base",
+      "label": "Varbase AI Search Base",
+      "description": null,
+      "url": "https://www.drupal.org/project/varbase_ai_search_base",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Search"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_seo",
+      "label": "Varbase AI SEO",
+      "description": "Generates the SEO title and SEO description of Blog posts and Utility pages with AI, on save and in bulk. The two fields already drive the meta title, meta description, Open Graph and Twitter card...",
+      "url": "https://www.drupal.org/project/varbase_ai_seo",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "SEO & Metadata"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_vdb_mariadb",
+      "label": "Varbase AI VDB: MariaDB",
+      "description": "Uses MariaDB as the vector database for AI Search, in the site''s own database, with no extra service. Installs the MariaDB VDB provider and keeps it on the Drupal database connection. Needs MariaD...",
+      "url": "https://www.drupal.org/project/varbase_ai_vdb_mariadb",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Search",
+        "Vector Database"
+      ]
+    },
+    {
+      "machine_name": "drupal/varbase_ai_vdb_milvus",
+      "label": "Varbase AI VDB: Milvus",
+      "description": "Connects the site to a Milvus or Zilliz Cloud vector database for AI Search. Installs the Milvus VDB provider and points it at http://milvus:19530, the DDEV service in ddev/, with no token. For a r...",
+      "url": "https://www.drupal.org/project/varbase_ai_vdb_milvus",
+      "version": "1.0.x-dev",
+      "release_date": "2026-10-22",
+      "stability": "dev",
+      "downloads": 0,
+      "stars": 0,
+      "categories": [
+        "Search",
+        "Analytics",
+        "Vector Database"
       ]
     }
   ]
