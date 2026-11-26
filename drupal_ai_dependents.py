@@ -95,7 +95,7 @@ PACKAGIST_STATS_URL  = "https://packagist.org/packages/drupal/{name}.json"
 
 # A Python `set` is like a PHP array used as a lookup table (array_flip'd),
 # where only unique values matter and order doesn't. Membership checks are O(1).
-TARGET_VERSIONS = {10, 11}
+TARGET_VERSIONS = {10, 11, 12}
 
 # Taxonomy term ID of drupal.org's "Artificial Intelligence (AI)" project
 # category (the "Project category" shown on project pages). Found via
@@ -408,7 +408,7 @@ def get_tagged_candidates() -> list[str]:
     at all (e.g. WebMCP integrations), which the other two sources would
     verify-and-reject. Names from this source are therefore exempted from
     the drupal/ai `require` check in get_p2_info(); they still must exist on
-    packages.drupal.org as a Drupal 10/11-compatible drupal-module.
+    packages.drupal.org as a Drupal 10/11/12-compatible drupal-module.
 
     Uses _drupal_api_get(), which already handles the drupal.org API's
     503-style rate limiting with Retry-After support.
@@ -543,31 +543,121 @@ def get_curated_recipe_candidates() -> list[str]:
 # Dependency verification — packages.drupal.org p2
 # ---------------------------------------------------------------------------
 
-def _core_is_d10_d11(constraint: str) -> bool:
-    """Check whether a drupal/core Composer version constraint covers D10 or D11.
+def _expand_minified(versions: list[dict]) -> list[dict]:
+    """Expand a Composer-minified p2 version list into full entries.
 
-    For example: "^10.3 || ^11" → True, "^8 || ^9" → False.
-    A missing or wildcard ("*") constraint is treated as compatible because
-    the packages.drupal.org/8 repository only serves modern Drupal packages.
+    p2 files served with `"minified": "composer/2.0"` (both packages.drupal.org
+    and repo.packagist.org do this) list the full composer.json only for the
+    first (newest) version. Every later entry carries just the keys that
+    changed since the entry before it; a value of "__unset" means the key was
+    removed. This mirrors Composer's MetadataMinifier::expand().
+
+    Without this, a release that didn't change its `require` looks like it has
+    no requirements at all, and gets wrongly skipped during verification.
     """
-    if not constraint or constraint == "*":
-        return True
+    expanded = []
+    previous: dict = {}
+    for entry in versions:
+        current = dict(previous)
+        for key, value in entry.items():
+            if value == "__unset":
+                current.pop(key, None)
+            else:
+                current[key] = value
+        expanded.append(current)
+        previous = current
+    return expanded
 
-    # `any()` is like PHP's array_filter() used as a boolean check —
-    # it returns True as soon as one element is truthy, short-circuiting
-    # the rest. Here we check if any TARGET_VERSION number (10, 11) appears
-    # as a whole word (\b is a word boundary) in the constraint string.
-    # rf"\b{v}\b" is a raw f-string — the r prefix stops Python from
-    # interpreting backslashes, and f allows {v} substitution.
-    # Result: rf"\b{10}\b" → the regex pattern r"\b10\b"
-    return bool(any(re.search(rf"\b{v}\b", constraint) for v in TARGET_VERSIONS))
+
+# One AND-part of a Composer constraint: optional operator, then a version
+# like "10", "10.3", "10.3.1", "10.x", "10.*", optionally prefixed with "v"
+# and suffixed with a stability flag ("-dev", "@beta"), which is ignored.
+_CONSTRAINT_PART_RE = re.compile(
+    r"^(?P<op>\^|~|>=|<=|>|<|==|=|!=)?v?"
+    r"(?P<major>\d+)(?:\.(?P<minor>\d+|x|\*))?(?:\.(?P<patch>\d+|x|\*))?"
+    r"(?:\.\d+)?(?:[-@][a-z0-9.]*)?$",
+    re.IGNORECASE,
+)
+
+
+def _clause_majors(clause: str) -> set[int] | None:
+    """Return the Drupal majors one OR-clause allows, or None if unparseable.
+
+    Each AND-part narrows a [lo, hi] major interval; see _core_majors().
+    """
+    clause = clause.strip()
+    if clause in ("", "*"):
+        return set(TARGET_VERSIONS)
+
+    # Hyphen range "A - B" (spaces around the dash are required by Composer).
+    hyphen = re.match(r"^v?(\d+)\S*\s+-\s+v?(\d+)\S*$", clause)
+    if hyphen:
+        lo, hi = int(hyphen.group(1)), int(hyphen.group(2))
+        return {v for v in TARGET_VERSIONS if lo <= v <= hi}
+
+    lo, hi = float("-inf"), float("inf")
+    for part in re.split(r"[\s,]+", clause):
+        if not part or part == "*":
+            continue
+        m = _CONSTRAINT_PART_RE.match(part)
+        if not m:
+            return None
+        op    = m.group("op") or "="
+        major = int(m.group("major"))
+        if op == "!=":
+            continue
+        if op in ("^", "~", "=", "=="):
+            lo, hi = max(lo, major), min(hi, major)
+        elif op in (">=", ">"):
+            lo = max(lo, major)
+        elif op == "<=":
+            hi = min(hi, major)
+        elif op == "<":
+            # "<12" / "<12.0" / "<12.0.0" excludes all of 12; "<12.1" doesn't.
+            minor, patch = m.group("minor"), m.group("patch")
+            rest_is_zero = all(p in (None, "0") for p in (minor, patch))
+            hi = min(hi, major - 1 if rest_is_zero else major)
+    return {v for v in TARGET_VERSIONS if lo <= v <= hi}
+
+
+def _core_majors(constraint: str | None) -> list[int]:
+    """Return the sorted TARGET_VERSIONS majors a drupal/core constraint allows.
+
+    For example: "^10.3 || ^11" → [10, 11], "^11.4 || ^12" → [11, 12],
+    ">=10.3 <12" → [10, 11], "^8 || ^9" → [].
+
+    A missing or wildcard ("*") constraint is treated as compatible with every
+    target, because the packages.drupal.org/8 repository only serves modern
+    Drupal packages.
+
+    This is a small interval evaluator for the constraint shapes Drupal
+    projects actually use (^, ~, >=, <, x.*, hyphen ranges, ||) — not a full
+    Composer semver implementation. An OR-clause it can't parse falls back to
+    a whole-word search for each target major (the old behavior).
+    """
+    if not constraint or constraint.strip() == "*":
+        return sorted(TARGET_VERSIONS)
+
+    majors: set[int] = set()
+    for clause in re.split(r"\|\|?", constraint):
+        result = _clause_majors(clause)
+        if result is None:
+            # rf"\b{v}\b" → e.g. r"\b10\b": "10" as a whole word.
+            result = {v for v in TARGET_VERSIONS if re.search(rf"\b{v}\b", clause)}
+        majors |= result
+    return sorted(majors)
+
+
+def _core_is_supported(constraint: str | None) -> bool:
+    """Check whether a drupal/core constraint covers any TARGET_VERSIONS major."""
+    return bool(_core_majors(constraint))
 
 
 def _select_best_ai_dependent_version(
     versions: list[dict], required_type: str, require_ai: bool = True
 ) -> dict | None:
     """Filter a p2 version list down to the newest version that matches
-    `required_type` and has a Drupal 10/11-compatible drupal/ai dependency.
+    `required_type` and has a Drupal 10/11/12-compatible drupal/ai dependency.
 
     With require_ai=False the drupal/ai `require` check is skipped — used for
     modules discovered via the drupal.org AI project category, which qualify
@@ -595,7 +685,7 @@ def _select_best_ai_dependent_version(
         if require_ai and "drupal/ai" not in require:
             continue
         core_constraint = require.get("drupal/core", "")
-        if not _core_is_d10_d11(core_constraint):
+        if not _core_is_supported(core_constraint):
             continue
         candidates.append(v)
 
@@ -622,7 +712,7 @@ def get_p2_info(machine_name: str, require_ai: bool = True) -> dict | None:
     `ai_constraint` is None when the chosen version has no drupal/ai require.
 
     Returns a dict with version/date/constraints, or None if the module fails
-    verification (exists, is a module, D10/11-compatible, and — unless
+    verification (exists, is a module, D10/11/12-compatible, and — unless
     require_ai=False — requires drupal/ai).
     """
     url = P2_URL.format(name=machine_name)
@@ -645,6 +735,8 @@ def get_p2_info(machine_name: str, require_ai: bool = True) -> dict | None:
     # Versions are listed newest-first. This is equivalent to PHP's:
     # $versions = $data['packages']["drupal/$machine_name"] ?? [];
     versions = data.get("packages", {}).get(f"drupal/{machine_name}", [])
+    if data.get("minified") == "composer/2.0":
+        versions = _expand_minified(versions)
 
     # Type check excludes recipes (`drupal-recipe`), profiles, distributions —
     # those are handled by the separate get_recipe_info() pipeline.
@@ -665,6 +757,7 @@ def get_p2_info(machine_name: str, require_ai: bool = True) -> dict | None:
         "date":            date,
         "ai_constraint":   require.get("drupal/ai"),
         "core_constraint": core_constraint,
+        "core_versions":   _core_majors(core_constraint),
         # The package's own composer.json "name" field, e.g. "drupal/ai_agents" —
         # already present in the p2 payload, so no extra request is needed.
         "composer_name":   best.get("name", ""),
@@ -694,7 +787,7 @@ def get_recipe_info(machine_name: str) -> dict | None:
 
     Returns a dict with version/date/constraints, or None if the recipe
     fails verification (doesn't exist, isn't a recipe, or doesn't have a
-    Drupal 10/11-compatible drupal/ai dependency).
+    Drupal 10/11/12-compatible drupal/ai dependency).
     """
     versions = []
     for url in (RECIPE_P2_URL.format(name=machine_name),
@@ -712,7 +805,12 @@ def get_recipe_info(machine_name: str) -> dict | None:
         except json.JSONDecodeError:
             continue
 
-        versions += data.get("packages", {}).get(f"drupal/{machine_name}", [])
+        # Expand each file on its own — the stable and ~dev files are
+        # separate minified chains, each starting from a full entry.
+        file_versions = data.get("packages", {}).get(f"drupal/{machine_name}", [])
+        if data.get("minified") == "composer/2.0":
+            file_versions = _expand_minified(file_versions)
+        versions += file_versions
 
     best = _select_best_ai_dependent_version(versions, "drupal-recipe")
     if best is None:
@@ -731,6 +829,7 @@ def get_recipe_info(machine_name: str) -> dict | None:
         "date":            date,
         "ai_constraint":   require["drupal/ai"],
         "core_constraint": core_constraint,
+        "core_versions":   _core_majors(core_constraint),
         "composer_name":   best.get("name", ""),
     }
 
@@ -1548,6 +1647,10 @@ def main() -> None:
             "usage":             usage,
             "security_covered":  security_covered,
             "stability":         detect_stability(p2["version"]),
+            # Drupal core majors the chosen release supports, e.g. [10, 11],
+            # plus the raw constraint it was derived from (None when absent).
+            "core_versions":     p2["core_versions"],
+            "core_constraint":   p2["core_constraint"] or None,
             # False only for AI-category-tagged modules whose latest release
             # has no drupal/ai in its composer require.
             "requires_ai":       p2["ai_constraint"] is not None,
@@ -1654,6 +1757,8 @@ def main() -> None:
             "version":      info["version"],
             "release_date": info["date"] or "—",
             "stability":    detect_stability(info["version"]),
+            "core_versions":   info["core_versions"],
+            "core_constraint": info["core_constraint"] or None,
             "downloads":    dl,
             "stars":        stars,
         })

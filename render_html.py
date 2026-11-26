@@ -252,6 +252,7 @@ _CSS = """\
       max-width: 44rem;
     }
     .col-version  { font-family: ui-monospace, monospace; white-space: nowrap; }
+    .col-core     { white-space: nowrap; text-align: center; }
     .col-date     { white-space: nowrap; }
     .col-security { text-align: center; }
     th.col-security { text-align: center; }
@@ -402,14 +403,26 @@ _JS = """\
         return { sortTable: sortTable, cellVal: cellVal, tbody: tbody };
       }
 
-      // ---- Modules tab: sorting + name/stability/security filter ----
+      // ---- Modules tab: sorting + name/stability/security/core filter ----
       var modulesSorter = makeSorter('#tbl-modules thead tr', '#tbody-modules');
-      modulesSorter.sortTable(4, 'num');
+      modulesSorter.sortTable(5, 'num');
 
       var filterModules = document.getElementById('filter-modules');
       var noResModules   = document.getElementById('no-results-modules');
 
       var catModules = document.getElementById('cat-modules');
+
+      // Drupal core filter — match-any, like categories: a row stays
+      // visible while at least one of its supported majors is checked.
+      // Scoped per panel so the two tabs filter independently.
+      function checkedCore(panelSel) {
+        return Array.from(document.querySelectorAll(panelSel + ' .core-cb:checked'))
+                    .map(function (cb) { return cb.value; });
+      }
+      function coreMatches(row, checked) {
+        var majors = (row.dataset.core || '').split('|').filter(Boolean);
+        return majors.some(function (v) { return checked.indexOf(v) !== -1; });
+      }
 
       function applyModulesFilter() {
         var q = filterModules.value.toLowerCase();
@@ -431,6 +444,7 @@ _JS = """\
                .map(function (cb) { return cb.value; })
         );
         var catSelected = catModules ? Array.from(catModules.selectedOptions).map(function (o) { return o.value; }) : [];
+        var coreChecked = checkedCore('#panel-modules');
         var visible = 0;
         Array.from(modulesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = modulesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
@@ -439,7 +453,8 @@ _JS = """\
           var depMatch = !hasDepFilter || depChecked.has(row.dataset.dep);
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
           var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
-          var show = nameMatch && stabMatch && secMatch && depMatch && catMatch;
+          var coreMatch = coreMatches(row, coreChecked);
+          var show = nameMatch && stabMatch && secMatch && depMatch && coreMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
@@ -447,18 +462,18 @@ _JS = """\
       }
 
       filterModules.addEventListener('input', applyModulesFilter);
-      Array.from(document.querySelectorAll('.stab-cb, .sec-cb, .dep-cb')).forEach(function (cb) {
+      Array.from(document.querySelectorAll('.stab-cb, .sec-cb, .dep-cb, #panel-modules .core-cb')).forEach(function (cb) {
         cb.addEventListener('change', applyModulesFilter);
       });
       if (catModules) catModules.addEventListener('change', applyModulesFilter);
 
-      // ---- Recipes tab: sorting + name-only filter ----
-      // No stability or security data exists for recipes, so there's
-      // nothing to check here beyond the name filter. Sort by Packagist
-      // downloads descending on load (column 3, numeric) — same pattern
+      // ---- Recipes tab: sorting + name/core/category filter ----
+      // No stability or security data exists for recipes, so those
+      // filters are modules-only. Sort by Packagist
+      // downloads descending on load (column 4, numeric) — same pattern
       // as modules' usage sort.
       var recipesSorter = makeSorter('#tbl-recipes thead tr', '#tbody-recipes');
-      recipesSorter.sortTable(3, 'num');
+      recipesSorter.sortTable(4, 'num');
 
       var filterRecipes = document.getElementById('filter-recipes');
       var noResRecipes   = document.getElementById('no-results-recipes');
@@ -468,12 +483,14 @@ _JS = """\
       function applyRecipesFilter() {
         var q = filterRecipes.value.toLowerCase();
         var catSelected = catRecipes ? Array.from(catRecipes.selectedOptions).map(function (o) { return o.value; }) : [];
+        var coreChecked = checkedCore('#panel-recipes');
         var visible = 0;
         Array.from(recipesSorter.tbody.querySelectorAll('tr')).forEach(function (row) {
           var nameMatch = recipesSorter.cellVal(row, 0).toLowerCase().indexOf(q) !== -1;
           var cats = (row.dataset.categories || '').split('|').filter(Boolean);
           var catMatch = catSelected.length === 0 || cats.length === 0 || cats.some(function (c) { return catSelected.indexOf(c) !== -1; });
-          var show = nameMatch && catMatch;
+          var coreMatch = coreMatches(row, coreChecked);
+          var show = nameMatch && coreMatch && catMatch;
           row.style.display = show ? '' : 'none';
           if (show) visible++;
         });
@@ -482,6 +499,9 @@ _JS = """\
 
       filterRecipes.addEventListener('input', applyRecipesFilter);
       if (catRecipes) catRecipes.addEventListener('change', applyRecipesFilter);
+      Array.from(document.querySelectorAll('#panel-recipes .core-cb')).forEach(function (cb) {
+        cb.addEventListener('change', applyRecipesFilter);
+      });
 
       // ---- Category pill click-to-filter ----
       // Clicking a pill in a row narrows that tab's category select down to
@@ -535,6 +555,19 @@ _JS = """\
     })();"""
 
 
+def _core_info(r: dict, default_versions: list) -> tuple[list, str]:
+    """A row's supported Drupal core majors and its raw drupal/core constraint.
+
+    Back-compat: results.json files from before per-row core data existed
+    fall back to the payload-wide `drupal_versions`, so every row stays
+    visible under the core filter.
+    """
+    versions = r.get("core_versions")
+    if versions is None:
+        versions = default_versions
+    return sorted(versions), r.get("core_constraint") or ""
+
+
 def render_html(payload: dict, history: dict | None = None) -> str:
     """Return a self-contained HTML string with a tabbed Modules/Recipes view.
 
@@ -546,7 +579,8 @@ def render_html(payload: dict, history: dict | None = None) -> str:
     rows         = payload["modules"]
     recipe_rows  = payload.get("recipes", [])  # back-compat: older files have no "recipes" key
     today        = payload["generated"]
-    v_label      = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
+    core_targets = sorted(payload["drupal_versions"])
+    v_label      = "/".join(str(v) for v in core_targets)
     count        = len(rows)
     recipe_count = len(recipe_rows)
     # Back-compat: files from before --full-ecosystem existed were all
@@ -557,6 +591,19 @@ def render_html(payload: dict, history: dict | None = None) -> str:
 
     def esc(s) -> str:
         return html.escape(str(s), quote=True)
+
+    def core_cells(r: dict) -> tuple[str, str]:
+        """(data-core attribute value, Core <td>) for one row.
+
+        data-val is the highest supported major so sorting groups the
+        projects ready for the newest core together.
+        """
+        versions, constraint = _core_info(r, core_targets)
+        data_core = "|".join(str(v) for v in versions)
+        disp      = ", ".join(str(v) for v in versions) or "—"
+        title     = f' title="drupal/core: {esc(constraint)}"' if constraint else ""
+        val       = str(max(versions)) if versions else ""
+        return data_core, f'<td data-val="{val}" class="col-core"{title}>{disp}</td>'
 
     row_lines = []
     for r in rows:
@@ -599,10 +646,12 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         cat_data = esc("|".join(cats))                       # filter (data-categories)
         cat_html = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
         trend_val, trend_disp = _trend_val_disp(history, r["machine_name"], "usage")
+        core_data, core_td = core_cells(r)
         row_lines.append(
-            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-dep="{dep_status}" data-categories="{cat_data}">'
+            f'      <tr data-stability="{esc(stability)}" data-security="{sec_status}" data-dep="{dep_status}" data-core="{core_data}" data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}{badge}</td>'
+            f'{core_td}'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{sec_val}" class="col-security">{sec_disp}</td>'
             f'<td data-val="{usage_raw}" class="col-usage">{usage_disp}</td>'
@@ -640,10 +689,12 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         cat_data    = esc("|".join(cats))
         cat_html    = "".join(f'<span class="cat-pill" data-cat="{esc(c)}">{esc(c)}</span>' for c in cats)
         trend_val, trend_disp = _trend_val_disp(history, r["machine_name"], "downloads")
+        core_data, core_td = core_cells(r)
         recipe_row_lines.append(
-            f'      <tr data-categories="{cat_data}">'
+            f'      <tr data-core="{core_data}" data-categories="{cat_data}">'
             f'<td data-val="{label_esc}"><a href="{url_esc}" title="{machine_esc}">{label_esc}</a>{desc_html}</td>'
             f'<td data-val="{ver_val}" class="col-version">{ver_disp}</td>'
+            f'{core_td}'
             f'<td data-val="{date_val}" class="col-date">{esc(date)}</td>'
             f'<td data-val="{dl_raw}" class="col-downloads">{dl_disp}</td>'
             f'<td data-val="{trend_val}" class="col-trend">{trend_disp}</td>'
@@ -666,6 +717,17 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         for status in SECURITY_ORDER
     )
 
+    # Drupal core checkboxes, one set per tab (scoped by panel in the JS).
+    def _core_filter(indent: str) -> str:
+        boxes = f"\n{indent}  ".join(
+            f'<label><input type="checkbox" class="core-cb" value="{v}" checked>'
+            f' {v}</label>'
+            for v in core_targets
+        )
+        return (f'{indent}<span class="stab-filters">Drupal:\n'
+                f'{indent}  {boxes}\n'
+                f'{indent}</span>\n')
+
     # Only rendered for --full-ecosystem payloads — see full_ecosystem above.
     dep_checkboxes = "\n      ".join(
         f'<label><input type="checkbox" class="dep-cb" value="{status}" checked>'
@@ -682,11 +744,11 @@ def render_html(payload: dict, history: dict | None = None) -> str:
     # The drupal/ai column sits between Trend and Categories, so Categories'
     # data-col shifts when it's omitted.
     dep_header_html = (
-        '          <th data-col="6" data-type="num" class="col-dep"'
+        '          <th data-col="7" data-type="num" class="col-dep"'
         ' title="Hard composer dependency on drupal/ai">drupal/ai</th>\n'
         if full_ecosystem else ""
     )
-    cat_col_index = 7 if full_ecosystem else 6
+    cat_col_index = 8 if full_ecosystem else 7
 
     dep_legend_html = (
         '    <p class="legend">drupal/ai:\n'
@@ -753,6 +815,7 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         f'          {security_checkboxes}\n'
         '        </span>\n'
         f'{dep_filter_html}'
+        f'{_core_filter("        ")}'
         '      </div>\n'
         '      <div class="controls-row controls-inputs">\n'
         '        <input id="filter-modules" type="search" placeholder="Filter by module name&hellip;">\n'
@@ -764,10 +827,11 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         '        <tr>\n'
         '          <th data-col="0" data-type="text">Label</th>\n'
         '          <th data-col="1" data-type="text">Version</th>\n'
-        '          <th data-col="2" data-type="date">Released</th>\n'
-        '          <th data-col="3" data-type="num" class="col-security" title="Security Coverage">Security</th>\n'
-        '          <th data-col="4" data-type="num" class="col-usage" title="Drupal.org Usage">Usage</th>\n'
-        '          <th data-col="5" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
+        '          <th data-col="2" data-type="num" class="col-core" title="Supported Drupal core versions">Core</th>\n'
+        '          <th data-col="3" data-type="date">Released</th>\n'
+        '          <th data-col="4" data-type="num" class="col-security" title="Security Coverage">Security</th>\n'
+        '          <th data-col="5" data-type="num" class="col-usage" title="Drupal.org Usage">Usage</th>\n'
+        '          <th data-col="6" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
         f'{dep_header_html}'
         f'          <th data-col="{cat_col_index}" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
@@ -786,6 +850,9 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         '  </div>\n'
         '  <div class="tab-panel" id="panel-recipes">\n'
         '    <div class="controls">\n'
+        '      <div class="controls-row controls-checks">\n'
+        f'{_core_filter("        ")}'
+        '      </div>\n'
         '      <div class="controls-row controls-inputs">\n'
         '        <input id="filter-recipes" type="search" placeholder="Filter by recipe name&hellip;">\n'
         f'        {recipe_cat_select}\n'
@@ -796,11 +863,12 @@ def render_html(payload: dict, history: dict | None = None) -> str:
         '        <tr>\n'
         '          <th data-col="0" data-type="text">Label</th>\n'
         '          <th data-col="1" data-type="text">Version</th>\n'
-        '          <th data-col="2" data-type="date">Released</th>\n'
-        '          <th data-col="3" data-type="num" class="col-downloads">Packagist downloads</th>\n'
-        '          <th data-col="4" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
-        '          <th data-col="5" data-type="num" class="col-stars">Packagist stars</th>\n'
-        '          <th data-col="6" data-type="text" class="col-cat">Categories</th>\n'
+        '          <th data-col="2" data-type="num" class="col-core" title="Supported Drupal core versions">Core</th>\n'
+        '          <th data-col="3" data-type="date">Released</th>\n'
+        '          <th data-col="4" data-type="num" class="col-downloads">Packagist downloads</th>\n'
+        '          <th data-col="5" data-type="num" class="col-trend" title="Change vs. previous run">Trend</th>\n'
+        '          <th data-col="6" data-type="num" class="col-stars">Packagist stars</th>\n'
+        '          <th data-col="7" data-type="text" class="col-cat">Categories</th>\n'
         '        </tr>\n'
         '      </thead>\n'
         '      <tbody id="tbody-recipes">\n'
