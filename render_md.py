@@ -109,6 +109,24 @@ def _trend_cell(history: dict, machine_name: str, metric: str) -> str:
     return f'<span title="{title}">{_TREND_ARROW[direction]} {pct:+.1f}%</span>'
 
 
+def _core_cell(r: dict, default_versions: list) -> str:
+    """Build the Core table cell: supported Drupal majors, e.g. "10, 11".
+
+    The raw drupal/core constraint goes in a <span title> tooltip (same
+    HTML-in-a-table-cell approach as _trend_cell). Back-compat: files from
+    before per-row core data fall back to the payload's drupal_versions.
+    """
+    versions = r.get("core_versions")
+    if versions is None:
+        versions = default_versions
+    disp = ", ".join(str(v) for v in sorted(versions)) or "—"
+    constraint = r.get("core_constraint")
+    if not constraint:
+        return disp
+    title = html.escape(f"drupal/core: {constraint}", quote=True).replace("|", "&#124;")
+    return f'<span title="{title}">{disp}</span>'
+
+
 def render_md(payload: dict, history: dict | None = None) -> str:
     """Return a Markdown string from a results.json payload.
 
@@ -120,7 +138,8 @@ def render_md(payload: dict, history: dict | None = None) -> str:
     rows         = payload["modules"]
     recipe_rows  = payload.get("recipes", [])  # back-compat: older files have no "recipes" key
     today        = payload["generated"]
-    v_label      = "/".join(str(v) for v in sorted(payload["drupal_versions"]))
+    core_targets = sorted(payload["drupal_versions"])
+    v_label      = "/".join(str(v) for v in core_targets)
     count        = len(rows)
     recipe_count = len(recipe_rows)
     # Back-compat: files from before --full-ecosystem existed were all
@@ -136,16 +155,16 @@ def render_md(payload: dict, history: dict | None = None) -> str:
             " [drupal/ai](https://www.drupal.org/project/ai) or filed under"
             " drupal.org's \"Artificial Intelligence (AI)\" project category*\n"
         )
-        header_row = ("| Label | URL | Latest Version | Release Date | Security"
+        header_row = ("| Label | URL | Latest Version | Core | Release Date | Security"
                       " | Usage | Trend | drupal/ai | Categories |")
-        divider_row = ("|-------|-----|:--------------:|:------------:|"
+        divider_row = ("|-------|-----|:--------------:|:----:|:------------:|"
                        ":------------------:|----------------:|:-----:|:---------:|------------|")
     else:
         scope_line = ("*Only includes projects with a dependency on the"
                       " [Drupal AI module](https://www.drupal.org/project/ai)*\n")
-        header_row = ("| Label | URL | Latest Version | Release Date | Security"
+        header_row = ("| Label | URL | Latest Version | Core | Release Date | Security"
                       " | Usage | Trend | Categories |")
-        divider_row = ("|-------|-----|:--------------:|:------------:|"
+        divider_row = ("|-------|-----|:--------------:|:----:|:------------:|"
                        ":------------------:|----------------:|:-----:|------------|")
 
     lines = [
@@ -173,6 +192,7 @@ def render_md(payload: dict, history: dict | None = None) -> str:
             security_str = SECURITY_NOT_COVERED_EMOJI
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
+            f" {_core_cell(r, core_targets)} |"
             f" {r['release_date']} | {security_str} | {usage_str} |"
             f" {_trend_cell(history, r['machine_name'], 'usage')} |"
             f"{requires_ai_cell} {_categories_cell(r)} |"
@@ -196,8 +216,8 @@ def render_md(payload: dict, history: dict | None = None) -> str:
     lines.append("\n## Recipes\n")
     # Column order matches render_html.py's recipes tab: Trend (which tracks
     # downloads) sits directly after the downloads column it derives from.
-    lines.append("| Label | URL | Latest Version | Release Date | Packagist downloads | Trend | Packagist stars | Categories |")
-    lines.append("|-------|-----|:--------------:|:------------:|--------------------:|:-----:|----------------:|------------|")
+    lines.append("| Label | URL | Latest Version | Core | Release Date | Packagist downloads | Trend | Packagist stars | Categories |")
+    lines.append("|-------|-----|:--------------:|:----:|:------------:|--------------------:|:-----:|----------------:|------------|")
     for r in recipe_rows:
         downloads = r.get("downloads")
         downloads_str = f"{downloads:,}" if downloads is not None else "—"
@@ -205,6 +225,7 @@ def render_md(payload: dict, history: dict | None = None) -> str:
         stars_str = f"{stars:,}" if stars is not None else "—"
         lines.append(
             f"| {_label_cell(r)} | {r['url']} | `{r['version']}` |"
+            f" {_core_cell(r, core_targets)} |"
             f" {r['release_date']} | {downloads_str} |"
             f" {_trend_cell(history, r['machine_name'], 'downloads')} |"
             f" {stars_str} | {_categories_cell(r)} |"

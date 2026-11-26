@@ -58,6 +58,8 @@ Every normal run also appends to a separate `history.json` (path configurable wi
       "usage": 13133,
       "security_covered": true,
       "stability": "stable",
+      "core_versions": [10, 11],
+      "core_constraint": "^10.3 || ^11",
       "categories": ["Cloud Providers"]
     }
   ],
@@ -70,6 +72,8 @@ Every normal run also appends to a separate `history.json` (path configurable wi
       "version": "1.1.0",
       "release_date": "2026-02-12",
       "stability": "stable",
+      "core_versions": [11],
+      "core_constraint": "^11.2",
       "downloads": 1234,
       "stars": 56,
       "categories": ["Media", "Search"]
@@ -85,6 +89,7 @@ Every normal run also appends to a separate `history.json` (path configurable wi
 - `usage` is the summed `project_usage` install count. **Recipe rows have no `usage` key at all**, since Drupal.org's API has no usage-tracking data for recipes whatsoever (confirmed: the field is entirely absent from the API response, not zero).
 - `downloads` and `stars` come from the same request to `packagist.org/packages/drupal/{name}.json` — `package.downloads.total` and `package.favers` respectively. (`favers` is Packagist's internal field name for its star count.) **Module rows have neither key** — modules live only on `packages.drupal.org`, not the main Packagist registry. Both are `null` if the stats call failed; `0` is a real zero (package exists but has no downloads/stars yet).
 - `stability` is derived from the version string: `stable`, `rc`, `beta`, `alpha`, or `dev`.
+- `core_versions` lists the Drupal core majors (out of 10, 11 and 12) that the chosen release's `drupal/core` constraint allows; `core_constraint` is that raw constraint (`null` if the release declares none, in which case every major is assumed). Present on both module and recipe rows.
 - `categories` is a list of one or more categories derived from the label, description and machine name (see [Categorization](#categorization)). Present on both module and recipe rows. Packages that match no rule get `["Uncategorized"]`.
 - Recipe rows are sorted by `downloads` descending (`null`/0 last), then alphabetically by `label` for ties.
 
@@ -94,18 +99,18 @@ Older `results.json` files from before recipe support was added (no `"recipes"` 
 
 Two sections, each with their own table. Modules is sorted by active installs (descending):
 
-| Label | machine name | URL | Latest Version | Release Date | Security coverage | Drupal.org usage | Trend | Categories |
-|-------|--------------|-----|:--------------:|:------------:|:------------------:|----------------:|:-----:|------------|
-| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 2026-02-25 | ✅ | 10,508 | ▲ +4.2% | Cloud Providers |
-| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 2025-12-05 | 🚫 | 8,894 | — | Media, Accessibility |
+| Label | machine name | URL | Latest Version | Core | Release Date | Security coverage | Drupal.org usage | Trend | Categories |
+|-------|--------------|-----|:--------------:|:----:|:------------:|:------------------:|----------------:|:-----:|------------|
+| OpenAI Provider | drupal/ai_provider_openai | https://www.drupal.org/project/ai_provider_openai | `1.2.1` | 10, 11 | 2026-02-25 | ✅ | 10,508 | ▲ +4.2% | Cloud Providers |
+| AI Image Alt Text | drupal/ai_image_alt_text | https://www.drupal.org/project/ai_image_alt_text | `1.0.2` | 10, 11 | 2025-12-05 | 🚫 | 8,894 | — | Media, Accessibility |
 
 The Label column links to the module's project page, with the project's description (when present) shown as a small second line beneath the link (`<br><sub>…</sub>`). The Trend column shows the usage change vs. the previous run (from `history.json`) as an arrow + percent, with a tooltip (hover, or tap on mobile) showing the raw value change and the date it's compared against, e.g. "+34 since Sep 1 2026" or "-543 since Aug 15 2026" — and shows `—` when there isn't enough history yet. The Categories column lists the project's categories, comma-separated. Modules with no tracked install count show `—` in the usage column. Security coverage uses three states: a filled shield icon (`images/shield-icon-black.svg`) when covered and on a stable release, an outline shield icon when covered but still pre-release (rc/beta/alpha/dev), and 🚫 when not covered. Both shield icons are rendered as `<img>` tags in the Markdown output.
 
 Recipes is sorted by Packagist downloads descending, with no Security coverage or Drupal.org usage columns:
 
-| Label | machine name | URL | Latest Version | Release Date | Packagist downloads | Trend | Packagist stars | Categories |
-|-------|--------------|-----|:--------------:|:------------:|--------------------:|:-----:|----------------:|------------|
-| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 2026-02-12 | 1,234 | ▼ -2.1% | 56 | Media |
+| Label | machine name | URL | Latest Version | Core | Release Date | Packagist downloads | Trend | Packagist stars | Categories |
+|-------|--------------|-----|:--------------:|:----:|:------------:|--------------------:|:-----:|----------------:|------------|
+| AI Image Classification recipe | drupal/ai_recipe_image_classification | https://www.drupal.org/project/ai_recipe_image_classification | `1.1.0` | 11 | 2026-02-12 | 1,234 | ▼ -2.1% | 56 | Media |
 
 ### HTML
 
@@ -113,6 +118,7 @@ Recipes is sorted by Packagist downloads descending, with no Security coverage o
 
 - **Sort by any column** — click a column header to sort ascending; click again to sort descending. Sort direction is indicated by ▲/▼ in the header.
 - **Filter by name** — type in the search box to instantly hide non-matching rows.
+- **Filter by Drupal core version** — a "Drupal:" checkbox per core major (10, 11, 12; all checked by default). A row stays visible while **at least one** of its supported majors is checked, so unchecking 10 and 11 shows only the projects ready for Drupal 12. A Core column shows each project's supported majors, with the raw `drupal/core` constraint as a tooltip; sorting it groups projects by their highest supported major.
 - **Filter by category** — a checkbox per category present in that tab (all checked by default); unchecking one hides rows tagged with it. Because a project can have several categories, a row stays visible as long as **at least one** of its categories is still checked. A Categories column shows each project's categories as pills.
 - **Trend column** — an arrow + percent change (colored green/red/gray for up/down/flat) comparing the current run's usage (Modules) or Packagist downloads (Recipes) to the previous run, read from `history.json`. Hovering shows a tooltip with the raw value change and the previous run's date, e.g. "+34 since Sep 1 2026". Sortable like any other column; `—` when there isn't at least two runs of history yet for that row. No dedicated filter — see [History and the Trend column](#history-and-the-trend-column) below.
 
@@ -231,7 +237,9 @@ This file contains the parsed contents of each version's `composer.json`. The sc
 
 1. `type == "drupal-module"` — excludes recipes, profiles, and distributions
 2. `"drupal/ai"` is present in the `require` field — confirms a hard dependency. Under `--full-ecosystem` this check is **skipped for candidates from the AI project category (Source 3)**, which qualify by tag; the outcome is recorded per module in a `requires_ai` boolean.
-3. The `drupal/core` constraint includes Drupal 10 or 11
+3. The `drupal/core` constraint allows Drupal 10, 11 or 12
+
+p2 files are Composer-minified (later versions only list fields that changed since the previous one), so the script expands them first, the same way Composer does, before applying these checks.
 
 Only modules passing these checks are included. Candidates from Sources 1 and 2 must pass all three, so ecosystem-page or search hits that don't actually require drupal/ai are correctly excluded — unless `--full-ecosystem` is in play and they also carry the AI project category, in which case the maintainer's own categorization is the qualification (and the `drupal/ai` column shows — instead of ✓).
 
@@ -264,7 +272,7 @@ repo.packagist.org/p2/drupal/{name}.json
 repo.packagist.org/p2/drupal/{name}~dev.json
 ```
 
-Same Composer v2 p2 format and the same three checks as module verification (type, `drupal/ai` in `require`, Drupal 10/11 core constraint) — only the required `type` differs (`drupal-recipe` instead of `drupal-module`). **Both URLs are fetched and merged**, because Composer splits stable/tagged releases from branch/dev snapshots into separate files; a recipe with only a `"1.x-dev"` release would otherwise appear to have no qualifying version at all.
+Same Composer v2 p2 format and the same three checks as module verification (type, `drupal/ai` in `require`, Drupal 10/11/12 core constraint) — only the required `type` differs (`drupal-recipe` instead of `drupal-module`). **Both URLs are fetched and merged**, because Composer splits stable/tagged releases from branch/dev snapshots into separate files; a recipe with only a `"1.x-dev"` release would otherwise appear to have no qualifying version at all.
 
 Unlike packages.drupal.org's p2 files, Packagist's have a real ISO-8601 `time` field on every version, so no date-fallback request is ever needed for recipes.
 

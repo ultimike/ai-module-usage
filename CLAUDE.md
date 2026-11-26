@@ -25,7 +25,10 @@ separate `##` sections in markdown, separate tabs in HTML).
 - Description — the module's description, from its `*.info.yml` `description:` key
 - Machine name — the `name` field from the module's `composer.json` (e.g. `drupal/ai_agents`)
 - URL (`https://www.drupal.org/project/{name}`)
-- Latest version compatible with Drupal 10 or 11
+- Latest version compatible with Drupal 10, 11 or 12
+- Core — the Drupal core majors that release supports (e.g. `10, 11`), from
+  its `drupal/core` constraint (`core_versions` in JSON; raw constraint as a
+  tooltip). HTML adds a per-tab "Drupal:" checkbox filter. Recipes get it too.
 - Release date
 - Security coverage — three states based on Drupal's security advisory policy and stability:
   - Filled shield (`images/shield-icon-black.svg`, 50% opacity) — covered + stable release
@@ -125,7 +128,7 @@ project category
   `api-d7/taxonomy_term.json?name=Artificial intelligence (AI)`)
 - **Names from this source are exempt from the drupal/ai `require` check in
   stage 2** — the maintainer's own categorization is the qualification. They
-  still must exist on packages.drupal.org as a D10/11-compatible
+  still must exist on packages.drupal.org as a D10/11/12-compatible
   `drupal-module`, so tagged-but-unreleased/sandbox projects are filtered out.
 - This is what catches AI-related modules with no code dependency on
   drupal/ai at all (e.g. `webmcp_user_forms`), which sources A/B would
@@ -150,9 +153,26 @@ Three checks are applied (all must pass):
    the outcome in a `requires_ai` boolean (False only for tag-qualified
    modules whose chosen release has no drupal/ai require). Without the flag
    `tagged_set` is empty, so every candidate is checked strictly.
-3. `drupal/core` constraint includes `\b10\b` or `\b11\b` — Drupal 10/11 compat.
-   Missing or `"*"` constraint is treated as compatible (the /8 repo only
-   serves modern packages).
+3. `drupal/core` constraint allows at least one of `TARGET_VERSIONS`
+   (`{10, 11, 12}`) — `_core_is_supported()`, built on `_core_majors()`.
+   `_core_majors(constraint)` is a small interval evaluator (not full Composer
+   semver): split on `||`, each clause's AND-parts narrow a `[lo, hi]` major
+   range (`^X`/`~X`/`X.x`/`X.Y.Z` → `[X, X]`, `>=X` → `lo=X`, `<X`/`<X.0` →
+   `hi=X-1`, `<X.Y` → `hi=X`, `A - B` → `[A, B]`), then the union is
+   intersected with the targets. A clause it can't parse falls back to the old
+   whole-word `\bN\b` regex. The result is stored per row as `core_versions`.
+   Missing or `"*"` constraint is treated as compatible with every target (the
+   /8 repo only serves modern packages).
+
+**p2 files are Composer-minified — expand before reading.** Both
+packages.drupal.org and repo.packagist.org serve `"minified": "composer/2.0"`:
+only the first (newest) entry is a full composer.json; each later entry holds
+only the keys that changed since the previous one (`"__unset"` = removed).
+`_expand_minified()` (a port of Composer's `MetadataMinifier::expand`) runs in
+`get_p2_info()`, and on each of the stable/`~dev` files separately in
+`get_recipe_info()` (independent chains). Before this was added, a release
+that didn't change its `require` looked like it had none and was skipped —
+e.g. `ai_agents` reported 1.2.7 while 1.3.5 was the latest stable.
 
 Also extracts from p2 data:
 - `version` — the version string
@@ -163,7 +183,7 @@ Also extracts from p2 data:
 field (standard Composer field), but DOES have `extra.drupal.datestamp`.
 The `version` string in p2 files matches updates.drupal.org exactly for
 modern semver packages (e.g. `1.2.1`), but older `8.x-*` style versions
-would differ — those are already filtered out by the D10/11 check anyway.
+would differ — those are already filtered out by the core-version check anyway.
 
 ### 3. Release date fallback — `updates.drupal.org/release-history/{name}/current`
 
@@ -304,12 +324,12 @@ release), but retrofitting it is out of scope for this change.
 |-----|-------|
 | `www.drupal.org/api-d7/node.json` | Returns HTTP 503 when called too fast. Respects `Retry-After` header. Values in `project_usage` are strings, not ints. `field_security_advisory_coverage` is `"covered"`/`"not-covered"` (string, not bool). |
 | `packages.drupal.org/8/search.json` | `per_page=100` is silently capped at 50. The `next` URL is absolute (starts with `https://`). |
-| `packages.drupal.org` p2 files | No `time` field. Date is in `extra.drupal.datestamp` as a Unix timestamp string. `type` for recipes is `drupal-recipe`, not `project_general`. Each version entry already includes the original composer.json `name` field (e.g. `drupal/ai_agents`) — no extra request needed for the "machine name" column. |
+| `packages.drupal.org` p2 files | **Minified** (`"minified": "composer/2.0"`) — later entries only list changed keys; run `_expand_minified()` first. No `time` field. Date is in `extra.drupal.datestamp` as a Unix timestamp string. `type` for recipes is `drupal-recipe`, not `project_general`. Each version entry already includes the original composer.json `name` field (e.g. `drupal/ai_agents`) — no extra request needed for the "machine name" column. |
 | `updates.drupal.org` | Returns XML (not JSON). More tolerant of fast requests than the Drupal.org JSON API. |
 | `drupal.org/project/ai/ecosystem` | Page 0 has no `?page=0` parameter (omit it). Pagination detected by checking if `?page=N` appears in the HTML. |
 | `git.drupalcode.org` raw files | Tag names match the p2 `version` string directly (no `8.x-` prefix needed for modern packages). 404s if the module's main `.info.yml` isn't at the repo root under `{machine_name}.info.yml` (rare; handled by falling back to the title-cased machine name). Both the `name:` (label) and `description:` keys are read from this one file — info.yml is the **only** source for the module description. |
 | `packagist.org/search.json` | Unlike `packages.drupal.org/8/search.json`, `per_page=100` is actually honored (not capped at 50). Returns all packages of the given `type` regardless of AI-relatedness — same false-positive-tolerant design as the module search. |
-| `repo.packagist.org` p2 files | Same Composer v2 p2 shape as packages.drupal.org's, but has a real `time` field — no datestamp workaround needed. **Splits stable/tagged releases from dev/branch snapshots into separate files** (`{name}.json` vs `{name}~dev.json`) — a dev-only package returns an empty version list from the main URL; both must be fetched and merged. |
+| `repo.packagist.org` p2 files | Same minified Composer v2 p2 shape as packages.drupal.org's, but has a real `time` field — no datestamp workaround needed. **Splits stable/tagged releases from dev/branch snapshots into separate files** (`{name}.json` vs `{name}~dev.json`) — a dev-only package returns an empty version list from the main URL; both must be fetched and merged. |
 | `git.drupalcode.org` recipe.yml | Fixed filename (`recipe.yml`, not `{name}.info.yml`). Composer `"x.y-dev"` version strings are NOT real git refs — GitLab serves the underlying branch (e.g. `"1.x"`) with the `-dev` suffix stripped. Both the `name:` (label) and `description:` keys are read from this one file — recipe.yml is the **only** source for the recipe description. |
 | curated YAML (`ai_dashboard_recommended_recipes.yml`) | Hand-maintained, not authoritative — every name still goes through full p2 verification. Catches at least one recipe (`drupal_cms_ai`) absent from the ecosystem page. |
 | `packagist.org` stats API | `packagist.org/packages/drupal/{name}.json` → `package.downloads.total` (downloads) and `package.favers` (stars). Both values come from the same response; no second request is made. Only called for recipes (not modules). Returns HTTP 404 for packages not on main Packagist — but only verified recipes are queried here, so 404s shouldn't occur in practice. |
@@ -554,7 +574,16 @@ replacement; use `render_html.py` directly.)
 - Combined modules filter: row visible when `nameMatches(row) AND
   stabChecked.has(stability) AND secChecked.has(security) AND catMatch`, where
   `catMatch` is **match-any** — true when at least one of the row's categories
-  is checked (or the row has none). Recipes filter = `nameMatches AND catMatch`.
+  is checked (or the row has none). Recipes filter = `nameMatches AND coreMatch
+  AND catMatch`.
+- **Drupal core filter (both tabs):** `.core-cb` checkboxes (one per
+  `payload["drupal_versions"]` major, all checked by default) under a
+  "Drupal:" label, scoped per panel (`#panel-modules .core-cb` /
+  `#panel-recipes .core-cb`). Rows carry `data-core="10|11"`. `coreMatch` is
+  **match-any** (`coreMatches(row, checkedCore(panelSel))`): a row stays
+  visible while at least one of its majors is checked, so unchecking 10 and 11
+  leaves the D12-ready projects. Rows from results.json files predating
+  `core_versions` fall back to the payload's `drupal_versions` (always visible).
 - **Tabbed Modules/Recipes interface:** two `.tab-btn` buttons toggle two
   `.tab-panel` divs (`#panel-modules`, `#panel-recipes`), each with its own
   `<table>`/`<tbody>` (`#tbl-modules`/`#tbody-modules`,
@@ -565,14 +594,15 @@ replacement; use `render_html.py` directly.)
   factored into a `makeSorter(theadSel, tbodySel)` factory shared by both
   tables — that logic is genuinely identical. The **filter** logic is
   deliberately *not* shared: `applyModulesFilter()` does
-  name+stability+security+category, `applyRecipesFilter()` does name+category —
+  name+stability+security+core+category, `applyRecipesFilter()` does
+  name+core+category —
   forcing the simpler recipes filter through the modules' shape would add
   pointless conditionals to already-tested code.
-- The modules table defaults to sorting by usage (col 4) descending on load
-  (`modulesSorter.sortTable(4, 'num')`), matching the row order the Python side
-  already produced. The recipes table defaults to Packagist downloads (col 3)
-  descending (`recipesSorter.sortTable(3, 'num')`). The Categories column is
-  col 5 in both tables — appended last, so these indices are unchanged.
+- The modules table defaults to sorting by usage (col 5) descending on load
+  (`modulesSorter.sortTable(5, 'num')`), matching the row order the Python side
+  already produced. The recipes table defaults to Packagist downloads (col 4)
+  descending (`recipesSorter.sortTable(4, 'num')`). Inserting a column before
+  these means updating both calls.
 
 Design notes for `render_html.py`:
 - CSS and JS are stored as regular Python string variables (not f-strings) to
@@ -585,17 +615,23 @@ Design notes for `render_html.py`:
     part of `data-val`, so it never affects sorting or filtering (the machine
     name is not its own column — it's the link's `title` attribute)
   - Version (col 1): raw semver string; `""` for missing (sorts to bottom)
-  - Released (col 2): `YYYY-MM-DD` string; `""` for `"—"` (sorts to bottom)
-  - Security coverage (col 3): `"1"`/`"0"`, sorted numerically
-  - Drupal.org usage (col 4): integer as string; `""` for unknown (treated as -Infinity)
-  - Categories (col 5): the categories joined into one string; sorts as text
+  - Core (col 2): highest supported major as string (e.g. `"12"`), so sorting
+    groups the newest-core-ready projects; `""` when none
+  - Released (col 3): `YYYY-MM-DD` string; `""` for `"—"` (sorts to bottom)
+  - Security coverage (col 4): `"1"`/`"0"`, sorted numerically
+  - Drupal.org usage (col 5): integer as string; `""` for unknown (treated as -Infinity)
+  - Trend (col 6): signed percent as string; `""` when missing
+  - drupal/ai (col 7, `--full-ecosystem` only): `"1"`/`"0"`
+  - Categories (col 7, or 8 with `--full-ecosystem`): the categories joined into one string; sorts as text
 - Recipe table `data-val` attributes:
   - Label (col 0): plain text (description sub-line excluded, same as modules)
   - Version (col 1): raw semver string; `""` for missing
-  - Released (col 2): `YYYY-MM-DD` string; `""` for `"—"`
-  - Packagist downloads (col 3): integer as string; `""` for unknown (treated as -Infinity)
-  - Packagist stars (col 4): integer as string; `""` for unknown (treated as -Infinity)
-  - Categories (col 5): the categories joined into one string; sorts as text
+  - Core (col 2): highest supported major, same as modules
+  - Released (col 3): `YYYY-MM-DD` string; `""` for `"—"`
+  - Packagist downloads (col 4): integer as string; `""` for unknown (treated as -Infinity)
+  - Trend (col 5): signed percent as string; `""` when missing
+  - Packagist stars (col 6): integer as string; `""` for unknown (treated as -Infinity)
+  - Categories (col 7): the categories joined into one string; sorts as text
 - Sort state is tracked with `sortCol` (column index, -1 = none) and
   `sortDir` (1 = asc, -1 = desc). First click on a text column → ascending;
   first click on a numeric column → descending. Re-click reverses. Default
@@ -765,7 +801,8 @@ column shifts from `"4"` to `"5"` (Categories `"5"`→`"6"`) — but Usage stays
 `data-col="4"` and Downloads stays `data-col="3"` (Trend is inserted *after*
 them), so the JS initial-sort calls
 (`modulesSorter.sortTable(4, 'num')`, `recipesSorter.sortTable(3, 'num')`)
-need no change. Trend's `data-val` is the signed percent as a string (`""`
+needed no change at the time. (The later Core column, inserted after Version,
+did shift them — see the HTML section for current indices.) Trend's `data-val` is the signed percent as a string (`""`
 when missing), which the existing generic sorter already treats as
 `-Infinity` — no sorter changes needed either.
 
@@ -792,7 +829,7 @@ The payload is written after the sort step:
 ```json
 {
   "generated":         "2026-06-22",
-  "drupal_versions":   [10, 11],
+  "drupal_versions":   [10, 11, 12],
   "modules": [
     {
       "machine_name":     "drupal/ai_provider_openai",
@@ -804,6 +841,8 @@ The payload is written after the sort step:
       "usage":            13133,
       "security_covered": true,
       "stability":        "stable",
+      "core_versions":    [10, 11],
+      "core_constraint":  "^10.3 || ^11",
       "categories":       ["Cloud Providers"]
     }
   ],
@@ -816,6 +855,8 @@ The payload is written after the sort step:
       "version":      "1.1.0",
       "release_date": "2026-02-12",
       "stability":    "stable",
+      "core_versions":   [11],
+      "core_constraint": "^11.2",
       "downloads":    1234,
       "stars":        56,
       "categories":   ["Media", "Search"]
@@ -854,6 +895,12 @@ last), then alphabetically by `label` as a tiebreaker:
 - `stability` is computed by `detect_stability(version)` in the main script using
   `_STABILITY_RE = re.compile(r'-(?P<level>alpha|beta|rc|dev)', re.IGNORECASE)`.
   Empty/missing version strings default to `"stable"`.
+- `core_versions` is the sorted list of `TARGET_VERSIONS` majors the chosen
+  release's `drupal/core` constraint allows (`_core_majors()`), e.g. `[10, 11]`;
+  `core_constraint` is that raw constraint string, or `null` when the release
+  has none (then `core_versions` is every target). Both on module and recipe
+  rows. `markdown` shows them as a Core column (`_core_cell()`, constraint as a
+  `<span title>` with `|` entity-escaped); HTML as the Core column + filter.
 - `categories` is a **list** (multiple allowed) computed by
   `detect_categories(label, description, machine_name)` and applied to the whole
   payload by `apply_categories(payload)` just before the JSON is written.
@@ -863,7 +910,8 @@ last), then alphabetically by `label` as a tiebreaker:
 Old `results.json` files without the `stability` field are handled gracefully
 in `render_html.py` via `r.get("stability", "stable")`, files predating the
 `description` field via `r.get("description")`, and files predating the
-`categories` field via `r.get("categories", [])` (renders no category cell) —
+`categories` field via `r.get("categories", [])` (renders no category cell),
+and files predating `core_versions` via the payload's `drupal_versions` —
 all in both renderers. Older files predating the
 `label`/`machine_name`(composer-name)/`security_covered` fields are
 **not** compatible with the current renderers — re-run the main script to
