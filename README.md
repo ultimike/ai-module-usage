@@ -2,6 +2,23 @@
 
 `drupal_ai_dependents.py` finds all Drupal modules and recipes that declare a **hard dependency on [drupal/ai](https://www.drupal.org/project/ai)** in their `composer.json`, and writes the results as JSON. Passing **`--full-ecosystem`** widens that to also include every module filed under drupal.org's **"Artificial Intelligence (AI)" project category**, which qualifies by tag alone even without the composer dependency; those runs record which case applies per module in a `requires_ai` boolean and add a filterable `drupal/ai` column (✓ / —) to both renderers. Without the flag the output contains only drupal/ai dependents and both renderers say so in the header. It only collects and verifies data — `render_md.py` and `render_html.py` turn that JSON into a markdown file or a self-contained HTML page, each with two tables: Modules (label, machine name, URL, latest release version, release date, security advisory coverage, active install count, usage trend) and Recipes (same first four columns plus Packagist download count, a downloads trend, and star count — no Drupal.org security coverage or usage, since those don't exist for recipes, see [Recipes](#recipes) below). Each project's own description (from its `*.info.yml` / `recipe.yml` `description:` key) is shown as a muted second line beneath its label in both tables. Every module and recipe is also tagged with one or more **categories** (Tool, Cloud Providers, Search, Chat, Agents, Media, …) derived from its name and description — both renderers show these in a Categories column, and the HTML page lets you filter by them. Every run of `drupal_ai_dependents.py` also appends a usage/downloads data point to a separate `history.json`, which both renderers read to show a **Trend** column (arrow + percent change since the previous run) — see [History and the Trend column](#history-and-the-trend-column) below.
 
+## Sources
+
+This project brings in a number of sources in order to construct the list of modules and recipes.
+
+**Modules**
+
+- [AI ecosystem page](https://www.drupal.org/project/ai/ecosystem)
+- [packages.drupal.org search for "ai"](https://packages.drupal.org/8/search.json?s=ai)
+- [drupal.org AI project category](https://www.drupal.org/api-d7/node.json?type=project_module&taxonomy_vocabulary_3=204588) (when `--full-ecosystem` is enabled)
+
+**Recipes**
+
+- [Packagist search for "ai" recipes](https://packagist.org/search.json?type=drupal-recipe&q=ai)
+- [AI Dashboard's recommended recipes](https://git.drupalcode.org/project/ai_dashboard/-/raw/1.0.x/ai_dashboard_recommended_recipes.yml)
+
+See [How it works](#how-it-works) for details.
+
 ## Requirements
 
 - Python 3.10 or later
