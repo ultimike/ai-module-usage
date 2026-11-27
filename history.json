@@ -31,6 +31,10 @@
     {
       "date": "2026-11-08",
       "usage": 17306
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 15151
     }
   ],
   "drupal/ai_image_alt_text": [
@@ -65,6 +69,10 @@
     {
       "date": "2026-11-08",
       "usage": 14467
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 12465
     }
   ],
   "drupal/ai_agents": [
@@ -99,6 +107,10 @@
     {
       "date": "2026-11-08",
       "usage": 13897
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 11909
     }
   ],
   "drupal/ai_provider_anthropic": [
@@ -133,6 +145,10 @@
     {
       "date": "2026-11-08",
       "usage": 11654
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 9616
     }
   ],
   "drupal/ai_provider_amazeeio": [
@@ -167,6 +183,10 @@
     {
       "date": "2026-11-08",
       "usage": 8792
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6255
     }
   ],
   "drupal/ai_dashboard": [
@@ -201,6 +221,10 @@
     {
       "date": "2026-11-08",
       "usage": 8569
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6551
     }
   ],
   "drupal/ai_provider_azure": [
@@ -235,6 +259,10 @@
     {
       "date": "2026-11-08",
       "usage": 1720
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1784
     }
   ],
   "drupal/gemini_provider": [
@@ -269,6 +297,10 @@
     {
       "date": "2026-11-08",
       "usage": 2178
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2327
     }
   ],
   "drupal/ai_tmgmt": [
@@ -303,6 +335,10 @@
     {
       "date": "2026-11-08",
       "usage": 2546
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1245
     }
   ],
   "drupal/ai_translate": [
@@ -337,6 +373,10 @@
     {
       "date": "2026-11-08",
       "usage": 11369
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10827
     }
   ],
   "drupal/ai_integration_eca": [
@@ -371,6 +411,10 @@
     {
       "date": "2026-11-08",
       "usage": 2035
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1210
     }
   ],
   "drupal/ai_context": [
@@ -405,6 +449,10 @@
     {
       "date": "2026-11-08",
       "usage": 2171
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1513
     }
   ],
   "drupal/ai_seo": [
@@ -439,6 +487,10 @@
     {
       "date": "2026-11-08",
       "usage": 853
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 942
     }
   ],
   "drupal/ai_vdb_provider_milvus": [
@@ -473,6 +525,10 @@
     {
       "date": "2026-11-08",
       "usage": 2328
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1495
     }
   ],
   "drupal/ai_provider_litellm": [
@@ -507,6 +563,10 @@
     {
       "date": "2026-11-08",
       "usage": 689
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 817
     }
   ],
   "drupal/metatag_ai": [
@@ -541,6 +601,10 @@
     {
       "date": "2026-11-08",
       "usage": 680
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 704
     }
   ],
   "drupal/ai_figma": [
@@ -575,6 +639,10 @@
     {
       "date": "2026-11-08",
       "usage": 1805
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 971
     }
   ],
   "drupal/ai_agent_modes": [
@@ -609,6 +677,10 @@
     {
       "date": "2026-11-08",
       "usage": 1795
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1081
     }
   ],
   "drupal/varbase_ai_figma": [
@@ -643,6 +715,10 @@
     {
       "date": "2026-11-08",
       "usage": 1779
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 643
     }
   ],
   "drupal/ai_search": [
@@ -677,6 +753,10 @@
     {
       "date": "2026-11-08",
       "usage": 2219
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1937
     }
   ],
   "drupal/ai_provider_ollama": [
@@ -711,6 +791,10 @@
     {
       "date": "2026-11-08",
       "usage": 534
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 728
     }
   ],
   "drupal/ai_vdb_provider_pinecone": [
@@ -745,6 +829,10 @@
     {
       "date": "2026-11-08",
       "usage": 423
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 402
     }
   ],
   "drupal/ai_content_suggestions": [
@@ -779,6 +867,10 @@
     {
       "date": "2026-11-08",
       "usage": 10043
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10117
     }
   ],
   "drupal/ai_provider_deepseek": [
@@ -813,6 +905,10 @@
     {
       "date": "2026-11-08",
       "usage": 164
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 154
     }
   ],
   "drupal/ai_vdb_provider_postgres": [
@@ -847,6 +943,10 @@
     {
       "date": "2026-11-08",
       "usage": 352
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 563
     }
   ],
   "drupal/ai_media_image": [
@@ -881,6 +981,10 @@
     {
       "date": "2026-11-08",
       "usage": 381
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 363
     }
   ],
   "drupal/ai_provider_aws_bedrock": [
@@ -915,6 +1019,10 @@
     {
       "date": "2026-11-08",
       "usage": 269
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 267
     }
   ],
   "drupal/ai_provider_groq": [
@@ -949,6 +1057,10 @@
     {
       "date": "2026-11-08",
       "usage": 425
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 301
     }
   ],
   "drupal/ai_ckeditor": [
@@ -983,6 +1095,10 @@
     {
       "date": "2026-11-08",
       "usage": 1095
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1435
     }
   ],
   "drupal/ai_provider_mistral": [
@@ -1017,6 +1133,10 @@
     {
       "date": "2026-11-08",
       "usage": 216
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 581
     }
   ],
   "drupal/ai_provider_deepl": [
@@ -1051,6 +1171,10 @@
     {
       "date": "2026-11-08",
       "usage": 233
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 248
     }
   ],
   "drupal/ai_validations": [
@@ -1085,6 +1209,10 @@
     {
       "date": "2026-11-08",
       "usage": 9593
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 9265
     }
   ],
   "drupal/ckeditor_ai_agent": [
@@ -1119,6 +1247,10 @@
     {
       "date": "2026-11-08",
       "usage": 208
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 166
     }
   ],
   "drupal/ai_provider_alibabacloud": [
@@ -1153,6 +1285,10 @@
     {
       "date": "2026-11-08",
       "usage": 10
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 12
     }
   ],
   "drupal/elevenlabs": [
@@ -1187,6 +1323,10 @@
     {
       "date": "2026-11-08",
       "usage": 935
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 700
     }
   ],
   "drupal/ai_provider_moonshot": [
@@ -1221,6 +1361,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/ai_provider_openrouter": [
@@ -1255,6 +1399,10 @@
     {
       "date": "2026-11-08",
       "usage": 236
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 396
     }
   ],
   "drupal/ai_logging": [
@@ -1289,6 +1437,10 @@
     {
       "date": "2026-11-08",
       "usage": 9838
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10674
     }
   ],
   "drupal/ai_summarize_document": [
@@ -1323,6 +1475,10 @@
     {
       "date": "2026-11-08",
       "usage": 145
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 117
     }
   ],
   "drupal/ai_provider_google_vertex": [
@@ -1357,6 +1513,10 @@
     {
       "date": "2026-11-08",
       "usage": 115
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 158
     }
   ],
   "drupal/ai_vdb_provider_mariadb": [
@@ -1391,6 +1551,10 @@
     {
       "date": "2026-11-08",
       "usage": 1575
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 791
     }
   ],
   "drupal/ai_search_block": [
@@ -1425,6 +1589,10 @@
     {
       "date": "2026-11-08",
       "usage": 146
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 267
     }
   ],
   "drupal/ai_vdb_provider_azure_ai_search": [
@@ -1459,6 +1627,10 @@
     {
       "date": "2026-11-08",
       "usage": 1725
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1871
     }
   ],
   "drupal/ai_content_strategy": [
@@ -1493,6 +1665,10 @@
     {
       "date": "2026-11-08",
       "usage": 134
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 106
     }
   ],
   "drupal/ai_provider_huggingface": [
@@ -1527,6 +1703,10 @@
     {
       "date": "2026-11-08",
       "usage": 73
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 112
     }
   ],
   "drupal/tts": [
@@ -1561,6 +1741,10 @@
     {
       "date": "2026-11-08",
       "usage": 110
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 122
     }
   ],
   "drupal/ai_translate_paragraph_asymetric": [
@@ -1595,6 +1779,10 @@
     {
       "date": "2026-11-08",
       "usage": 118
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 101
     }
   ],
   "drupal/analyze_ai_sentiments": [
@@ -1629,6 +1817,10 @@
     {
       "date": "2026-11-08",
       "usage": 119
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 86
     }
   ],
   "drupal/ai_translate_textfield": [
@@ -1659,6 +1851,10 @@
     {
       "date": "2026-11-08",
       "usage": 54
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 50
     }
   ],
   "drupal/analyze_ai_brand_voice": [
@@ -1693,6 +1889,10 @@
     {
       "date": "2026-11-08",
       "usage": 121
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 86
     }
   ],
   "drupal/analyze_ai_content_marketing_audit": [
@@ -1727,6 +1927,10 @@
     {
       "date": "2026-11-08",
       "usage": 117
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 86
     }
   ],
   "drupal/ai_provider_anythingllm": [
@@ -1761,6 +1965,10 @@
     {
       "date": "2026-11-08",
       "usage": 52
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 49
     }
   ],
   "drupal/ai_provider_dxpr": [
@@ -1795,6 +2003,10 @@
     {
       "date": "2026-11-08",
       "usage": 115
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 86
     }
   ],
   "drupal/ai_provider_langdock": [
@@ -1829,6 +2041,10 @@
     {
       "date": "2026-11-08",
       "usage": 49
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 54
     }
   ],
   "drupal/search_api_solr_dense_vector": [
@@ -1863,6 +2079,10 @@
     {
       "date": "2026-11-08",
       "usage": 94
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 81
     }
   ],
   "drupal/ai_provider_lmstudio": [
@@ -1897,6 +2117,10 @@
     {
       "date": "2026-11-08",
       "usage": 64
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 203
     }
   ],
   "drupal/analyze_ai_content_security_audit": [
@@ -1931,6 +2155,10 @@
     {
       "date": "2026-11-08",
       "usage": 111
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 78
     }
   ],
   "drupal/ai_provider_openai_compatible": [
@@ -1965,6 +2193,10 @@
     {
       "date": "2026-11-08",
       "usage": 68
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 206
     }
   ],
   "drupal/ai_vdb_provider_sqlite": [
@@ -1999,6 +2231,10 @@
     {
       "date": "2026-11-08",
       "usage": 55
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 46
     }
   ],
   "drupal/varbase_ai": [
@@ -2033,6 +2269,10 @@
     {
       "date": "2026-11-08",
       "usage": 39
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 33
     }
   ],
   "drupal/ai_usage_limits": [
@@ -2067,6 +2307,10 @@
     {
       "date": "2026-11-08",
       "usage": 33
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 23
     }
   ],
   "drupal/ai_vdb_provider_qdrant": [
@@ -2101,6 +2345,10 @@
     {
       "date": "2026-11-08",
       "usage": 90
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 256
     }
   ],
   "drupal/ai_provider_x": [
@@ -2135,6 +2383,10 @@
     {
       "date": "2026-11-08",
       "usage": 28
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 21
     }
   ],
   "drupal/ai_simple_pdf_to_text": [
@@ -2169,6 +2421,10 @@
     {
       "date": "2026-11-08",
       "usage": 30
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 26
     }
   ],
   "drupal/ai_editoria11y": [
@@ -2203,6 +2459,10 @@
     {
       "date": "2026-11-08",
       "usage": 25
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 57
     }
   ],
   "drupal/feeds_tamper_ai": [
@@ -2237,6 +2497,10 @@
     {
       "date": "2026-11-08",
       "usage": 37
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 32
     }
   ],
   "drupal/ai_agents_debugger": [
@@ -2271,6 +2535,10 @@
     {
       "date": "2026-11-08",
       "usage": 22
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 37
     }
   ],
   "drupal/ai_rag_search_chat": [
@@ -2305,6 +2573,10 @@
     {
       "date": "2026-11-08",
       "usage": 19
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 27
     }
   ],
   "drupal/ai_auto_reference": [
@@ -2339,6 +2611,10 @@
     {
       "date": "2026-11-08",
       "usage": 51
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 45
     }
   ],
   "drupal/fireworksai": [
@@ -2373,6 +2649,10 @@
     {
       "date": "2026-11-08",
       "usage": 24
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 17
     }
   ],
   "drupal/node_ai_assistant": [
@@ -2407,6 +2687,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_provider_acquia": [
@@ -2441,6 +2725,10 @@
     {
       "date": "2026-11-08",
       "usage": 56
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 59
     }
   ],
   "drupal/ai_metering": [
@@ -2475,6 +2763,10 @@
     {
       "date": "2026-11-08",
       "usage": 100
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 289
     }
   ],
   "drupal/agui": [
@@ -2509,6 +2801,10 @@
     {
       "date": "2026-11-08",
       "usage": 34
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 164
     }
   ],
   "drupal/ai_schemadotorg_jsonld": [
@@ -2543,6 +2839,10 @@
     {
       "date": "2026-11-08",
       "usage": 13
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 11
     }
   ],
   "drupal/ai_provider_vllm": [
@@ -2577,6 +2877,10 @@
     {
       "date": "2026-11-08",
       "usage": 18
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 16
     }
   ],
   "drupal/ai_provider_nanobanana": [
@@ -2611,6 +2915,10 @@
     {
       "date": "2026-11-08",
       "usage": 23
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 21
     }
   ],
   "drupal/openai_batch": [
@@ -2645,6 +2953,10 @@
     {
       "date": "2026-11-08",
       "usage": 13
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/mcp_client": [
@@ -2679,6 +2991,10 @@
     {
       "date": "2026-11-08",
       "usage": 27
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 41
     }
   ],
   "drupal/chat_messenger": [
@@ -2713,6 +3029,10 @@
     {
       "date": "2026-11-08",
       "usage": 20
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 28
     }
   ],
   "drupal/ai_provider_yandex": [
@@ -2747,6 +3067,10 @@
     {
       "date": "2026-11-08",
       "usage": 16
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 21
     }
   ],
   "drupal/ai_related_content": [
@@ -2781,6 +3105,10 @@
     {
       "date": "2026-11-08",
       "usage": 21
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 13
     }
   ],
   "drupal/ai_webform_guard": [
@@ -2815,6 +3143,10 @@
     {
       "date": "2026-11-08",
       "usage": 23
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 11
     }
   ],
   "drupal/ai_automator_extractor": [
@@ -2849,6 +3181,10 @@
     {
       "date": "2026-11-08",
       "usage": 11
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6
     }
   ],
   "drupal/ai_content_advisor": [
@@ -2883,6 +3219,10 @@
     {
       "date": "2026-11-08",
       "usage": 12
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10
     }
   ],
   "drupal/ai_ckeditor_extras": [
@@ -2917,6 +3257,10 @@
     {
       "date": "2026-11-08",
       "usage": 9
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/ai_provider_browser": [
@@ -2951,6 +3295,10 @@
     {
       "date": "2026-11-08",
       "usage": 28
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 22
     }
   ],
   "drupal/ai_translate_lb_asymmetric": [
@@ -2985,6 +3333,10 @@
     {
       "date": "2026-11-08",
       "usage": 9
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10
     }
   ],
   "drupal/vais": [
@@ -3019,6 +3371,10 @@
     {
       "date": "2026-11-08",
       "usage": 21
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 15
     }
   ],
   "drupal/ai_llms_txt_generator": [
@@ -3087,6 +3443,10 @@
     {
       "date": "2026-11-08",
       "usage": 20
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 23
     }
   ],
   "drupal/ai_translate_plus": [
@@ -3121,6 +3481,10 @@
     {
       "date": "2026-11-08",
       "usage": 12
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/ai_provider_dropsolidai": [
@@ -3154,6 +3518,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 10
+    },
+    {
+      "date": "2026-11-27",
       "usage": 10
     }
   ],
@@ -3189,6 +3557,10 @@
     {
       "date": "2026-11-08",
       "usage": 17
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 11
     }
   ],
   "drupal/flowdrop_ai_provider": [
@@ -3223,6 +3595,10 @@
     {
       "date": "2026-11-08",
       "usage": 300
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 373
     }
   ],
   "drupal/flowdrop_ui_agents": [
@@ -3257,6 +3633,10 @@
     {
       "date": "2026-11-08",
       "usage": 5
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 12
     }
   ],
   "drupal/ai_agent_memory": [
@@ -3291,6 +3671,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/ai_content_lifecycle": [
@@ -3324,6 +3708,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 12
+    },
+    {
+      "date": "2026-11-27",
       "usage": 12
     }
   ],
@@ -3359,6 +3747,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10
     }
   ],
   "drupal/ai_vdb_provider_opensearch": [
@@ -3393,6 +3785,10 @@
     {
       "date": "2026-11-08",
       "usage": 65
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 330
     }
   ],
   "drupal/rag_search": [
@@ -3427,6 +3823,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_budget_control": [
@@ -3460,6 +3860,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 3
+    },
+    {
+      "date": "2026-11-27",
       "usage": 3
     }
   ],
@@ -3495,6 +3899,10 @@
     {
       "date": "2026-11-08",
       "usage": 7
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 9
     }
   ],
   "drupal/ai_content_chat": [
@@ -3529,6 +3937,10 @@
     {
       "date": "2026-11-08",
       "usage": 7
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 10
     }
   ],
   "drupal/ai_simple_provider_installer": [
@@ -3563,6 +3975,10 @@
     {
       "date": "2026-11-08",
       "usage": 15
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 56
     }
   ],
   "drupal/ai_chatblock": [
@@ -3597,6 +4013,10 @@
     {
       "date": "2026-11-08",
       "usage": 16
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 17
     }
   ],
   "drupal/smartlinker_ai": [
@@ -3631,6 +4051,10 @@
     {
       "date": "2026-11-08",
       "usage": 12
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 14
     }
   ],
   "drupal/media_accessibility_audit": [
@@ -3664,6 +4088,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 5
+    },
+    {
+      "date": "2026-11-27",
       "usage": 5
     }
   ],
@@ -3699,6 +4127,10 @@
     {
       "date": "2026-11-08",
       "usage": 12
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 8
     }
   ],
   "drupal/ai_document_ocr": [
@@ -3733,6 +4165,10 @@
     {
       "date": "2026-11-08",
       "usage": 11
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 144
     }
   ],
   "drupal/ai_migrate": [
@@ -3767,6 +4203,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/metatag_ai_generate": [
@@ -3801,6 +4241,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/pexels_ai": [
@@ -3835,6 +4279,10 @@
     {
       "date": "2026-11-08",
       "usage": 5
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/nanobanana_editor": [
@@ -3869,6 +4317,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_audio_field": [
@@ -3903,6 +4355,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 3
     }
   ],
   "drupal/ai_audio_generator": [
@@ -3937,6 +4393,10 @@
     {
       "date": "2026-11-08",
       "usage": 24
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 28
     }
   ],
   "drupal/ai_editor_actions": [
@@ -3971,6 +4431,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 3
     }
   ],
   "drupal/ai_workspace": [
@@ -4005,6 +4469,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_vdb_provider_elasticsearch": [
@@ -4038,6 +4506,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 2
+    },
+    {
+      "date": "2026-11-27",
       "usage": 2
     }
   ],
@@ -4073,6 +4545,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/metatag_ai_bulk_update": [
@@ -4103,6 +4579,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 9
     }
   ],
   "drupal/ai_rag_api": [
@@ -4133,6 +4613,10 @@
     {
       "date": "2026-11-08",
       "usage": 28
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 21
     }
   ],
   "drupal/ai_jsonld_schema_generator": [
@@ -4167,6 +4651,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6
     }
   ],
   "drupal/ai_costs": [
@@ -4200,6 +4688,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -4235,6 +4727,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/ai_provider_apertus": [
@@ -4269,6 +4765,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 3
     }
   ],
   "drupal/ai_provider_bifrost": [
@@ -4303,6 +4803,10 @@
     {
       "date": "2026-11-08",
       "usage": 15
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 17
     }
   ],
   "drupal/ai_provider_zhipuai": [
@@ -4337,6 +4841,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_single_page_importer": [
@@ -4370,6 +4878,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -4405,6 +4917,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/workers_ai_provider": [
@@ -4439,6 +4955,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_automator_google_vision": [
@@ -4473,6 +4993,10 @@
     {
       "date": "2026-11-08",
       "usage": 7
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_migration": [
@@ -4507,6 +5031,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_seo_link_advisor": [
@@ -4541,6 +5069,10 @@
     {
       "date": "2026-11-08",
       "usage": 5
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/ai_webform_sentiment": [
@@ -4575,6 +5107,10 @@
     {
       "date": "2026-11-08",
       "usage": 7
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 3
     }
   ],
   "drupal/cortex": [
@@ -4608,6 +5144,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 1
+    },
+    {
+      "date": "2026-11-27",
       "usage": 1
     }
   ],
@@ -4643,6 +5183,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_provider_quant_cloud": [
@@ -4677,6 +5221,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/aidmi": [
@@ -4710,6 +5258,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 1
+    },
+    {
+      "date": "2026-11-27",
       "usage": 1
     }
   ],
@@ -4745,6 +5297,10 @@
     {
       "date": "2026-11-08",
       "usage": 8
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/auphonic": [
@@ -4775,6 +5331,10 @@
     {
       "date": "2026-11-08",
       "usage": 9
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/openai_image_for_drupal": [
@@ -4809,6 +5369,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/aia": [
@@ -4843,6 +5407,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/ai_vdb_provider_openai": [
@@ -4877,6 +5445,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/ai_decoupled": [
@@ -4911,6 +5483,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/ai_empathy": [
@@ -4945,6 +5521,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_image_filename": [
@@ -4978,6 +5558,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5013,6 +5597,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_metatag_generator": [
@@ -5047,6 +5635,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/torneo_ai_language": [
@@ -5080,6 +5672,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5115,6 +5711,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_provider_universal": [
@@ -5149,6 +5749,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 7
     }
   ],
   "drupal/ai_anthropic_provider_oauth": [
@@ -5183,6 +5787,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6
     }
   ],
   "drupal/module_scout": [
@@ -5216,6 +5824,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5251,6 +5863,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_answers": [
@@ -5285,6 +5901,10 @@
     {
       "date": "2026-11-08",
       "usage": 1562
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 889
     }
   ],
   "drupal/ai_image_studio": [
@@ -5318,6 +5938,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5353,6 +5977,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/ai_tool_get_ip_address": [
@@ -5386,6 +6014,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5421,6 +6053,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_agents_experimental_collection": [
@@ -5454,6 +6090,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5489,6 +6129,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_automators_agent": [
@@ -5523,6 +6167,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/ai_automator_pixabay": [
@@ -5556,6 +6204,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5591,6 +6243,10 @@
     {
       "date": "2026-11-08",
       "usage": 49
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 76
     }
   ],
   "drupal/ai_log_analysis": [
@@ -5624,6 +6280,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5659,6 +6319,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_monitoring": [
@@ -5692,6 +6356,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5727,6 +6395,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_pageindex": [
@@ -5760,6 +6432,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5795,6 +6471,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 46
     }
   ],
   "drupal/ai_playwright": [
@@ -5829,6 +6509,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 48
     }
   ],
   "drupal/ai_provider_baidu": [
@@ -5863,6 +6547,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_search_sc": [
@@ -5896,6 +6584,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5931,6 +6623,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/aivc": [
@@ -5964,6 +6660,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -5999,6 +6699,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_provider_assemblyai": [
@@ -6033,6 +6737,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 2
     }
   ],
   "drupal/better_ai_report": [
@@ -6066,6 +6774,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6101,6 +6813,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_provider_cloudflare_gateway": [
@@ -6135,6 +6851,10 @@
     {
       "date": "2026-11-08",
       "usage": 4
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6
     }
   ],
   "drupal/ai_recipe_generator": [
@@ -6168,6 +6888,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6203,6 +6927,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/drupaleasy_ai_tools": [
@@ -6237,6 +6965,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_compliance_report": [
@@ -6270,6 +7002,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6305,6 +7041,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_automator_html_to_markdown": [
@@ -6338,6 +7078,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6373,6 +7117,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/smart_paste": [
@@ -6407,6 +7155,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/twig_to_sdc": [
@@ -6440,6 +7192,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6475,6 +7231,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_inspector": [
@@ -6508,6 +7268,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6611,6 +7375,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_plus": [
@@ -6644,6 +7412,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6679,6 +7451,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/apex_ai": [
@@ -6712,6 +7488,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6747,6 +7527,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_watchdog_analyst": [
@@ -6781,6 +7565,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_site_manager": [
@@ -6814,6 +7602,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -6849,6 +7641,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_provider_bytedance": [
@@ -6883,6 +7679,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_content_type_generator": [
@@ -6912,6 +7712,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 1
+    },
+    {
+      "date": "2026-11-27",
       "usage": 1
     }
   ],
@@ -6947,6 +7751,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_rag_service": [
@@ -6981,6 +7789,10 @@
     {
       "date": "2026-11-08",
       "usage": 5
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/ai_revision_assistant": [
@@ -7014,6 +7826,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7049,6 +7865,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_grounding": [
@@ -7083,6 +7903,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/ai_provider_mittwald": [
@@ -7116,6 +7940,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": 1
+    },
+    {
+      "date": "2026-11-27",
       "usage": 1
     }
   ],
@@ -7151,6 +7979,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_vdb_provider_vectorize": [
@@ -7184,6 +8016,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7219,6 +8055,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/thunder_ai_prompt_management": [
@@ -7252,6 +8092,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7287,6 +8131,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/did_ai_provider": [
@@ -7321,6 +8169,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/chirp_ai_photo_alt_text": [
@@ -7354,6 +8206,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7389,6 +8245,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/smart_table_generator": [
@@ -7422,6 +8282,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7457,6 +8321,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_rag_search_summary": [
@@ -7490,6 +8358,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7525,6 +8397,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/webform_document_field_builder_ai": [
@@ -7558,6 +8434,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7593,6 +8473,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_content_factory": [
@@ -7626,6 +8510,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7661,6 +8549,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_agents_ossa": [
@@ -7694,6 +8586,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7729,6 +8625,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/grok": [
@@ -7763,6 +8663,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_content_assistant": [
@@ -7797,6 +8701,10 @@
     {
       "date": "2026-11-08",
       "usage": 12
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 11
     }
   ],
   "drupal/ai_provider_siliconflow": [
@@ -7831,6 +8739,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_upgrade_assistant": [
@@ -7864,6 +8776,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7899,6 +8815,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/config_navigator": [
@@ -7932,6 +8852,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -7967,6 +8891,10 @@
     {
       "date": "2026-11-08",
       "downloads": 225687
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 234547
     }
   ],
   "drupal/varbase_ai_editor_assistant": [
@@ -8001,6 +8929,10 @@
     {
       "date": "2026-11-08",
       "downloads": 35828
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 38853
     }
   ],
   "drupal/varbase_ai_taxonomy_tagging": [
@@ -8035,6 +8967,10 @@
     {
       "date": "2026-11-08",
       "downloads": 35443
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 38459
     }
   ],
   "drupal/varbase_ai_image_alt": [
@@ -8069,6 +9005,10 @@
     {
       "date": "2026-11-08",
       "downloads": 35408
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 38411
     }
   ],
   "drupal/varbase_ai_agents": [
@@ -8103,6 +9043,10 @@
     {
       "date": "2026-11-08",
       "downloads": 23431
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 24939
     }
   ],
   "drupal/varbase_ai_default": [
@@ -8137,6 +9081,10 @@
     {
       "date": "2026-11-08",
       "downloads": 23953
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 26763
     }
   ],
   "drupal/ai_recipe_guardrails_prompt_safety": [
@@ -8171,6 +9119,10 @@
     {
       "date": "2026-11-08",
       "downloads": 14240
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 16532
     }
   ],
   "drupal/ai_recipe_guardrails_pii": [
@@ -8205,6 +9157,10 @@
     {
       "date": "2026-11-08",
       "downloads": 13759
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 15588
     }
   ],
   "drupal/varbase_ai_safety": [
@@ -8239,6 +9195,10 @@
     {
       "date": "2026-11-08",
       "downloads": 12371
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 14079
     }
   ],
   "drupal/varbase_ai_figma_base": [
@@ -8273,6 +9233,10 @@
     {
       "date": "2026-11-08",
       "downloads": 7110
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 8721
     }
   ],
   "drupal/ai_provider_amazeeio_recipe": [
@@ -8307,6 +9271,10 @@
     {
       "date": "2026-11-08",
       "downloads": 4089
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 4292
     }
   ],
   "drupal/ai_recipe_seo_optimizer": [
@@ -8341,6 +9309,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1875
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2030
     }
   ],
   "drupal/drupal_cms_ai_ckeditor": [
@@ -8375,6 +9347,10 @@
     {
       "date": "2026-11-08",
       "downloads": 808
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 812
     }
   ],
   "drupal/ai_recipe_image_classification": [
@@ -8409,6 +9385,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1520
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1645
     }
   ],
   "drupal/ai_recipe_content_classification": [
@@ -8443,6 +9423,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1288
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1404
     }
   ],
   "drupal/ai_recipe_validations_image_safety": [
@@ -8477,6 +9461,10 @@
     {
       "date": "2026-11-08",
       "downloads": 759
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 786
     }
   ],
   "drupal/ai_recipe_content_pre_moderation": [
@@ -8511,6 +9499,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1275
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1415
     }
   ],
   "drupal/ai_recipe_content_search_vector": [
@@ -8545,6 +9537,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1306
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1438
     }
   ],
   "drupal/ai_recipe_image_alt_text": [
@@ -8579,6 +9575,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1313
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1433
     }
   ],
   "drupal/ai_recipe_audio_transcription": [
@@ -8613,6 +9613,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1248
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1364
     }
   ],
   "drupal/ai_recipe_content_suggestions": [
@@ -8647,6 +9651,10 @@
     {
       "date": "2026-11-08",
       "downloads": 1253
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1369
     }
   ],
   "drupal/saplings_ai_mcp": [
@@ -8681,6 +9689,10 @@
     {
       "date": "2026-11-08",
       "downloads": 110
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 112
     }
   ],
   "drupal/thunder_ai": [
@@ -8715,6 +9727,10 @@
     {
       "date": "2026-11-08",
       "downloads": 204
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 240
     }
   ],
   "drupal/ai_ecosystem": [
@@ -8748,6 +9764,10 @@
     },
     {
       "date": "2026-11-08",
+      "downloads": 89
+    },
+    {
+      "date": "2026-11-27",
       "downloads": 89
     }
   ],
@@ -8783,6 +9803,10 @@
     {
       "date": "2026-11-08",
       "downloads": 79
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 80
     }
   ],
   "drupal/saplings_ai_ckeditor_experience": [
@@ -8816,6 +9840,10 @@
     },
     {
       "date": "2026-11-08",
+      "downloads": 48
+    },
+    {
+      "date": "2026-11-27",
       "downloads": 48
     }
   ],
@@ -8851,6 +9879,10 @@
     {
       "date": "2026-11-08",
       "downloads": 62
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 63
     }
   ],
   "drupal/ai_dev_recipe": [
@@ -8884,6 +9916,10 @@
     },
     {
       "date": "2026-11-08",
+      "downloads": 32
+    },
+    {
+      "date": "2026-11-27",
       "downloads": 32
     }
   ],
@@ -8919,6 +9955,10 @@
     {
       "date": "2026-11-08",
       "downloads": 25
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 25
     }
   ],
   "drupal/drupal_module_chatbot_recipe": [
@@ -8952,6 +9992,10 @@
     },
     {
       "date": "2026-11-08",
+      "downloads": 15
+    },
+    {
+      "date": "2026-11-27",
       "downloads": 15
     }
   ],
@@ -8987,6 +10031,10 @@
     {
       "date": "2026-11-08",
       "downloads": 10
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 11
     }
   ],
   "drupal/quiz_questions_by_eca_and_ai": [
@@ -9020,6 +10068,10 @@
     },
     {
       "date": "2026-11-08",
+      "downloads": 9
+    },
+    {
+      "date": "2026-11-27",
       "downloads": 9
     }
   ],
@@ -9055,6 +10107,10 @@
     {
       "date": "2026-11-08",
       "downloads": 927
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 1057
     }
   ],
   "drupal/ai_recipe_observability_views": [
@@ -9089,6 +10145,10 @@
     {
       "date": "2026-11-08",
       "downloads": 769
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 891
     }
   ],
   "drupal/ai_recipe_ckeditor": [
@@ -9123,6 +10183,10 @@
     {
       "date": "2026-11-08",
       "downloads": 756
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 874
     }
   ],
   "drupal/ai_recipe_comment_spam": [
@@ -9157,6 +10221,10 @@
     {
       "date": "2026-11-08",
       "downloads": 17
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 23
     }
   ],
   "drupal/ai_recipe_image_crop": [
@@ -9191,6 +10259,10 @@
     {
       "date": "2026-11-08",
       "downloads": 674
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 791
     }
   ],
   "drupal/govnl_cms_ai": [
@@ -9221,6 +10293,10 @@
     {
       "date": "2026-11-08",
       "downloads": 0
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2
     }
   ],
   "drupal/ai_content_review": [
@@ -9247,6 +10323,10 @@
     {
       "date": "2026-11-08",
       "usage": 1559
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 893
     }
   ],
   "drupal/ai_mautic": [
@@ -9273,6 +10353,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 3
     }
   ],
   "drupal/ai_provider_krea": [
@@ -9299,6 +10383,10 @@
     {
       "date": "2026-11-08",
       "usage": 1
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/webai": [
@@ -9325,6 +10413,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 46
     }
   ],
   "drupal/cxo_ai_content_editor": [
@@ -9346,6 +10438,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9369,6 +10465,10 @@
     {
       "date": "2026-11-08",
       "downloads": 161
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 227
     }
   ],
   "drupal/ai_vdb_provider_dynamodb": [
@@ -9386,6 +10486,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9405,6 +10509,10 @@
     {
       "date": "2026-11-08",
       "downloads": 0
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2
     }
   ],
   "drupal/display_builder_ai": [
@@ -9419,6 +10527,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 53
     }
   ],
   "drupal/ai_image": [
@@ -9433,6 +10545,10 @@
     {
       "date": "2026-11-08",
       "usage": 20
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 16
     }
   ],
   "drupal/ai_basic_chatbot": [
@@ -9447,6 +10563,10 @@
     {
       "date": "2026-11-08",
       "usage": 7
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_content_migrate": [
@@ -9461,6 +10581,10 @@
     {
       "date": "2026-11-08",
       "usage": 11
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 6
     }
   ],
   "drupal/ai_provider_typesafeai": [
@@ -9475,6 +10599,10 @@
     {
       "date": "2026-11-08",
       "usage": 6
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 12
     }
   ],
   "drupal/semantic_duplicates": [
@@ -9488,6 +10616,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9503,6 +10635,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 4
     }
   ],
   "drupal/ai_provider_nvidia": [
@@ -9517,6 +10653,10 @@
     {
       "date": "2026-11-08",
       "usage": 2
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_provider_typesafe": [
@@ -9531,6 +10671,10 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/site_agent": [
@@ -9545,6 +10689,10 @@
     {
       "date": "2026-11-08",
       "usage": 8
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 31
     }
   ],
   "drupal/ai_ckeditor_cefr": [
@@ -9555,6 +10703,10 @@
     {
       "date": "2026-11-08",
       "usage": 14
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 15
     }
   ],
   "drupal/ai_chatlog": [
@@ -9565,6 +10717,10 @@
     {
       "date": "2026-11-08",
       "usage": 5
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 14
     }
   ],
   "drupal/ai_provider_telos_brain": [
@@ -9574,6 +10730,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9585,6 +10745,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_act": [
@@ -9594,6 +10758,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9605,6 +10773,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 9
     }
   ],
   "drupal/ai_provider_stackit": [
@@ -9614,6 +10786,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9625,6 +10801,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 1
     }
   ],
   "drupal/ai_accept_tmgmt": [
@@ -9634,6 +10814,10 @@
     },
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9645,6 +10829,10 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_recipe_validations": [
@@ -9654,6 +10842,10 @@
     },
     {
       "date": "2026-11-08",
+      "downloads": 1
+    },
+    {
+      "date": "2026-11-27",
       "downloads": 1
     }
   ],
@@ -9665,6 +10857,10 @@
     {
       "date": "2026-11-08",
       "downloads": 971
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2323
     }
   ],
   "drupal/varbase_ai_chatbot_base": [
@@ -9675,6 +10871,10 @@
     {
       "date": "2026-11-08",
       "downloads": 968
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2316
     }
   ],
   "drupal/varbase_ai_content_operations_base": [
@@ -9685,6 +10885,10 @@
     {
       "date": "2026-11-08",
       "downloads": 981
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2329
     }
   ],
   "drupal/varbase_ai_content_review_base": [
@@ -9695,6 +10899,10 @@
     {
       "date": "2026-11-08",
       "downloads": 972
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2314
     }
   ],
   "drupal/varbase_ai_media_base": [
@@ -9705,6 +10913,10 @@
     {
       "date": "2026-11-08",
       "downloads": 986
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2340
     }
   ],
   "drupal/varbase_ai_search_base": [
@@ -9715,6 +10927,10 @@
     {
       "date": "2026-11-08",
       "downloads": 975
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2317
     }
   ],
   "drupal/varbase_ai_seo": [
@@ -9725,6 +10941,10 @@
     {
       "date": "2026-11-08",
       "downloads": 978
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2322
     }
   ],
   "drupal/varbase_ai_vdb_mariadb": [
@@ -9735,6 +10955,10 @@
     {
       "date": "2026-11-08",
       "downloads": 971
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2317
     }
   ],
   "drupal/varbase_ai_vdb_milvus": [
@@ -9745,23 +10969,39 @@
     {
       "date": "2026-11-08",
       "downloads": 969
+    },
+    {
+      "date": "2026-11-27",
+      "downloads": 2320
     }
   ],
   "drupal/ai_media": [
     {
       "date": "2026-11-08",
       "usage": 1413
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 697
     }
   ],
   "drupal/ai_assistant_ui": [
     {
       "date": "2026-11-08",
       "usage": 7
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 9
     }
   ],
   "drupal/ai_automator_pandoc": [
     {
       "date": "2026-11-08",
+      "usage": 5
+    },
+    {
+      "date": "2026-11-27",
       "usage": 5
     }
   ],
@@ -9769,17 +11009,29 @@
     {
       "date": "2026-11-08",
       "usage": 3
+    },
+    {
+      "date": "2026-11-27",
+      "usage": 5
     }
   ],
   "drupal/ai_report": [
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_console": [
     {
       "date": "2026-11-08",
+      "usage": null
+    },
+    {
+      "date": "2026-11-27",
       "usage": null
     }
   ],
@@ -9793,12 +11045,68 @@
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
     }
   ],
   "drupal/ai_provider_genmagic": [
     {
       "date": "2026-11-08",
       "usage": null
+    },
+    {
+      "date": "2026-11-27",
+      "usage": null
+    }
+  ],
+  "drupal/latentkit_ai": [
+    {
+      "date": "2026-11-27",
+      "usage": 3
+    }
+  ],
+  "drupal/ai_provider_docker": [
+    {
+      "date": "2026-11-27",
+      "usage": 1
+    }
+  ],
+  "drupal/ai_translate_auto": [
+    {
+      "date": "2026-11-27",
+      "usage": null
+    }
+  ],
+  "drupal/ai_content_consistency": [
+    {
+      "date": "2026-11-27",
+      "usage": null
+    }
+  ],
+  "drupal/varbase_canvas_ai": [
+    {
+      "date": "2026-11-27",
+      "usage": null
+    }
+  ],
+  "drupal/ai_provider_cli": [
+    {
+      "date": "2026-11-27",
+      "usage": null
+    }
+  ],
+  "drupal/ai_content_review_base": [
+    {
+      "date": "2026-11-27",
+      "downloads": 22
+    }
+  ],
+  "drupal/display_builder_ai_recipe": [
+    {
+      "date": "2026-11-27",
+      "downloads": 0
     }
   ]
 }
